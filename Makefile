@@ -7,11 +7,16 @@
 
 ANALYZER	=
 SRC_COMPILE	=
+MAKE_FLAGS	= -j
+
+.PHONY: make_lib
+make_lib:
+	@$(MAKE) $(MAKE_FLAGS) -C lib/ $(SRC_COMPILE)
 
 .PHONY: all
-all:
-	@$(MAKE) -C asm/ $(SRC_COMPILE)
-	@$(MAKE) -C corewar/ $(SRC_COMPILE)
+all: make_lib
+	@$(MAKE) $(MAKE_FLAGS) -C asm/ $(SRC_COMPILE)
+	@$(MAKE) $(MAKE_FLAGS) -C corewar/ $(SRC_COMPILE)
 
 .PHONY: all
 re: fclean all
@@ -37,16 +42,24 @@ analyzer: SRC_COMPILE += analyzer
 analyzer: reset_analyzer all
 reanalyzer: fclean analyzer
 
+.PHONY: clean_lib
+clean_lib:
+	@$(MAKE) $(MAKE_FLAGS) -C lib/ clean
+
 .PHONY: clean
-clean:
+clean: clean_lib
 	@rm -f *.gcno
 	@rm -f *.gcda
 	@rm -f vgcore.*
 	@rm -f *.log
-	@$(MAKE) -C asm/ clean
-	@$(MAKE) -C corewar/ clean
+	@$(MAKE) $(MAKE_FLAGS) -C asm/ clean
+	@$(MAKE) $(MAKE_FLAGS) -C corewar/ clean
+
+.PHONY: fclean_lib
+fclean_lib:
+	@$(MAKE) $(MAKE_FLAGS) -C lib/ fclean
 
 .PHONY: fclean
-fclean: clean
-	@$(MAKE) -C asm/ fclean
-	@$(MAKE) -C corewar/ fclean
+fclean: fclean_lib clean
+	@$(MAKE) $(MAKE_FLAGS) -C asm/ fclean
+	@$(MAKE) $(MAKE_FLAGS) -C corewar/ fclean
