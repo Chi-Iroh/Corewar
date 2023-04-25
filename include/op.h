@@ -41,6 +41,7 @@
 
     // Label
     #define T_LAB           8
+    #define WORD_TYPE_MAX (T_LAB + 1)
 
     typedef struct op_s {
         char *mnemonique;

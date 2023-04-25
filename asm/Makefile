@@ -6,7 +6,8 @@
 ##
 
 SRC = 	main.c \
-parser_check_syntax.c \
+parser_check_instruction_syntax.c \
+parser_check_word_syntax.c \
 parser_free.c \
 parser_linked_list.c
 

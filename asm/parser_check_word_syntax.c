@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2023
 ** parser_check_syntax.c
 ** File description:
-** -> Checks syntax of the parsed file
+** -> Checks syntax of each word
 */
 
 #include <my.h>

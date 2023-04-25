@@ -3,7 +3,6 @@
 ##
 
 # main
-*test*
 asm/asm
 corewar/corewar
 
@@ -33,7 +32,6 @@ corewar/corewar
 *.txt
 *.log
 vgcore.*
-*test*
 *.zip
 corewar_binaries
 *gdb*
