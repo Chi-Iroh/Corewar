@@ -8,6 +8,7 @@
 #pragma once
 
 #include <stdbool.h>
+#include <op.h>
 
 typedef struct asm_parser_instruction {
     char *word;

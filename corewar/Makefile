@@ -63,8 +63,8 @@ tests: clean_tests
 		exit 1;																\
 	fi
 	@echo [COREWAR] Building tests
-	@gcc -g3 -o asm tests/*.c --coverage -lcriterion ./op.c	\
-		-I $(INCLUDE_DIR) $(LDFLAGS)
+	@gcc -g3 -o corewar $(shell ls *.c | grep -v main.c) tests/*.c 	\
+		--coverage -lcriterion ./op.c -I $(INCLUDE_DIR) $(LDFLAGS)
 	@echo "[COREWAR] Running tests :"
 	@./corewar
 	@echo "[COREWAR] Writing line coverage log in corewar/line_coverage.log."

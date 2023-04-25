@@ -5,6 +5,7 @@
 ** -> Linked list management functions for asm parser.
 */
 
+#include <stdlib.h>
 #include <my_macros.h>
 #include <asm.h>
 

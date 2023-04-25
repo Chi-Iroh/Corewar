@@ -52,7 +52,7 @@ void asm_parser_free_line(asm_parser_line_t **line)
     }
     while (*line) {
         copy_next = (*line)->next;
-        asm_parser_free_instruction((*line)->instruction);
+        asm_parser_free_instruction(&(*line)->instruction);
         free(*line);
         *line = copy_next;
     }
