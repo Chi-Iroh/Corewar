@@ -34,5 +34,5 @@ if [[ "$1" != "asm" && "$1" != "corewar" ]]; then
 fi
 
 make -C $1 redebug
-valgrind --leak-check=full --track-origins=yes -s --malloc-fill=0x42 --free-fill=0x84 --log-file=valgrind.log $1/$1 ${@:2}
+valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -s --malloc-fill=0x42 --free-fill=0x84 --log-file=valgrind.log $1/$1 ${@:2}
 echo "Open ./valgrind.log to see valgrind's output !"
