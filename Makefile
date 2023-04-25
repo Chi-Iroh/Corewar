@@ -7,7 +7,7 @@
 
 ANALYZER	=
 SRC_COMPILE	=
-MAKE_FLAGS	= -j
+MAKE_FLAGS	= -s -j
 
 .PHONY: make_lib
 make_lib:
@@ -41,6 +41,16 @@ analyzer: ANALYZER += on
 analyzer: SRC_COMPILE += analyzer
 analyzer: reset_analyzer all
 reanalyzer: fclean analyzer
+
+.PHONY: clean_tests
+clean_tests:
+	@$(MAKE) $(MAKE_FLAGS) -C asm/ clean_tests
+	@$(MAKE) $(MAKE_FLAGS) -C corewar/ clean_tests
+
+.PHONY: tests
+tests: make_lib clean_tests
+	@$(MAKE) $(MAKE_FLAGS) -C asm/ tests
+	@$(MAKE) $(MAKE_FLAGS) -C corewar/ tests
 
 .PHONY: clean_lib
 clean_lib:

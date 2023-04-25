@@ -19,9 +19,11 @@ SANITIZE	=	-fsanitize=address,undefined \
 -fsanitize-recover=address,undefined
 ANALYZER	=
 
+INCLUDE_DIR	=	../include/
+LIB_DIR	=	../lib/
 CFLAGS  +=  -Wall -Wextra -pedantic -fsigned-char       \
--funsigned-bitfields -Wno-unused-parameter -std=gnu2x
-LDFLAGS	+=	-L ../lib
+-funsigned-bitfields -Wno-unused-parameter -std=gnu2x -I $(INCLUDE_DIR)
+LDFLAGS	+=	-L $(LIB_DIR) -lmy
 LD_PRELOAD	=
 
 NAME    =   corewar
@@ -33,13 +35,11 @@ re: fclean all
 
 .PHONY: debug redebug
 debug: CFLAGS += $(DEBUG)
-debug: LIB_COMPILE += debug
 debug: $(NAME)
 redebug: fclean debug
 
 .PHONY: sanitize resanitize
 sanitize: CFLAGS += $(DEBUG) $(SANITIZE)
-sanitize: LIB_COMPILE += sanitize
 sanitize: LD_PRELOAD += -lasan -lubsan
 sanitize: $(NAME)
 resanitize: fclean sanitize
@@ -47,26 +47,50 @@ resanitize: fclean sanitize
 .PHONY: analyzer reanalyzer
 analyzer: ANALYZER += on
 analyzer: CFLAGS += $(DEBUG) -fanalyzer
-analyzer: LIB_COMPILE += analyzer
 analyzer: $(NAME)
 reanalyzer: fclean analyzer
 
+.PHONY: clean_tests
+clean_tests:
+	@echo [COREWAR] Removing criterion temporary files.
+	@rm -f *.gcda
+	@rm -f *.gcno
+
+.PHONY: tests
+tests: clean_tests
+	@if [[ "$(shell find tests/ -type f -name '*.c')" == "" ]]; then		\
+		echo "[COREWAR] No .c file in corewar/tests/ directory - aborting.";\
+		exit 1;																\
+	fi
+	@echo [COREWAR] Building tests
+	@gcc -g3 -o asm tests/*.c --coverage -lcriterion ./op.c	\
+		-I $(INCLUDE_DIR) $(LDFLAGS)
+	@echo "[COREWAR] Running tests :"
+	@./corewar
+	@echo "[COREWAR] Writing line coverage log in corewar/line_coverage.log."
+	@gcovr --exclude tests/ > line_coverage.log
+	@echo -n "[COREWAR] Writing branch coverage log in "
+	@echo "corewar/branch_coverage.log."
+	@gcovr --exclude tests/ --branches > branch_coverage.log
+
+
 $(NAME): $(OBJ)
 	@echo -------------
-	@echo CC : $(CC)
-	@echo CFLAGS : $(CFLAGS)
-	@echo LDFLAGS : $(LD_PRELOAD) $(LDFLAGS)
+	@echo [COREWAR] CC : $(CC)
+	@echo [COREWAR] CFLAGS : $(CFLAGS)
+	@echo [COREWAR] LDFLAGS : $(LD_PRELOAD) $(LDFLAGS)
 	@gcc $(OBJ) $(LD_PRELOAD) $(LDFLAGS) -o $(NAME)
 
 %.o: %.c
 	@if [[ "$(ANALYZER)" != "" ]]; then\
-		$(CC) -c $(CFLAGS) $< -I ../include/ -o $@ 2>> ../analyzer.log;\
+		$(CC) -c $(CFLAGS) $< -o $@ 2>> ../analyzer.log;\
 	else\
-		$(CC) -c $(CFLAGS) $< -I ../include/ -o $@;\
+		$(CC) -c $(CFLAGS) $< -o $@;\
 	fi
 
 .PHONY: clean
 clean:
+	@echo [COREWAR] Removing temporary and object files.
 	@rm -f *.gcno
 	@rm -f *.gcda
 	@rm -f vgcore.*
@@ -75,4 +99,5 @@ clean:
 
 .PHONY: fclean
 fclean: clean
+	@echo [COREWAR] Removing binary.
 	@rm -f $(NAME)

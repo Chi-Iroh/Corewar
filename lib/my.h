@@ -37,8 +37,8 @@ bool is_char_valid_in_nbr(char c);
 size_t my_nbr_strlen(const char *str);
 long long my_pow10l(int n);
 
-char *my_strcpy(char *dest, char const *src);
-char *my_strncpy(char *dest, char const *src, size_t n);
+char *my_strcpy(char *dest, const char *src);
+char *my_strncpy(char *dest, const char *src, size_t n);
 int my_strcmp(const char *s1, const char *s2);
 char my_toupper(char c);
 char my_tolower(char c);

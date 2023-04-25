@@ -5,7 +5,10 @@
 ## Makefile
 ##
 
-SRC = 	main.c
+SRC = 	main.c \
+parser_check_syntax.c \
+parser_free.c \
+parser_linked_list.c
 
 OBJ =   $(SRC:.c=.o)
 
@@ -18,10 +21,11 @@ SANITIZE	=	-fsanitize=address,undefined \
 -fsanitize-recover=address,undefined
 ANALYZER	=
 
-INCLUDE = ../include/
+INCLUDE_DIR	= ../include/
+LIB_DIR	=	../lib/
 CFLAGS  +=  -Wall -Wextra -pedantic -fsigned-char       \
--funsigned-bitfields -Wno-unused-parameter -std=gnu2x -I $(INCLUDE)
-LDFLAGS	+=	-L ../lib -lmy
+-funsigned-bitfields -Wno-unused-parameter -std=gnu2x -I $(INCLUDE_DIR)
+LDFLAGS	+=	-L $(LIB_DIR) -lmy
 LD_PRELOAD	=
 
 NAME    =   asm
@@ -48,11 +52,33 @@ analyzer: CFLAGS += $(DEBUG) -fanalyzer
 analyzer: $(NAME)
 reanalyzer: fclean analyzer
 
+.PHONY: clean_tests
+clean_tests:
+	@echo [ASM] Removing criterion temporary files.
+	@rm -f *.gcda
+	@rm -f *.gcno
+
+.PHONY: tests
+tests: clean_tests
+	@if [[ "$(shell find tests/ -type f -name '*.c')" == "" ]]; then	\
+		echo "[ASM] No .c file in asm/tests/ directory - aborting.";	\
+		exit 1;															\
+	fi
+	@echo [ASM] Building tests
+	@gcc -g3 -o asm tests/*.c --coverage -lcriterion ../corewar/op.c	\
+		-I $(INCLUDE_DIR) $(LDFLAGS)
+	@echo "[ASM] Running tests :"
+	@./asm
+	@echo "[ASM] Writing line coverage log in asm/line_coverage.log."
+	@gcovr --exclude tests/ > line_coverage.log
+	@echo "[ASM] Writing branch coverage log in asm/branch_coverage.log."
+	@gcovr --exclude tests/ --branches > branch_coverage.log
+
 $(NAME): $(OBJ)
 	@echo -------------
-	@echo CC : $(CC)
-	@echo CFLAGS : $(CFLAGS)
-	@echo LDFLAGS : $(LD_PRELOAD) $(LDFLAGS)
+	@echo [ASM] CC : $(CC)
+	@echo [ASM] CFLAGS : $(CFLAGS)
+	@echo [ASM] LDFLAGS : $(LD_PRELOAD) $(LDFLAGS)
 	@gcc $(OBJ) $(LD_PRELOAD) $(LDFLAGS) -o $(NAME)
 
 %.o: %.c
@@ -63,13 +89,13 @@ $(NAME): $(OBJ)
 	fi
 
 .PHONY: clean
-clean:
-	@rm -f *.gcno
-	@rm -f *.gcda
+clean: clean_tests
+	@echo [ASM] Removing temporary and object files.
 	@rm -f vgcore.*
 	@rm -f *.log
 	@rm -f $(OBJ)
 
 .PHONY: fclean
 fclean: clean
+	@echo [ASM] Removing binary.
 	@rm -f $(NAME)

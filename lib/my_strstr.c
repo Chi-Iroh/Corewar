@@ -5,6 +5,7 @@
 ** ->   looks for a substring into a string
 */
 
+#include <stdlib.h>
 #include <stdbool.h>
 #include <my.h>
 
@@ -34,12 +35,12 @@ char *my_strstr(char *str, const char *to_find)
     }
     const unsigned str_len = my_strlen(str);
     if (str_len == 0) {
-        return *to_find == '\0' ? str : (void *)0;
+        return *to_find == '\0' ? str : NULL;
     }
     for (unsigned i = 0; i < str_len; i++) {
         if (does_substr_match((const char *)str, to_find, i)) {
             return str + i;
         }
     }
-    return (void *)0;
+    return NULL;
 }

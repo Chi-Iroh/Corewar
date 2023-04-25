@@ -22,6 +22,7 @@ This [Makefile](Makefile) supports multiple compilation modes.
 - **Sanitize** : Compiled with GCC address and undefined sanitizers.
 - **Analyzer** : Same as **Debug**, but with GCC analyzer.
 - **Release** : Compiled without any debug information.
+- **Tests** : Compiled Criterion unit test files, runs and writes the coverage into log files.
 
 Please note that **Release** mode doesn't add optimizations, as many syscalls are forbidden and GCC may call them even if they're not in our code.
 

@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <op.h>
 
-op_t op_tab[] = {
+op_t op_tab[N_OP] = {
     {
         .mnemonique = "live",
         .nbr_args = 1,

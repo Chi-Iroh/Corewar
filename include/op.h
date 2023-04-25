@@ -8,6 +8,9 @@
 #ifndef _OP_H_
     #define _OP_H_
 
+    #define N_OP 17
+    #define LAST_OP (N_OP - 1)
+
     #define MEM_SIZE                (6 * 1024)
     // Modulo of the index
     #define IDX_MOD                 512
