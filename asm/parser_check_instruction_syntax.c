@@ -99,7 +99,7 @@ bool asm_parser_check_instruction_syntax(asm_parser_instruction_t *instruction)
     RETURN_VALUE_IF(index == N_OP, false);
     instruction = instruction->next;
     nb_args = op_tab[index].nbr_args;
-    for (unsigned i = 0; i < nb_args; i++) {
+    for (unsigned i = 1; i <= nb_args; i++) {
         if (!instruction) {
             return false;
         }

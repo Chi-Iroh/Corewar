@@ -6,11 +6,11 @@
 ##
 
 SRC = 	main.c \
-op.c \
-parser_check_instruction_syntax.c \
-parser_check_word_syntax.c \
-parser_free.c \
-parser_linked_list.c
+		op.c \
+		parser_check_instruction_syntax.c \
+		parser_check_word_syntax.c \
+		parser_free.c \
+		parser_linked_list.c
 
 OBJ =   $(SRC:.c=.o)
 
