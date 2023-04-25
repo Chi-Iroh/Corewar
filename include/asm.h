@@ -43,5 +43,5 @@ bool asm_parser_is_register(char *word);
 
 #define ASM_PARSER_WORD_TYPES 4
 
-extern bool (*asm_parser_syntax_functions[WORD_TYPE_MAX])(char*);
+extern bool (*asm_parser_syntax_functions[ARG_TYPE_MAX])(char*);
 extern const unsigned asm_parser_word_types[4];

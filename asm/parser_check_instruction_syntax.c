@@ -10,7 +10,7 @@
 #include <asm.h>
 #include <op.h>
 
-bool (*asm_parser_syntax_functions[WORD_TYPE_MAX])(char*) = {
+bool (*asm_parser_syntax_functions[ARG_TYPE_MAX])(char*) = {
     [T_REG] = asm_parser_is_register,
     [T_DIR] = asm_parser_is_direct_value,
     [T_IND] = asm_parser_is_indirect_value,
@@ -53,14 +53,22 @@ static unsigned asm_parser_op_tab_mnemonic_index(char *mnemonic)
 @returns
     true if arg is in a legal type, otherwise false
 */
-static bool asm_parser_is_word_type_ok
+static bool asm_parser_is_arg_type_ok
 (char *arg, unsigned arg_i, unsigned op_tab_index)
 {
+    op_t *const instruction = &op_tab[op_tab_index];
+    unsigned parser_word_type = 0;
+
+    RETURN_VALUE_IF(!arg, false);
+    if (arg_i == 0) {
+        return my_strcmp(instruction->mnemonique, arg) == 0;
+    }
     for (unsigned j = 0; j < ASM_PARSER_WORD_TYPES; j++) {
-        if (!(op_tab[op_tab_index].type[arg_i] & asm_parser_word_types[j])) {
+        parser_word_type = asm_parser_word_types[j];
+        if (!(instruction->type[arg_i - 1] & parser_word_type)) {
             continue;
         }
-        if (asm_parser_syntax_functions[j](arg)) {
+        if (asm_parser_syntax_functions[parser_word_type](arg)) {
             return true;
         }
     }
@@ -95,7 +103,7 @@ bool asm_parser_check_instruction_syntax(asm_parser_instruction_t *instruction)
         if (!instruction) {
             return false;
         }
-        if (!asm_parser_is_word_type_ok(instruction->word, i, index)) {
+        if (!asm_parser_is_arg_type_ok(instruction->word, i, index)) {
             return false;
         }
         instruction = instruction->next;

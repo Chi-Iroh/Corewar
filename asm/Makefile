@@ -6,6 +6,7 @@
 ##
 
 SRC = 	main.c \
+op.c \
 parser_check_instruction_syntax.c \
 parser_check_word_syntax.c \
 parser_free.c \
@@ -61,13 +62,13 @@ clean_tests:
 
 .PHONY: tests
 tests: clean_tests
-	@if [[ "$(shell find tests/ -type f -name '*.c')" == "" ]]; then	\
-		echo "[ASM] No .c file in asm/tests/ directory - aborting.";	\
-		exit 1;															\
+	@if [[ "$(shell find ../tests/asm/ -type f -name '*.c')" == "" ]]; then	\
+		echo "[ASM] No .c file in /tests/asm/ directory - aborting.";		\
+		exit 1;																\
 	fi
 	@echo [ASM] Building tests
-	@gcc -g3 -o asm  $(shell ls *.c | grep -v main.c) tests/*.c 	\
-		--coverage -lcriterion ../corewar/op.c -I $(INCLUDE_DIR) $(LDFLAGS)
+	@gcc -g3 -o asm ../tests/asm/*.c 	\
+		--coverage -lcriterion op.c -I $(INCLUDE_DIR) $(LDFLAGS)
 	@echo "[ASM] Running tests :"
 	@./asm
 	@echo "[ASM] Writing line coverage log in asm/line_coverage.log."

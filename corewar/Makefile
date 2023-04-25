@@ -5,8 +5,7 @@
 ## Makefile
 ##
 
-SRC = 	main.c	\
-		op.c
+SRC = 	main.c
 
 OBJ =   $(SRC:.c=.o)
 
@@ -58,12 +57,13 @@ clean_tests:
 
 .PHONY: tests
 tests: clean_tests
-	@if [[ "$(shell find tests/ -type f -name '*.c')" == "" ]]; then		\
-		echo "[COREWAR] No .c file in corewar/tests/ directory - aborting.";\
+	@if [[ "$(shell find ../tests/corewar -type f -name '*.c')" == "" ]];	\
+		then																\
+		echo "[COREWAR] No .c file in /tests/corewar directory - aborting.";\
 		exit 1;																\
 	fi
 	@echo [COREWAR] Building tests
-	@gcc -g3 -o corewar $(shell ls *.c | grep -v main.c) tests/*.c 	\
+	@gcc -g3 -o corewar ../tests/corewar/*.c 	\
 		--coverage -lcriterion ./op.c -I $(INCLUDE_DIR) $(LDFLAGS)
 	@echo "[COREWAR] Running tests :"
 	@./corewar

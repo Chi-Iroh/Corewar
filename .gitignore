@@ -26,6 +26,7 @@ corewar/corewar
 
 # trash
 **/*test*
+!tests/
 .trash
 **/*.log
 **/*valgrind.log.core.*
