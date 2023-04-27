@@ -15,6 +15,8 @@
 #ifdef RUNNING_CRITERION_TESTS
     #define STATIC_FUNCTION
 
+    // Declare any static function here.
+
     STATIC_FUNCTION bool asm_parser_is_arg_type_ok
     (char *arg, unsigned arg_i, unsigned op_tab_index);
 

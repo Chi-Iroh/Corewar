@@ -34,3 +34,8 @@ Please note that **Release** mode doesn't add optimizations, as many syscalls ar
 - **[sanitize.sh](sanitize.sh)** : Compiles a binary with GCC sanitizers (address and undefined) and runs it.
 
 Each of these tools have a help menu (run with --help).
+
+## Note
+
+To test **static** functions, there is a define in [asm_config.h](include/asm_config.h) to grant their a global visibility only in test mode.
+Such functions **must** be declared in this header, near the help comment.
