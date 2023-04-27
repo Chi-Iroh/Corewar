@@ -8,7 +8,6 @@
 #include <my.h>
 #include <my_macros.h>
 #include <asm.h>
-#include <op.h>
 
 bool (*asm_parser_syntax_functions[ARG_TYPE_MAX])(char*) = {
     [T_REG] = asm_parser_is_register,
@@ -32,7 +31,7 @@ const unsigned asm_parser_word_types[ASM_PARSER_WORD_TYPES] = {
 @returns
     N_OP if not found (op_tab's size), otherwise its index
 */
-static unsigned asm_parser_op_tab_mnemonic_index(char *mnemonic)
+STATIC_FUNCTION unsigned asm_parser_op_tab_mnemonic_index(char *mnemonic)
 {
     RETURN_VALUE_IF(!mnemonic, N_OP);
     for (unsigned i = 0; i < LAST_OP; i++) {
@@ -53,7 +52,7 @@ static unsigned asm_parser_op_tab_mnemonic_index(char *mnemonic)
 @returns
     true if arg is in a legal type, otherwise false
 */
-static bool asm_parser_is_arg_type_ok
+STATIC_FUNCTION bool asm_parser_is_arg_type_ok
 (char *arg, unsigned arg_i, unsigned op_tab_index)
 {
     op_t *const instruction = &op_tab[op_tab_index];

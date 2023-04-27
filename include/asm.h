@@ -8,7 +8,8 @@
 #pragma once
 
 #include <stdbool.h>
-#include <op.h>
+#include "op.h"
+#include "asm_config.h"
 
 typedef struct asm_parser_instruction {
     char *word;
@@ -29,6 +30,9 @@ typedef struct {
 void asm_parser_free_instruction
 (asm_parser_instruction_t **instruction);
 void asm_parser_free_line(asm_parser_line_t **line);
+
+bool asm_parser_check_instruction_syntax
+(asm_parser_instruction_t *instruction);
 
 bool asm_parser_instruction_append_word
 (asm_parser_instruction_t *node, char *word);

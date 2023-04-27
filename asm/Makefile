@@ -5,12 +5,14 @@
 ## Makefile
 ##
 
-SRC = 	main.c \
-		op.c \
-		parser_check_instruction_syntax.c \
-		parser_check_word_syntax.c \
-		parser_free.c \
-		parser_linked_list.c
+SRC_NO_MAIN = \
+			op.c \
+			parser_check_instruction_syntax.c \
+			parser_check_word_syntax.c \
+			parser_free.c \
+			parser_linked_list.c
+
+SRC 	=	$(SRC_NO_MAIN) main.c
 
 OBJ =   $(SRC:.c=.o)
 
@@ -67,8 +69,8 @@ tests: clean_tests
 		exit 1;																\
 	fi
 	@echo [ASM] Building tests
-	@gcc -g3 -o asm ../tests/asm/*.c 	\
-		--coverage -lcriterion op.c -I $(INCLUDE_DIR) $(LDFLAGS)
+	@gcc -g3 $(SRC_NO_MAIN) ../tests/asm/*.c -DRUNNING_CRITERION_TESTS	\
+		--coverage -lcriterion -I $(INCLUDE_DIR) $(LDFLAGS) -o asm
 	@echo "[ASM] Running tests :"
 	@./asm
 	@echo "[ASM] Writing line coverage log in asm/line_coverage.log."
