@@ -17,6 +17,20 @@ const asm_parser_line_t ASM_PARSER_EMPTY_LINE = {
     .previous = NULL
 };
 
+/*
+@brief
+    Extracts the next word of the line.
+@param
+    line is the line string.
+@param
+    status is used to store the parser status (comment, end, ok, fail).
+@param
+    n is used to store the number of characters read.
+@param
+    instruction is the linked list node to store the next word.
+@returns
+    false if fails, otherwise true (also check status).
+*/
 STATIC_FUNCTION bool asm_parser_get_next_word_impl
     (char *line, asm_parser_status_t *status, size_t *n,
     asm_parser_instruction_t *instruction)
@@ -79,6 +93,14 @@ STATIC_FUNCTION asm_parser_instruction_t *asm_parser_get_next_word
     return instruction;
 }
 
+/*
+@brief
+    Splits a line into a linked list.
+@param
+    line is the line string
+@returns
+    NULL if fails, otherwise a valid pointer to a linked list.
+*/
 asm_parser_line_t *asm_parser_split_line(char *line)
 {
     asm_parser_line_t *split_line = malloc(sizeof(asm_parser_line_t));

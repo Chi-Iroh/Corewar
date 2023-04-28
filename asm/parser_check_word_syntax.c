@@ -13,9 +13,9 @@
 @brief
     Checks if an instruction is a mnemonic (as ld or add) or not.
 @param
-    word the string to parse.
+    word is the string to parse.
 @returns
-    false if either word is NULL or isn't a mnemonic, true otherwise.
+    false if either word is NULL or isn't a mnemonic, otherwise true.
 */
 bool asm_parser_is_mnemonic(char *word)
 {
@@ -28,6 +28,14 @@ bool asm_parser_is_mnemonic(char *word)
     return false;
 }
 
+/*
+@brief
+    Checks if an instruction is a label (as :hello or :world).
+@param
+    word is the string to parse
+@returns
+    false if either word is NULL or isn't a label, otherwise true.
+*/
 bool asm_parser_is_label(char *word)
 {
     RETURN_VALUE_IF(!word || word[0] != LABEL_CHAR || !word[1], false);
@@ -43,9 +51,9 @@ bool asm_parser_is_label(char *word)
 @brief
     Checks if an instruction is a direct value (as %4 or %:label) or not.
 @param
-    word the string to parse.
+    word is the string to parse.
 @returns
-    false if either word is NULL or isn't a direct value, true otherwise.
+    false if either word is NULL or isn't a direct value, otherwise true.
 */
 bool asm_parser_is_direct_value(char *word)
 {
@@ -64,9 +72,9 @@ bool asm_parser_is_direct_value(char *word)
 @brief
     Checks if an instruction is an indirect value (as 4 or :label) or not.
 @param
-    word the string to parse.
+    word is the string to parse.
 @returns
-    false if either word is NULL or isn't an indirect value, true otherwise.
+    false if either word is NULL or isn't an indirect value, otherwise true.
 */
 bool asm_parser_is_indirect_value(char *word)
 {
@@ -81,9 +89,9 @@ bool asm_parser_is_indirect_value(char *word)
 @brief
     Checks if an instruction is an register (r1 --> rREG_NUMBER) or not.
 @param
-    word the string to parse.
+    word is the string to parse.
 @returns
-    false if either word is NULL or isn't a register, true otherwise.
+    false if either word is NULL or isn't a register, otherwise true.
 */
 bool asm_parser_is_register(char *word)
 {
