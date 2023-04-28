@@ -9,14 +9,14 @@ ANALYZER	=
 SRC_COMPILE	=
 MAKE_FLAGS	= -s -j
 
-.PHONY: make_lib
-make_lib:
-	@$(MAKE) $(MAKE_FLAGS) -C lib/ $(SRC_COMPILE)
-
 .PHONY: all
 all: make_lib
 	@$(MAKE) $(MAKE_FLAGS) -C asm/ $(SRC_COMPILE)
 	@$(MAKE) $(MAKE_FLAGS) -C corewar/ $(SRC_COMPILE)
+
+.PHONY: make_lib
+make_lib:
+	@$(MAKE) $(MAKE_FLAGS) -C lib/ $(SRC_COMPILE)
 
 .PHONY: all
 re: fclean all
@@ -56,12 +56,16 @@ tests: make_lib clean_tests
 clean_lib:
 	@$(MAKE) $(MAKE_FLAGS) -C lib/ clean
 
-.PHONY: clean
-clean: clean_lib
+.PHONY: clean_source
+clean_source:
 	@rm -f *.gcno
 	@rm -f *.gcda
 	@rm -f vgcore.*
+	@rm -f valgrind*.log.core.*
 	@rm -f *.log
+
+.PHONY: clean
+clean: clean_lib clean_source
 	@$(MAKE) $(MAKE_FLAGS) -C asm/ clean
 	@$(MAKE) $(MAKE_FLAGS) -C corewar/ clean
 
@@ -70,6 +74,6 @@ fclean_lib:
 	@$(MAKE) $(MAKE_FLAGS) -C lib/ fclean
 
 .PHONY: fclean
-fclean: fclean_lib clean
+fclean: fclean_lib clean_source
 	@$(MAKE) $(MAKE_FLAGS) -C asm/ fclean
 	@$(MAKE) $(MAKE_FLAGS) -C corewar/ fclean

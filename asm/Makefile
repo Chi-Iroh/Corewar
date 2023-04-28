@@ -10,7 +10,8 @@ SRC_NO_MAIN = \
 			parser_check_instruction_syntax.c \
 			parser_check_word_syntax.c \
 			parser_free.c \
-			parser_linked_list.c
+			parser_linked_list.c \
+			parser.c
 
 SRC 	=	$(SRC_NO_MAIN) main.c
 
@@ -87,16 +88,20 @@ $(NAME): $(OBJ)
 
 %.o: %.c
 	@if [[ "$(ANALYZER)" != "" ]]; then\
-		$(CC) -c $(CFLAGS) $< -o $@ 2>> ../analyzer.log;\
+		$(CC) -c $(CFLAGS) $< -o $@ 2>> ../analyzer_asm.log;\
 	else\
 		$(CC) -c $(CFLAGS) $< -o $@;\
 	fi
 
-.PHONY: clean
-clean: clean_tests
-	@echo [ASM] Removing temporary and object files.
+.PHONY: clean_vgcore
+clean_vgcore:
+	@echo [ASM] Removing Core Dumped files.
 	@rm -f vgcore.*
-	@rm -f *.log
+	@rm -f valgring*.log.core.*
+
+.PHONY: clean
+clean: clean_tests clean_vgcore
+	@echo [ASM] Removing temporary and object files.
 	@rm -f $(OBJ)
 
 .PHONY: fclean

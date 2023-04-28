@@ -6,8 +6,8 @@
 */
 
 #include <stdlib.h>
-#include <my_macros.h>
-#include <asm.h>
+#include "../include/my_macros.h"
+#include "../include/asm.h"
 
 /*
 @brief

@@ -6,7 +6,7 @@
 */
 
 #include <stdlib.h>
-#include <op.h>
+#include "../include/op.h"
 
 op_t op_tab[N_OP] = {
     {

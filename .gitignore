@@ -29,7 +29,7 @@ corewar/corewar
 !tests/
 .trash
 **/*.log
-**/*valgrind.log.core.*
+**/*valgrind*.log.core.*
 .vscode
 **/*.txt
 **/*.log

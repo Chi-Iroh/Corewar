@@ -6,8 +6,8 @@
 */
 
 #include <stdlib.h>
-#include <my_macros.h>
-#include <asm.h>
+#include "../include/my_macros.h"
+#include "../include/asm.h"
 
 /*
 @brief
@@ -39,28 +39,30 @@ bool asm_parser_instruction_append_word
 
 /*
 @brief
-    Appends a word to an instruction linked list.
+    Appends an instruction to a line linked list.
 @param
-    node is the current instructiion node
+    node is the current instruction node
 @param
     instruction is the instruction to append to the next node
 @note
     Beware to the lifetime of instruction !
 @note
     Should be malloc'd or point to a static variable.
-@returns
-    false if an error occured or either node or instruction is NULL
+@note
+    Does nothing if instruction or node is NULL
 */
-bool asm_parser_line_append_instruction
+void asm_parser_line_append_instruction
 (asm_parser_line_t *node, asm_parser_instruction_t *instruction)
 {
-    asm_parser_line_t *const new_node = node && instruction ?
-        malloc(sizeof(asm_parser_line_t)) : NULL;
+    asm_parser_instruction_t *last = node ? node->instruction : NULL;
 
-    RETURN_VALUE_IF(!new_node, false);
-    new_node->next = node->next;
-    new_node->previous = node;
-    new_node->instruction = instruction;
-    node->next = new_node;
-    return true;
+    RETURN_IF(!node || !instruction);
+    while (last && last->next) {
+        last = last->next;
+    }
+    if (last) {
+        last->next = instruction;
+    } else {
+        node->instruction = instruction;
+    }
 }

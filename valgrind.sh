@@ -22,7 +22,7 @@ if [[ "$1" == "--cmd" ]]; then
     echo -e "\t\t- prevents compiler behaviour (often initializes memory with 0) to make secure code"
     echo -e "\t\t- helps detecting mistakes by lokking for this byte in valgrind's log"
     echo -e "\t--free-fill=0x48 : same as above, except that it's freed memory which is filled with 0x84"
-    echo -e "\t--log-file=valgrind.log : saves all the log into valgrind.log file"
+    echo -e "\t--log-file=valgrind_$1.log : saves all the log into valgrind_$1.log file"
     exit 0
 fi
 
@@ -34,5 +34,7 @@ if [[ "$1" != "asm" && "$1" != "corewar" ]]; then
 fi
 
 make -C $1 redebug
-valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -s --malloc-fill=0x42 --free-fill=0x84 --log-file=valgrind.log $1/$1 ${@:2}
-echo "Open ./valgrind.log to see valgrind's output !"
+echo "-----PROGRAM OUTPUT-------"
+valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -s --malloc-fill=0x42 --free-fill=0x84 --log-file=valgrind_$1.log $1/$1 ${@:2}
+echo "--------------------------"
+echo "Open ./valgrind_$1.log to see valgrind's output !"

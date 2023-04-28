@@ -5,9 +5,9 @@
 ** -> Checks syntax of each word
 */
 
-#include <my.h>
-#include <my_macros.h>
-#include <asm.h>
+#include "../include/my.h"
+#include "../include/my_macros.h"
+#include "../include/asm.h"
 
 /*
 @brief

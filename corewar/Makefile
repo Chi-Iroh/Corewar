@@ -18,10 +18,9 @@ SANITIZE	=	-fsanitize=address,undefined \
 -fsanitize-recover=address,undefined
 ANALYZER	=
 
-INCLUDE_DIR	=	../include/
 LIB_DIR	=	../lib/
 CFLAGS  +=  -Wall -Wextra -pedantic -fsigned-char       \
--funsigned-bitfields -Wno-unused-parameter -std=gnu2x -I $(INCLUDE_DIR)
+-funsigned-bitfields -Wno-unused-parameter -std=gnu2x
 LDFLAGS	+=	-L $(LIB_DIR) -lmy
 LD_PRELOAD	=
 
@@ -63,10 +62,9 @@ tests: clean_tests
 		exit 1;																\
 	fi
 	@echo [COREWAR] Building tests
-	@gcc -g3 -o corewar ../tests/corewar/*.c 	\
-		--coverage -lcriterion ./op.c -I $(INCLUDE_DIR) $(LDFLAGS)
+	@gcc -g3 -o $(NAME)../tests/corewar/*.c --coverage -lcriterion $(LDFLAGS)
 	@echo "[COREWAR] Running tests :"
-	@./corewar
+	@./$(NAME)
 	@echo "[COREWAR] Writing line coverage log in corewar/line_coverage.log."
 	@gcovr --exclude tests/ > line_coverage.log
 	@echo -n "[COREWAR] Writing branch coverage log in "
@@ -83,18 +81,20 @@ $(NAME): $(OBJ)
 
 %.o: %.c
 	@if [[ "$(ANALYZER)" != "" ]]; then\
-		$(CC) -c $(CFLAGS) $< -o $@ 2>> ../analyzer.log;\
+		$(CC) -c $(CFLAGS) $< -o $@ 2>> ../analyzer_corewar.log;\
 	else\
 		$(CC) -c $(CFLAGS) $< -o $@;\
 	fi
 
-.PHONY: clean
-clean:
-	@echo [COREWAR] Removing temporary and object files.
-	@rm -f *.gcno
-	@rm -f *.gcda
+.PHONY: clean_vgcore
+clean_vgcore:
+	@echo [COREWAR] Removing Core Dumped files.
 	@rm -f vgcore.*
-	@rm -f *.log
+	@rm -f valgring*.log.core.*
+
+.PHONY: clean
+clean: clean_vgcore clean_tests
+	@echo [COREWAR] Removing temporary and object files.
 	@rm -f $(OBJ)
 
 .PHONY: fclean

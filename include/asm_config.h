@@ -18,9 +18,17 @@
     // Declare any static function here.
 
     STATIC_FUNCTION bool asm_parser_is_arg_type_ok
-    (char *arg, unsigned arg_i, unsigned op_tab_index);
+        (char *arg, unsigned arg_i, unsigned op_tab_index);
 
     STATIC_FUNCTION unsigned asm_parser_op_tab_mnemonic_index(char *mnemonic);
+
+    STATIC_FUNCTION bool asm_parser_get_next_word_impl
+        (char *line, asm_parser_status_t *status, size_t *n,
+        asm_parser_instruction_t *instruction);
+
+    STATIC_FUNCTION asm_parser_instruction_t *asm_parser_get_next_word
+        (char *line, asm_parser_status_t *status, size_t *n);
+
 #else
     #define STATIC_FUNCTION static
 #endif

@@ -5,9 +5,9 @@
 ** -> Checks instruction's syntax
 */
 
-#include <my.h>
-#include <my_macros.h>
-#include <asm.h>
+#include "../include/my.h"
+#include "../include/my_macros.h"
+#include "../include/asm.h"
 
 bool (*asm_parser_syntax_functions[ARG_TYPE_MAX])(char*) = {
     [T_REG] = asm_parser_is_register,
