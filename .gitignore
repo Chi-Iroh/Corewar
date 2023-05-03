@@ -21,6 +21,11 @@ corewar/corewar
 **/*.old
 **/*~
 
+# test files
+**/*.s
+**/*.S
+**/*.asm
+
 # .gitignore
 !**/.gitignore
 

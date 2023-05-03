@@ -24,10 +24,6 @@ typedef struct asm_parser_line {
     struct asm_parser_line *previous;
 } asm_parser_line_t;
 
-typedef struct {
-    asm_parser_line_t *lines;
-} asm_file_t;
-
 extern const asm_parser_line_t ASM_PARSER_EMPTY_LINE;
 
 /*
@@ -42,16 +38,18 @@ typedef enum {
 } asm_parser_status_t;
 
 void asm_parser_free_instruction
-(asm_parser_instruction_t **instruction);
+    (asm_parser_instruction_t **instruction);
 void asm_parser_free_line(asm_parser_line_t **line);
 
 bool asm_parser_check_instruction_syntax
-(asm_parser_instruction_t *instruction);
+    (asm_parser_instruction_t *instruction);
 
 bool asm_parser_instruction_append_word
-(asm_parser_instruction_t *node, char *word);
+    (asm_parser_instruction_t *node, char *word);
 void asm_parser_line_append_instruction
-(asm_parser_line_t *node, asm_parser_instruction_t *instruction);
+    (asm_parser_instruction_t **node, asm_parser_instruction_t *instruction);
+void asm_parser_file_append_line
+    (asm_parser_line_t *file, asm_parser_line_t *line);
 
 bool asm_parser_is_mnemonic(char *word);
 bool asm_parser_is_label(char *word);

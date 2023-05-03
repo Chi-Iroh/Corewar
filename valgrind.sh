@@ -33,6 +33,7 @@ if [[ "$1" != "asm" && "$1" != "corewar" ]]; then
     exit 1
 fi
 
+make -C lib/ redebug
 make -C $1 redebug
 echo "-----PROGRAM OUTPUT-------"
 valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -s --malloc-fill=0x42 --free-fill=0x84 --log-file=valgrind_$1.log $1/$1 ${@:2}

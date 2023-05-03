@@ -6,29 +6,26 @@
 */
 
 #include <stdio.h>
+#include "../include/my_macros.h"
 #include "../include/asm.h"
 
-asm_parser_line_t *asm_parser_split_line(char *line);
+asm_parser_line_t *asm_parse_file(char *filename);
 
 int main(void)
 {
-    asm_parser_line_t *line = asm_parser_split_line("sti %4 %:label");
-    asm_parser_instruction_t *instruction = line->instruction;
+    asm_parser_line_t *file = asm_parse_file("file.asm");
+    asm_parser_instruction_t *instruction = file->instruction;
 
-    if (!line) {
-        return 1;
-    }
-    while (instruction->previous) {
-        instruction = instruction->previous;
-    }
-    while (true) {
-        printf("%s\n", instruction->word);
-        if (instruction->next) {
+    RETURN_VALUE_IF(!file || !instruction, 84);
+    do {
+        instruction = file->instruction;
+        do {
+            printf("%s\t", instruction->word);
             instruction = instruction->next;
-        } else {
-            break;
-        }
-    }
-    asm_parser_free_line(&line);
+        } while (instruction);
+        putchar('\n');
+        file = file->next;
+    } while (file && file->instruction);
+    asm_parser_free_line(&file);
     return 0;
 }
