@@ -9,8 +9,6 @@
 #include "../include/my_macros.h"
 #include "../include/asm.h"
 
-asm_parser_line_t *asm_parse_file(char *filename);
-
 int main(void)
 {
     asm_parser_line_t *file = asm_parse_file("file.asm");
