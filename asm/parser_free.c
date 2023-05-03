@@ -37,9 +37,11 @@ void asm_parser_free_instruction(asm_parser_instruction_t **instruction)
 /*
 @brief
     Properly frees a line (asm_parser_line_t linked list).
+@param
     line should be the address of an existing line linked list.
 @note
     If *line isn't the first node, goes back to free from the very first node.
+@note
     If line or *line is NULL, retruns.
 */
 void asm_parser_free_line(asm_parser_line_t **line)

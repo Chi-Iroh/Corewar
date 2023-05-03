@@ -14,6 +14,7 @@ asm_parser_line_t *asm_parse_file(char *filename);
 int main(void)
 {
     asm_parser_line_t *file = asm_parse_file("file.asm");
+    asm_parser_line_t *const file_copy = file;
     asm_parser_instruction_t *instruction = file->instruction;
 
     RETURN_VALUE_IF(!file || !instruction, 84);
@@ -26,6 +27,7 @@ int main(void)
         putchar('\n');
         file = file->next;
     } while (file && file->instruction);
+    file = file_copy;
     asm_parser_free_line(&file);
     return 0;
 }
