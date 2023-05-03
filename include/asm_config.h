@@ -29,6 +29,13 @@
     STATIC_FUNCTION asm_parser_instruction_t *asm_parser_get_next_word
         (char *line, asm_parser_status_t *status, size_t *n);
 
+    STATIC_FUNCTION asm_parser_line_t *asm_parser_split_line(char *line);
+
 #else
     #define STATIC_FUNCTION static
 #endif
+
+#ifdef ALWAYS_STATIC
+    #undef ALWAYS_STATIC
+#endif
+#define ALWAYS_STATIC static

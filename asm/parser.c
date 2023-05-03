@@ -102,7 +102,7 @@ STATIC_FUNCTION asm_parser_instruction_t *asm_parser_get_next_word
 @returns
     NULL if fails, otherwise a valid pointer to a linked list.
 */
-asm_parser_line_t *asm_parser_split_line(char *line)
+STATIC_FUNCTION asm_parser_line_t *asm_parser_split_line(char *line)
 {
     asm_parser_line_t *split_line = malloc(sizeof(asm_parser_line_t));
     asm_parser_instruction_t *instruction = NULL;
@@ -126,7 +126,7 @@ asm_parser_line_t *asm_parser_split_line(char *line)
     return split_line;
 }
 
-static bool asm_parser_add_line(char *line, asm_parser_line_t **file)
+ALWAYS_STATIC bool asm_parser_add_line(char *line, asm_parser_line_t **file)
 {
     asm_parser_line_t *parser_line = NULL;
 

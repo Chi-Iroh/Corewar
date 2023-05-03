@@ -57,6 +57,17 @@ bool asm_parser_is_direct_value(char *word);
 bool asm_parser_is_indirect_value(char *word);
 bool asm_parser_is_register(char *word);
 
+asm_parser_line_t *asm_parse_file(char *filename);
+
+/*
+@brief
+    Number of types (register, label... -> T_REG, T_LAB ...)
+@note
+    Macro because a const variable cannot be used as a static array length.
+@note
+    Should be a constexpr unsigned when C23 will be released and
+        fully implemented.
+*/
 #define ASM_PARSER_WORD_TYPES 4
 
 extern bool (*asm_parser_syntax_functions[ARG_TYPE_MAX])(char*);
