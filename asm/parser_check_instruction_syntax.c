@@ -109,3 +109,27 @@ bool asm_parser_check_instruction_syntax(asm_parser_instruction_t *instruction)
     }
     return instruction == NULL;
 }
+
+/*
+@brief
+    Checks if a file's syntax is OK.
+@param
+    file is the file linked list.
+@returns
+    true if syntax is ok, false otherwise (or if file is NULL).
+*/
+bool asm_parser_check_syntax(asm_parser_line_t *file)
+{
+    bool status = false;
+
+    RETURN_VALUE_IF(!file, false);
+    while (file) {
+        status = asm_parser_is_instruction_header(file->instruction);
+        status |= asm_parser_check_instruction_syntax(file->instruction);
+        if (!status) {
+            return false;
+        }
+        file = file->next;
+    }
+    return true;
+}

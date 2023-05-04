@@ -57,6 +57,7 @@ bool asm_parser_is_direct_value(char *word);
 bool asm_parser_is_indirect_value(char *word);
 bool asm_parser_is_register(char *word);
 
+bool asm_parser_is_instruction_header(asm_parser_instruction_t *instruction);
 asm_parser_line_t *asm_parse_file(char *filename);
 
 /*

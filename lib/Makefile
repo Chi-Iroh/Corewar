@@ -96,7 +96,7 @@ str_find.c 							\
 str_find_not.c 						\
 str_merge.c 						\
 str_split.c 						\
-str_begin.c
+str_begin_end.c
 
 OBJ	=	$(SRC:.c=.o)
 

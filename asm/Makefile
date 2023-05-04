@@ -11,6 +11,7 @@ SRC_NO_MAIN = 									\
 			parser_check_word_syntax.c 			\
 			parser_free.c 						\
 			parser_linked_list.c 				\
+			parser_check_header.c				\
 			parser.c
 
 SRC 	=	$(SRC_NO_MAIN) main.c

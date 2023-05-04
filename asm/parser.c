@@ -135,12 +135,17 @@ STATIC_FUNCTION asm_parser_line_t *asm_parser_split_line(char *line)
     file is an address to the file head.
 @returns
     false if either line or file is NULL, otherwise true.
+@returns
+    true if line only contains spaces or tabulations.
 */
 ALWAYS_STATIC bool asm_parser_add_line(char *line, asm_parser_line_t **file)
 {
     asm_parser_line_t *parser_line = NULL;
 
     RETURN_VALUE_IF(!line || !file, false);
+    if (!str_find_not_pred(line, my_isspace)) {
+        return true;
+    }
     parser_line = asm_parser_split_line(line);
     if (!parser_line) {
         return false;
