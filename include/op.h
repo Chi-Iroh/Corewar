@@ -11,7 +11,7 @@
     #define N_OP 17
     #define LAST_OP (N_OP - 1)
 
-    #define MEM_SIZE                (6 * 1024)
+    #define MEM_SIZE                (6 * 1'024)
     // Modulo of the index
     #define IDX_MOD                 512
     // this may not be changed 2^*IND_SIZE
@@ -63,9 +63,9 @@
 
     // Header
     #define PROG_NAME_LENGTH        128
-    #define COMMENT_LENGTH          2048
+    #define COMMENT_LENGTH          2'048
     // Magic number in the binary header
-    #define COREWAR_EXEC_MAGIC      0xea83f3
+    #define COREWAR_EXEC_MAGIC      0xEA'83'F3
 
     typedef struct header_s {
         int magic;
@@ -76,7 +76,7 @@
 
     // Live
     // number of cycle before beig declared dead
-    #define CYCLE_TO_DIE    1536
+    #define CYCLE_TO_DIE    1'536
     #define CYCLE_DELTA     5
     #define NBR_LIVE        40
 #endif
