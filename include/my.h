@@ -160,4 +160,6 @@ extern const long double PI;
 long double radian_to_degree(long double radian);
 long double degree_to_radian(long double degree);
 
+char str_begin(char *str);
+
 bool is_between(long double n1, long double n2, long double x);
