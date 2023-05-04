@@ -126,6 +126,16 @@ STATIC_FUNCTION asm_parser_line_t *asm_parser_split_line(char *line)
     return split_line;
 }
 
+/*
+@brief
+    Splits a line and adds it to a file linked list.
+@param
+    line is the string to parse and add.
+@param
+    file is an address to the file head.
+@returns
+    false if either line or file is NULL, otherwise true.
+*/
 ALWAYS_STATIC bool asm_parser_add_line(char *line, asm_parser_line_t **file)
 {
     asm_parser_line_t *parser_line = NULL;

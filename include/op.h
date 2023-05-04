@@ -64,7 +64,8 @@
     // Header
     #define PROG_NAME_LENGTH        128
     #define COMMENT_LENGTH          2048
-    #define COREWAR_EXEC_MAGIC      0xea83f3        /* why not */
+    // Magic number in the binary header
+    #define COREWAR_EXEC_MAGIC      0xea83f3
 
     typedef struct header_s {
         int magic;
@@ -74,7 +75,6 @@
     } header_t;
 
     // Live
-
     // number of cycle before beig declared dead
     #define CYCLE_TO_DIE    1536
     #define CYCLE_DELTA     5
