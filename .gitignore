@@ -31,8 +31,7 @@ asm_files/
 !**/.gitignore
 
 # trash
-**/*test*
-!tests/
+!tests/*
 .trash
 **/*.log
 **/*valgrind*.log.core.*

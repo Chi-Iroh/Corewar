@@ -9,7 +9,7 @@
 #include "../include/my_macros.h"
 #include "../include/asm.h"
 
-ALWAYS_STATIC bool asm_parser_is_instruction_string
+STATIC_FUNCTION bool asm_parser_is_instruction_string
     (asm_parser_instruction_t *instruction)
 {
     bool status = true;
