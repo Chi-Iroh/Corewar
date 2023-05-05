@@ -31,6 +31,12 @@
 
     STATIC_FUNCTION asm_parser_line_t *asm_parser_split_line(char *line);
 
+    STATIC_FUNCTION bool asm_parser_check_instruction_syntax
+        (asm_parser_instruction_t *instruction);
+
+    STATIC_FUNCTION void asm_parser_remove_single_instruction_comma
+        (asm_parser_instruction_t *instruction);
+
 #else
     #define STATIC_FUNCTION static
 #endif

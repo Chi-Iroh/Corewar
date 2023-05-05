@@ -9,13 +9,15 @@
 #include "../include/my_macros.h"
 #include "../include/asm.h"
 
-int main(void)
+int main(int argc, char *argv[])
 {
-    asm_parser_line_t *file = asm_parse_file("file.asm");
+    RETURN_VALUE_IF(!argv[1], 84);
+    asm_parser_line_t *file = asm_parse_file(argv[1]);
     asm_parser_line_t *const file_copy = file;
     asm_parser_instruction_t *instruction = file->instruction;
 
     RETURN_VALUE_IF(!file || !instruction, 84);
+    printf("%u\n", asm_parser_check_syntax(file));
     do {
         instruction = file->instruction;
         do {

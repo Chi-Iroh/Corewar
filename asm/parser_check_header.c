@@ -15,8 +15,8 @@ ALWAYS_STATIC bool asm_parser_is_instruction_string
     bool status = true;
 
     RETURN_VALUE_IF(!instruction, false);
-    status &= str_begin(instruction->word) == '\"';
-    status &= str_end(instruction->word) == '\"';
+    status &= *str_begin(instruction->word) == '\"';
+    status &= *str_end(instruction->word) == '\"';
     status &= !instruction->next;
     return status;
 }

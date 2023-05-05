@@ -178,7 +178,7 @@ asm_parser_line_t *asm_parse_file(char *filename)
 
     RETURN_VALUE_IF(!file, NULL);
     while ((read = getline(&line, &n, file)) != EOF) {
-        if (str_begin(line) != '#' && !asm_parser_add_line(line, &code)) {
+        if (*str_begin(line) != '#' && !asm_parser_add_line(line, &code)) {
             read = -1;
             break;
         }

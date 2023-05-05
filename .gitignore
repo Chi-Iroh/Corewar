@@ -25,6 +25,7 @@ corewar/corewar
 **/*.s
 **/*.S
 **/*.asm
+asm_files/
 
 # .gitignore
 !**/.gitignore

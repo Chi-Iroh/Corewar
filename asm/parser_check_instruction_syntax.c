@@ -87,7 +87,8 @@ STATIC_FUNCTION bool asm_parser_is_arg_type_ok
     If instruction isn't NULL, it means that it is connected with another node
     we don't want.
 */
-bool asm_parser_check_instruction_syntax(asm_parser_instruction_t *instruction)
+STATIC_FUNCTION bool asm_parser_check_instruction_syntax
+    (asm_parser_instruction_t *instruction)
 {
     unsigned index = 0;
     unsigned nb_args = 0;
@@ -123,6 +124,7 @@ bool asm_parser_check_syntax(asm_parser_line_t *file)
     bool status = false;
 
     RETURN_VALUE_IF(!file, false);
+    asm_parser_remove_operand_comma(file);
     while (file) {
         status = asm_parser_is_instruction_header(file->instruction);
         status |= asm_parser_check_instruction_syntax(file->instruction);

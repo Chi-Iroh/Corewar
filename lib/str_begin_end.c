@@ -9,35 +9,37 @@
 
 /*
 @brief
-    Returns the first non-space character of a string.
+    Returns a pointer to first non-space character of a string.
 @param
     str is the string to read.
 @returns
-    '\0' is str is NULL or space-only, otherwise the first non-space character.
+    NULL is str is NULL or space-only,
+        otherwise a pointer to the first non-space character.
 */
-char str_begin(char *str)
+char *str_begin(char *str)
 {
     if (!str) {
-        return '\0';
+        return NULL;
     }
     str_advance_pred(&str, my_isspace);
-    return *str;
+    return str;
 }
 
 /*
 @brief
-    Returns the last non-space character of a string.
+    Returns a pointer to the last non-space character of a string.
 @param
     str is the string to read.
 @returns
-    '\0' is str is NULL or space-only, otherwise the last non-space character.
+    NULL is str is NULL or space-only,
+        otherwise a pointer to the last non-space character.
 */
-char str_end(char *str)
+char *str_end(char *str)
 {
-    const char c = str ? *str_rfind_not_pred(str, my_isspace) : '\0';
+    char *const c = str ? str_rfind_not_pred(str, my_isspace) : NULL;
 
     if (!str) {
-        return '\0';
+        return NULL;
     }
     return c;
 }

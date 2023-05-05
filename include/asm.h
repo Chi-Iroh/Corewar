@@ -41,9 +41,6 @@ void asm_parser_free_instruction
     (asm_parser_instruction_t **instruction);
 void asm_parser_free_line(asm_parser_line_t **line);
 
-bool asm_parser_check_instruction_syntax
-    (asm_parser_instruction_t *instruction);
-
 bool asm_parser_instruction_append_word
     (asm_parser_instruction_t *node, char *word);
 void asm_parser_line_append_instruction
@@ -58,7 +55,9 @@ bool asm_parser_is_indirect_value(char *word);
 bool asm_parser_is_register(char *word);
 
 bool asm_parser_is_instruction_header(asm_parser_instruction_t *instruction);
+void asm_parser_remove_operand_comma(asm_parser_line_t *file);
 asm_parser_line_t *asm_parse_file(char *filename);
+bool asm_parser_check_syntax(asm_parser_line_t *file);
 
 /*
 @brief
