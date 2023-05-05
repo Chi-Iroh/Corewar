@@ -24,6 +24,7 @@ typedef struct asm_parser_line {
     struct asm_parser_line *previous;
 } asm_parser_line_t;
 
+extern const asm_parser_instruction_t ASM_PARSER_EMPTY_INSTRUCTION;
 extern const asm_parser_line_t ASM_PARSER_EMPTY_LINE;
 
 /*
@@ -54,6 +55,7 @@ bool asm_parser_is_direct_value(char *word);
 bool asm_parser_is_indirect_value(char *word);
 bool asm_parser_is_register(char *word);
 
+bool asm_parser_add_line(char *line, asm_parser_line_t **file);
 bool asm_parser_is_instruction_header(asm_parser_instruction_t *instruction);
 void asm_parser_remove_operand_comma(asm_parser_line_t *file);
 asm_parser_line_t *asm_parse_file(char *filename);

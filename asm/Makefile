@@ -13,6 +13,7 @@ SRC_NO_MAIN = 									\
 			parser_linked_list.c 				\
 			parser_check_header.c				\
 			parser_remove_operand_comma.c		\
+			parser_next_word.c					\
 			parser.c
 
 SRC 	=	$(SRC_NO_MAIN) main.c

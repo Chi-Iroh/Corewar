@@ -25,13 +25,14 @@ corewar/corewar
 **/*.s
 **/*.S
 **/*.asm
-asm_files/
+!asm_files/**
 
 # .gitignore
 !**/.gitignore
 
 # trash
-!tests/*
+**/*test*
+!tests/**
 .trash
 **/*.log
 **/*valgrind*.log.core.*

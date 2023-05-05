@@ -26,9 +26,6 @@
         (char *line, asm_parser_status_t *status, size_t *n,
         asm_parser_instruction_t *instruction);
 
-    STATIC_FUNCTION asm_parser_instruction_t *asm_parser_get_next_word
-        (char *line, asm_parser_status_t *status, size_t *n);
-
     STATIC_FUNCTION asm_parser_line_t *asm_parser_split_line(char *line);
 
     STATIC_FUNCTION bool asm_parser_check_instruction_syntax
@@ -36,6 +33,9 @@
 
     STATIC_FUNCTION void asm_parser_remove_single_instruction_comma
         (asm_parser_instruction_t *instruction);
+
+    STATIC_FUNCTION bool asm_parser_add_line
+        (char *line, asm_parser_line_t **file);
 
 #else
     #define STATIC_FUNCTION static

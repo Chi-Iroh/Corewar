@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include "../include/my_macros.h"
+#include "../include/my.h"
 #include "../include/asm.h"
 
 int main(int argc, char *argv[])
@@ -17,14 +18,14 @@ int main(int argc, char *argv[])
     asm_parser_instruction_t *instruction = file->instruction;
 
     RETURN_VALUE_IF(!file || !instruction, 84);
-    printf("%u\n", asm_parser_check_syntax(file));
+    my_printf("Syntax %s\n", asm_parser_check_syntax(file) ? "OK" : "KO");
     do {
         instruction = file->instruction;
         do {
-            printf("%s\t", instruction->word);
+            my_printf("'%s'\t", instruction->word);
             instruction = instruction->next;
         } while (instruction);
-        putchar('\n');
+        my_putchar('\n');
         file = file->next;
     } while (file && file->instruction);
     file = file_copy;
