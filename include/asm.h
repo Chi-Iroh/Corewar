@@ -28,12 +28,12 @@ extern const asm_parser_instruction_t ASM_PARSER_EMPTY_INSTRUCTION;
 extern const asm_parser_line_t ASM_PARSER_EMPTY_LINE;
 
 /*
-    Don't change the order !
+    Don't change the value of PARSER_ERROR nor PARSER_OK !
     Must match to boolean (0 = error, 1 = ok)
 */
 typedef enum {
-    PARSER_ERROR,
-    PARSER_OK,
+    PARSER_ERROR = 0,
+    PARSER_OK = 1,
     PARSER_COMMENT,
     PARSER_END
 } asm_parser_status_t;
