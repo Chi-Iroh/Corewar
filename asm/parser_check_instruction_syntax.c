@@ -9,17 +9,7 @@
 #include "../include/my_macros.h"
 #include "../include/asm.h"
 
-/*
-\brief
-    Wraps the function parser_is_label with a "default value", to be used
-        in the below array of function pointers.
-\note
-    Exactly the same as parser_is_label(word, LABEL_COLON_END)
-*/
-STATIC_FUNCTION bool parser_is_arg_label(char *word)
-{
-    return parser_is_label(word, LABEL_COLON_END);
-}
+STATIC_FUNCTION bool parser_is_arg_label(char *word);
 
 bool (*parser_syntax_functions[PARAMETER_MAX])(char*) = {
     [PARAMETER_REGISTER] = parser_is_register,
@@ -34,6 +24,18 @@ const unsigned parser_word_types[PARSER_WORD_TYPES] = {
     PARAMETER_INDIRECT,
     PARAMETER_LABEL
 };
+
+/*
+\brief
+    Wraps the function parser_is_label with a "default value", to be used
+        in the below array of function pointers.
+\note
+    Exactly the same as parser_is_label(word, LABEL_COLON_END)
+*/
+STATIC_FUNCTION bool parser_is_arg_label(char *word)
+{
+    return parser_is_label(word, LABEL_COLON_END);
+}
 
 /*
 @brief
