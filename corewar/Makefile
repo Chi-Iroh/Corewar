@@ -5,7 +5,7 @@
 ## Makefile
 ##
 
-SRC_NO_MAIN =
+SRC_NO_MAIN = op.c
 
 SRC	=	$(SRC_NO_MAIN) main.c
 
