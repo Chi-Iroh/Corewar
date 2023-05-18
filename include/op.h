@@ -61,7 +61,7 @@
     #define DIRECT_SIZE             4
     #define REGISTER_SIZE           DIRECT_SIZE
 
-    extern op_t op_tab[];
+    extern op_t op_tab[N_OP];
 
 
     // Header
