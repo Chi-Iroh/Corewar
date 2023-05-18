@@ -134,7 +134,7 @@ bool asm_parser_check_syntax(asm_parser_line_t *file)
     while (file) {
         after_labels = file->instruction;
         while (after_labels &&
-            asm_parser_is_label(after_labels->word, LABEL_COLON_BEGIN)) {
+            asm_parser_is_label(after_labels->word, LABEL_COLON_END)) {
             after_labels = after_labels->next;
         }
         if (after_labels) {
