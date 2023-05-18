@@ -113,5 +113,5 @@ bool parser_is_register(char *word)
     if (str_find_not_pred(&word[1], my_isdigit)) {
         return false;
     }
-    return n >= 1 && n <= REG_NUMBER;
+    return n >= 1 && n <= REGISTERS_NUMBER;
 }

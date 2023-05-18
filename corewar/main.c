@@ -7,14 +7,14 @@
 
 #include "../include/corewar/corewar.h"
 
+ALWAYS_STATIC bool open_binary(char *binary)
+{
+    return true;
+}
 
 int main(void)
 {
-    cpu_t cpu = {
-        .memory = {},
-        .registers = { 1 },
-        .carry = CARRY_OFF
-    };
+    memory_t memory = {};
 
     return 0;
 }

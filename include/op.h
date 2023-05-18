@@ -8,12 +8,18 @@
 #ifndef _OP_H_
     #define _OP_H_
 
-    #define N_OP 17
-    #define LAST_OP (N_OP - 1)
+    #include <stdint.h>
 
-    #define MEM_SIZE                (6 * 1'024)
+    // Should replace all these defines with constexpr variables
+    // But GCC 13 doesn't fully support constexpr for now
+    // constexpr char* doesn't compile with string literals
+
+    #define N_OP                    17
+    #define LAST_OP                 (N_OP - 1)
+
+    #define MEMORY_SIZE             (6 * 1'024)
     // Modulo of the index
-    #define IDX_MOD                 512
+    #define INDEX_MODULO            512
     // this may not be changed 2^*IND_SIZE
     #define MAX_ARGS_NUMBER         4
 
@@ -28,33 +34,32 @@
     #define COMMENT_CMD_STRING      ".comment"
 
     // Number of registers (r1 --> rx)
-    #define REG_NUMBER      16
+    #define REGISTERS_NUMBER              16
 
-    typedef char args_type_t;
-
+    typedef uint8_t args_type_t;
 
     typedef enum {
-        PARAMETER_REGISTER = 1 << 0,
-        PARAMETER_DIRECT = 1 << 1,
-        PARAMETER_INDIRECT = 1 << 2,
-        PARAMETER_LABEL = 1 << 3,
-        PARAMETER_MAX = 1 + (1 << 3)
+        PARAMETER_REGISTER =        1 << 0,
+        PARAMETER_DIRECT =          1 << 1,
+        PARAMETER_INDIRECT =        1 << 2,
+        PARAMETER_LABEL =           1 << 3,
+        PARAMETER_MAX =             1 + (1 << 3)
     } asm_parameter_t;
 
     typedef struct op_s {
         char *mnemonique;
         unsigned char nbr_args;
         args_type_t type[MAX_ARGS_NUMBER];
-        char code;
-        int nbr_cycles;
+        uint8_t code;
+        uint16_t nbr_cycles;
         char *comment;
     } op_t;
 
 
     // Size
-    #define IND_SIZE        2
-    #define DIR_SIZE        4
-    #define REG_SIZE        DIR_SIZE
+    #define INDIRECT_SIZE           2
+    #define DIRECT_SIZE             4
+    #define REGISTER_SIZE           DIRECT_SIZE
 
     extern op_t op_tab[];
 
@@ -66,15 +71,15 @@
     #define COREWAR_EXEC_MAGIC      0xEA'83'F3
 
     typedef struct header_s {
-        int magic;
+        uint32_t magic;
         char prog_name[PROG_NAME_LENGTH + 1];
-        int prog_size;
+        unsigned prog_size;
         char comment[COMMENT_LENGTH + 1];
     } header_t;
 
     // Live
     // number of cycle before beig declared dead
-    #define CYCLE_TO_DIE    1'536
-    #define CYCLE_DELTA     5
-    #define NBR_LIVE        40
+    #define CYCLE_TO_DIE            1'536
+    #define CYCLE_DELTA             5
+    #define NBR_LIVE                40
 #endif
