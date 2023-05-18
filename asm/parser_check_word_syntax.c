@@ -30,21 +30,34 @@ bool asm_parser_is_mnemonic(char *word)
 
 /*
 @brief
-    Checks if an instruction is a label (as :hello or :world).
+    Checks if an instruction is a label (as hello: or world:).
 @param
     word is the string to parse
+@param
+    colon_pos is the position of the colon (:) in the label,
+        at the end, at the beginning or nowwhere (check asm.h).
 @returns
     false if either word is NULL or isn't a label, otherwise true.
 */
-bool asm_parser_is_label(char *word)
+bool asm_parser_is_label(char *word, asm_parser_label_colon_pos_t colon_pos)
 {
-    RETURN_VALUE_IF(!word || word[0] != LABEL_CHAR || !word[1], false);
-    for (size_t i = 1; word[i]; i++) {
+    size_t i = 0;
+    char c = word ? word[0] : '\0';
+
+    RETURN_VALUE_IF(!word || !word[0], false);
+    if (colon_pos == LABEL_COLON_BEGIN && (c != LABEL_CHAR || !word[1])) {
+        return false;
+    }
+    for (i = (colon_pos == LABEL_COLON_BEGIN); word[i]; i++) {
+        c = word[i];
+        if (colon_pos == LABEL_COLON_END && c == LABEL_CHAR && !word[i + 1]) {
+            return i > 0;
+        }
         if (!my_strchr(LABEL_CHARS, word[i])) {
             return false;
         }
     }
-    return true;
+    return colon_pos != LABEL_COLON_END;
 }
 
 /*
@@ -57,15 +70,13 @@ bool asm_parser_is_label(char *word)
 */
 bool asm_parser_is_direct_value(char *word)
 {
-    const bool status = word;
-    const bool begins_with_percent = status ?
-        word[0] == DIRECT_CHAR : false;
+    const bool begins_with_percent = word ? word[0] == DIRECT_CHAR : false;
 
-    RETURN_VALUE_IF(!status || !begins_with_percent, false);
+    RETURN_VALUE_IF(!begins_with_percent, false);
     if (word[1] && !str_find_not_pred(&word[1], my_isdigit)) {
         return true;
     }
-    return asm_parser_is_label(&word[1]);
+    return asm_parser_is_label(&word[1], LABEL_COLON_BEGIN);
 }
 
 /*
@@ -82,7 +93,7 @@ bool asm_parser_is_indirect_value(char *word)
     if (!str_find_not_pred(word, my_isdigit)) {
         return true;
     }
-    return asm_parser_is_label(word);
+    return asm_parser_is_label(word, LABEL_COLON_BEGIN);
 }
 
 /*

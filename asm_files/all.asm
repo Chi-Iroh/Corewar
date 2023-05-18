@@ -2,7 +2,7 @@
 
 
 .comment                "hdsjz"
-sti r1, %:label, %1 # h
+label: sti r1, %:label, %1 # h
 # 7542
 live %234 # 4 #7
             #fjdk

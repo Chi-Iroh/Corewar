@@ -12,8 +12,9 @@ SRC_NO_MAIN = 									\
 			parser_free.c 						\
 			parser_linked_list.c 				\
 			parser_check_header.c				\
-			parser_remove_operand_comma.c		\
+			parser_remove_operand_separator.c	\
 			parser_next_word.c					\
+			parser_labels.c						\
 			parser.c
 
 SRC 	=	$(SRC_NO_MAIN) main.c
@@ -69,12 +70,15 @@ clean_tests:
 .PHONY: tests
 tests: clean_tests
 	@if [[ "$(shell find ../tests/asm/ -type f -name '*.c')" == "" ]]; then	\
-		echo "[ASM] No .c file in /tests/asm/ directory - aborting.";		\
-		exit 1;																\
+		echo "[ASM] No .c file in /tests/asm/ directory.";		\
+	else																	\
+		echo [ASM] Building tests;											\
+		gcc -g3 $(SRC_NO_MAIN) ../tests/$(NAME)/*.c --coverage -lcriterion \
+			-DRUNNING_CRITERION_TESTS $(CFLAGS) $(LDFLAGS) -o $(NAME);		\
 	fi
-	@echo [ASM] Building tests
-	@gcc -g3 $(SRC_NO_MAIN) ../tests/asm/*.c -DRUNNING_CRITERION_TESTS	\
-		--coverage -lcriterion -I $(INCLUDE_DIR) $(LDFLAGS) -o asm
+
+.PHONY: run_tests
+run_tests: clean_tests tests
 	@echo "[ASM] Running tests :"
 	@./asm
 	@echo "[ASM] Writing line coverage log in asm/line_coverage.log."

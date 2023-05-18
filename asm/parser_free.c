@@ -42,7 +42,7 @@ void asm_parser_free_instruction(asm_parser_instruction_t **instruction)
 @note
     If *line isn't the first node, goes back to free from the very first node.
 @note
-    If line or *line is NULL, retruns.
+    If line or *line is NULL, returns.
 */
 void asm_parser_free_line(asm_parser_line_t **line)
 {
@@ -57,5 +57,32 @@ void asm_parser_free_line(asm_parser_line_t **line)
         asm_parser_free_instruction(&(*line)->instruction);
         free(*line);
         *line = copy_next;
+    }
+}
+
+/*
+@brief
+    Properly frees labels.
+@param
+    labels should be the address of an existing bale linked list.
+@note
+    If *labels isn't the first node, goes back to free
+        from the very first node.
+@note
+    If labels or *labels is NULL, returns;
+*/
+void asm_parser_free_labels(asm_parser_label_t **labels)
+{
+    asm_parser_label_t *copy_next = NULL;
+
+    RETURN_IF(!labels || !(*labels));
+    while ((*labels)->previous) {
+        *labels = (*labels)->previous;
+    }
+    while (*labels) {
+        copy_next = (*labels)->next;
+        FREE_IF_ALLOCATED((*labels)->name, free);
+        free(*labels);
+        *labels = copy_next;
     }
 }

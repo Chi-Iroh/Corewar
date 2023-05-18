@@ -24,15 +24,39 @@ Test(check_word_syntax, mnemonic) {
     cr_expect(!asm_parser_is_mnemonic(""), "an empty string isn't a mnemonic");
 }
 
+static const char *const colon_pos_name[LABEL_COLON_MAX] = {
+    "LABEL_COLON_BEGIN",
+    "LABEL_COLON_END",
+    "LABEL_COLON_NONE"
+};
+
+void test_label(char *str, asm_parser_label_colon_pos_t valid_colon_pos) {
+    for (asm_parser_label_colon_pos_t colon_pos = 0; colon_pos < LABEL_COLON_MAX; colon_pos++) {
+        const bool expected_return_value = colon_pos == valid_colon_pos;
+        const char *error_msg = expected_return_value ? "is a label" : "isn't a label";
+
+        cr_expect(expected_return_value == asm_parser_is_label(str, colon_pos), "%s %s (%s)", str, error_msg, colon_pos_name[colon_pos]);
+    }
+}
+
 Test(check_word_syntax, label) {
-    cr_expect(asm_parser_is_label(":label"), ":label is a label");
-    cr_expect(asm_parser_is_label(":label_42"), ":label_42 is a label");
-    cr_expect(asm_parser_is_label(":42"), ":42 is a label");
-    cr_expect(!asm_parser_is_label(":LABEL_42"), ":LABEL_42 isn't a label");
-    cr_expect(!asm_parser_is_label(":"), ": isn't a label");
-    cr_expect(!asm_parser_is_label("4"), "42 isn't a label");
-    cr_expect(!asm_parser_is_label(""), "an empty string isn't a label");
-    cr_expect(!asm_parser_is_label(NULL), "NULL isn't a label");
+    for (asm_parser_label_colon_pos_t colon_pos = 0; colon_pos < LABEL_COLON_MAX; colon_pos++) {
+        cr_expect(!asm_parser_is_label(":LABEL_42", colon_pos), ":LABEL_42 isn't a label (%s)", colon_pos_name[colon_pos]);
+        cr_expect(!asm_parser_is_label(":", colon_pos), ": isn't a label (%s)", colon_pos_name[colon_pos]);
+        cr_expect(!asm_parser_is_label("", colon_pos), "an empty string isn't a label (%s)", colon_pos_name[colon_pos]);
+        cr_expect(!asm_parser_is_label(NULL, colon_pos), "NULL isn't a label (%s)", colon_pos_name[colon_pos]);
+    }
+    test_label(":label", LABEL_COLON_BEGIN);
+    test_label(":label_42", LABEL_COLON_BEGIN);
+    test_label(":42", LABEL_COLON_BEGIN);
+
+    test_label("label:", LABEL_COLON_END);
+    test_label("label_42:", LABEL_COLON_END);
+    test_label("42:", LABEL_COLON_END);
+
+    test_label("label", LABEL_COLON_NONE);
+    test_label("label_42", LABEL_COLON_NONE);
+    test_label("42", LABEL_COLON_NONE);
 }
 
 Test(check_word_syntax, direct_value) {
@@ -70,7 +94,7 @@ Test(check_word_syntax, registers) {
     cr_expect(!asm_parser_is_register(&buf[0]), "%s isn't a register", &buf[0]);
     cr_expect(!asm_parser_is_register("r0"), "r0 isn't a register");
     cr_expect(!asm_parser_is_register("R4"), "R4 isn't a register");
-    cr_expect(!asm_parser_is_label("r1x"), "r1x isn't a register");
+    cr_expect(!asm_parser_is_register("r1x"), "r1x isn't a register");
     cr_expect(!asm_parser_is_register("rg"), "rg isn't a register");
     cr_expect(!asm_parser_is_register("r"), "r isn't a register");
     cr_expect(!asm_parser_is_register(""), "an empty string isn't a register");

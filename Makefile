@@ -7,7 +7,7 @@
 
 ANALYZER	=
 SRC_COMPILE	=
-MAKE_FLAGS	= -s -j
+MAKE_FLAGS	= -s -j --no-print-directory
 
 .PHONY: all
 all: make_lib

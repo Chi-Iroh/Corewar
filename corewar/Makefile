@@ -5,7 +5,9 @@
 ## Makefile
 ##
 
-SRC = 	main.c
+SRC_NO_MAIN =
+
+SRC	=	$(SRC_NO_MAIN) main.c
 
 OBJ =   $(SRC:.c=.o)
 
@@ -58,11 +60,15 @@ clean_tests:
 tests: clean_tests
 	@if [[ "$(shell find ../tests/corewar -type f -name '*.c')" == "" ]];	\
 		then																\
-		echo "[COREWAR] No .c file in /tests/corewar directory - aborting.";\
-		exit 1;																\
+		echo "[COREWAR] No .c file in /tests/corewar directory.";			\
+	else																	\
+		echo [COREWAR] Building tests;										\
+		gcc -g3 $(SRC_NO_MAIN) ../tests/$(NAME)/*.c --coverage -lcriterion \
+			-DRUNNING_CRITERION_TESTS $(CFLAGS) $(LDFLAGS) -o $(NAME);		\
 	fi
-	@echo [COREWAR] Building tests
-	@gcc -g3 -o $(NAME)../tests/corewar/*.c --coverage -lcriterion $(LDFLAGS)
+
+.PHONY: run_tests
+run_tests: clean_tests tests
 	@echo "[COREWAR] Running tests :"
 	@./$(NAME)
 	@echo "[COREWAR] Writing line coverage log in corewar/line_coverage.log."
@@ -70,7 +76,6 @@ tests: clean_tests
 	@echo -n "[COREWAR] Writing branch coverage log in "
 	@echo "corewar/branch_coverage.log."
 	@gcovr --exclude tests/ --branches > branch_coverage.log
-
 
 $(NAME): $(OBJ)
 	@echo -------------

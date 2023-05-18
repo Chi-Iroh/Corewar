@@ -45,7 +45,7 @@
 
     typedef struct op_s {
         char *mnemonique;
-        char nbr_args;
+        unsigned char nbr_args;
         args_type_t type[MAX_ARGS_NUMBER];
         char code;
         int nbr_cycles;

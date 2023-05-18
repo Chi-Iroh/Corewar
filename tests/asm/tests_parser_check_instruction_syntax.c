@@ -43,7 +43,6 @@ Test(check_instruction_syntax, check_arg_type) {
     char buf[256] = { 0 };
     char *mnemonic_str = NULL;
     int type_val = 0;
-    char *arg_str = NULL;
 
     for (unsigned mnemonic = 0; mnemonic < LAST_OP; mnemonic++) {
         mnemonic_str = op_tab[mnemonic].mnemonique;
@@ -160,7 +159,7 @@ Test(check_instruction_syntax, check_instruction) {
             for (unsigned arg = 1; arg < op_tab[mnemonic].nbr_args; arg++) {
                 for (unsigned arg_type_index = 0; arg_type_index < ASM_PARSER_WORD_TYPES; arg_type_index++) {
                     if ((op_tab[mnemonic].type[arg - 1] & asm_parser_word_types[arg_type_index])) {
-                        instruction[arg]->word = arg_examples_ok[asm_parser_word_types[arg_type_index]][nok_example];
+                        instruction[arg]->word = arg_examples_nok[asm_parser_word_types[arg_type_index]][nok_example];
                     }
                 }
             }

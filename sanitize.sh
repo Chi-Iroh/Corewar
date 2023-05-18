@@ -20,6 +20,6 @@ if [[ "$1" != "asm" && "$1" != "corewar" ]]; then
 fi
 
 export ASAN_OPTIONS=halt_on_error=0
-make -C lib/ resanitize
-make -C $1 resanitize
+make --no-print-directory -C lib/ resanitize
+make --no-print-directory -C $1 resanitize
 $1/$1 ${@:2}

@@ -11,36 +11,11 @@
 #include <stdbool.h>
 #include "op.h"
 #include "asm_config.h"
+#include "asm_types.h"
 
-typedef struct asm_parser_instruction {
-    char *word;
-    struct asm_parser_instruction *next;
-    struct asm_parser_instruction *previous;
-} asm_parser_instruction_t;
-
-typedef struct asm_parser_line {
-    asm_parser_instruction_t *instruction;
-    struct asm_parser_line *next;
-    struct asm_parser_line *previous;
-} asm_parser_line_t;
-
-extern const asm_parser_instruction_t ASM_PARSER_EMPTY_INSTRUCTION;
-extern const asm_parser_line_t ASM_PARSER_EMPTY_LINE;
-
-/*
-    Don't change the value of PARSER_ERROR nor PARSER_OK !
-    Must match to boolean (0 = error, 1 = ok)
-*/
-typedef enum {
-    PARSER_ERROR = 0,
-    PARSER_OK = 1,
-    PARSER_COMMENT,
-    PARSER_END
-} asm_parser_status_t;
-
-void asm_parser_free_instruction
-    (asm_parser_instruction_t **instruction);
+void asm_parser_free_instruction(asm_parser_instruction_t **instruction);
 void asm_parser_free_line(asm_parser_line_t **line);
+void asm_parser_free_labels(asm_parser_label_t **labels);
 
 bool asm_parser_instruction_append_word
     (asm_parser_instruction_t *node, char *word);
@@ -50,15 +25,16 @@ void asm_parser_file_append_line
     (asm_parser_line_t *file, asm_parser_line_t *line);
 
 bool asm_parser_is_mnemonic(char *word);
-bool asm_parser_is_label(char *word);
+bool asm_parser_is_label(char *word, asm_parser_label_colon_pos_t color_pos);
 bool asm_parser_is_direct_value(char *word);
 bool asm_parser_is_indirect_value(char *word);
 bool asm_parser_is_register(char *word);
 
 bool asm_parser_add_line(char *line, asm_parser_line_t **file);
 bool asm_parser_is_instruction_header(asm_parser_instruction_t *instruction);
-void asm_parser_remove_operand_comma(asm_parser_line_t *file);
+void asm_parser_remove_operand_separator(asm_parser_line_t *file);
 asm_parser_line_t *asm_parse_file(char *filename);
+bool asm_parse_labels(asm_parser_line_t *file, asm_parser_label_t **labels);
 bool asm_parser_check_syntax(asm_parser_line_t *file);
 
 /*

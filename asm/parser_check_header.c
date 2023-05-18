@@ -28,11 +28,11 @@ bool asm_parser_is_instruction_header(asm_parser_instruction_t *instruction)
     bool status = false;
 
     RETURN_VALUE_IF(!instruction || !instruction->word, false);
-    if (my_strcmp(instruction->word, ".name") == 0 && !has_name) {
+    if (my_strcmp(instruction->word, NAME_CMD_STRING) == 0 && !has_name) {
         status = true;
         has_name = true;
     }
-    if (my_strcmp(instruction->word, ".comment") == 0 && !has_comment) {
+    if (my_strcmp(instruction->word,COMMENT_CMD_STRING) == 0 && !has_comment) {
         status = true;
         has_comment = true;
     }

@@ -9,11 +9,16 @@
 #include "../include/my_macros.h"
 #include "../include/asm.h"
 
+STATIC_FUNCTION bool asm_parser_is_arg_label(char *word)
+{
+    return asm_parser_is_label(word, LABEL_COLON_END);
+}
+
 bool (*asm_parser_syntax_functions[ARG_TYPE_MAX])(char*) = {
     [T_REG] = asm_parser_is_register,
     [T_DIR] = asm_parser_is_direct_value,
     [T_IND] = asm_parser_is_indirect_value,
-    [T_LAB] = asm_parser_is_label
+    [T_LAB] = asm_parser_is_arg_label
 };
 
 const unsigned asm_parser_word_types[ASM_PARSER_WORD_TYPES] = {
@@ -44,7 +49,7 @@ STATIC_FUNCTION unsigned asm_parser_op_tab_mnemonic_index(char *mnemonic)
 
 /*
 @brief
-    Checks if a mnemonic's i-th arg is an a legal type or not.
+    Checks if a mnemonic's i-th arg is in a legal type or not.
 @param
     arg is the argument string
     arg_i is the index of the arg (2nd arg <-> arg_i = 1)
@@ -111,6 +116,16 @@ STATIC_FUNCTION bool asm_parser_check_instruction_syntax
     return instruction == NULL;
 }
 
+STATIC_FUNCTION asm_parser_instruction_t *asm_parser_syntax_skip_labels
+    (asm_parser_instruction_t *instruction)
+{
+    RETURN_VALUE_IF(!instruction, NULL);
+    while (instruction && asm_parser_is_label(instruction->word, LABEL_COLON_BEGIN)) {
+        instruction = instruction->next;
+    }
+    return instruction;
+}
+
 /*
 @brief
     Checks if a file's syntax is OK.
@@ -121,15 +136,20 @@ STATIC_FUNCTION bool asm_parser_check_instruction_syntax
 */
 bool asm_parser_check_syntax(asm_parser_line_t *file)
 {
+    asm_parser_instruction_t *after_labels = file ? file->instruction : NULL;
     bool status = false;
 
     RETURN_VALUE_IF(!file, false);
-    asm_parser_remove_operand_comma(file);
+    asm_parser_remove_operand_separator(file);
     while (file) {
-        status = asm_parser_is_instruction_header(file->instruction);
-        status |= asm_parser_check_instruction_syntax(file->instruction);
-        if (!status) {
-            return false;
+        while (after_labels &&
+            asm_parser_is_label(after_labels->word, LABEL_COLON_BEGIN)) {
+            after_labels = after_labels->next;
+        }
+        if (after_labels) {
+            status = asm_parser_is_instruction_header(after_labels);
+            status |= asm_parser_check_instruction_syntax(after_labels);
+            RETURN_VALUE_IF(!status, false);
         }
         file = file->next;
     }
