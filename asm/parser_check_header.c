@@ -9,8 +9,8 @@
 #include "../include/my_macros.h"
 #include "../include/asm.h"
 
-STATIC_FUNCTION bool asm_parser_is_instruction_string
-    (asm_parser_instruction_t *instruction)
+STATIC_FUNCTION bool parser_is_instruction_string
+    (parser_instruction_t *instruction)
 {
     bool status = true;
 
@@ -21,7 +21,7 @@ STATIC_FUNCTION bool asm_parser_is_instruction_string
     return status;
 }
 
-bool asm_parser_is_instruction_header(asm_parser_instruction_t *instruction)
+bool parser_is_instruction_header(parser_instruction_t *instruction)
 {
     static bool has_name = false;
     static bool has_comment = false;
@@ -36,6 +36,6 @@ bool asm_parser_is_instruction_header(asm_parser_instruction_t *instruction)
         status = true;
         has_comment = true;
     }
-    status = status && asm_parser_is_instruction_string(instruction->next);
+    status = status && parser_is_instruction_string(instruction->next);
     return status;
 }

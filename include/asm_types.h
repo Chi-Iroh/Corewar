@@ -7,27 +7,27 @@
 
 #pragma once
 
-typedef struct asm_parser_instruction {
+typedef struct parser_instruction {
     char *word;
-    struct asm_parser_instruction *next;
-    struct asm_parser_instruction *previous;
-} asm_parser_instruction_t;
+    struct parser_instruction *next;
+    struct parser_instruction *previous;
+} parser_instruction_t;
 
-typedef struct asm_parser_line {
-    asm_parser_instruction_t *instruction;
-    struct asm_parser_line *next;
-    struct asm_parser_line *previous;
-} asm_parser_line_t;
+typedef struct parser_line {
+    parser_instruction_t *instruction;
+    struct parser_line *next;
+    struct parser_line *previous;
+} parser_line_t;
 
-typedef struct asm_parser_label {
+typedef struct parser_label {
     char *name;
-    asm_parser_instruction_t *line;
-    struct asm_parser_label *next;
-    struct asm_parser_label *previous;
-} asm_parser_label_t;
+    parser_instruction_t *line;
+    struct parser_label *next;
+    struct parser_label *previous;
+} parser_label_t;
 
-extern const asm_parser_instruction_t ASM_PARSER_EMPTY_INSTRUCTION;
-extern const asm_parser_line_t ASM_PARSER_EMPTY_LINE;
+extern const parser_instruction_t PARSER_EMPTY_INSTRUCTION;
+extern const parser_line_t PARSER_EMPTY_LINE;
 
 /*
     Don't change the value of PARSER_ERROR nor PARSER_OK !
@@ -38,11 +38,11 @@ typedef enum {
     PARSER_OK = 1,
     PARSER_COMMENT,
     PARSER_END
-} asm_parser_status_t;
+} parser_status_t;
 
 typedef enum {
     LABEL_COLON_BEGIN,
     LABEL_COLON_END,
     LABEL_COLON_NONE,
     LABEL_COLON_MAX
-} asm_parser_label_colon_pos_t;
+} parser_label_colon_pos_t;

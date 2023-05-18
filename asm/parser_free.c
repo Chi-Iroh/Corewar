@@ -11,16 +11,16 @@
 
 /*
 @brief
-    Properly frees an instruction (asm_parser_instruction_t linked list).
+    Properly frees an instruction (parser_instruction_t linked list).
     instruction should be the address of an existing instruction linked list.
 @note
     If *instruction isn't the first node, goes back to free from the very
     first node.
     If instruction or *instruction is NULL, returns.
 */
-void asm_parser_free_instruction(asm_parser_instruction_t **instruction)
+void parser_free_instruction(parser_instruction_t **instruction)
 {
-    asm_parser_instruction_t *copy_next = NULL;
+    parser_instruction_t *copy_next = NULL;
 
     RETURN_IF(!instruction || !(*instruction));
     while ((*instruction)->previous) {
@@ -36,7 +36,7 @@ void asm_parser_free_instruction(asm_parser_instruction_t **instruction)
 
 /*
 @brief
-    Properly frees a line (asm_parser_line_t linked list).
+    Properly frees a line (parser_line_t linked list).
 @param
     line should be the address of an existing line linked list.
 @note
@@ -44,9 +44,9 @@ void asm_parser_free_instruction(asm_parser_instruction_t **instruction)
 @note
     If line or *line is NULL, returns.
 */
-void asm_parser_free_line(asm_parser_line_t **line)
+void parser_free_line(parser_line_t **line)
 {
-    asm_parser_line_t *copy_next = NULL;
+    parser_line_t *copy_next = NULL;
 
     RETURN_IF(!line || !(*line));
     while ((*line)->previous) {
@@ -54,7 +54,7 @@ void asm_parser_free_line(asm_parser_line_t **line)
     }
     while (*line) {
         copy_next = (*line)->next;
-        asm_parser_free_instruction(&(*line)->instruction);
+        parser_free_instruction(&(*line)->instruction);
         free(*line);
         *line = copy_next;
     }
@@ -71,9 +71,9 @@ void asm_parser_free_line(asm_parser_line_t **line)
 @note
     If labels or *labels is NULL, returns;
 */
-void asm_parser_free_labels(asm_parser_label_t **labels)
+void parser_free_labels(parser_label_t **labels)
 {
-    asm_parser_label_t *copy_next = NULL;
+    parser_label_t *copy_next = NULL;
 
     RETURN_IF(!labels || !(*labels));
     while ((*labels)->previous) {

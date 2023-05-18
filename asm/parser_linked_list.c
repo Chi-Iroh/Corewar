@@ -23,11 +23,11 @@
 @returns
     false if an error occured or node is NULL.
 */
-bool asm_parser_instruction_append_word
-    (asm_parser_instruction_t *node, char *word)
+bool parser_instruction_append_word
+    (parser_instruction_t *node, char *word)
 {
-    asm_parser_instruction_t *const new_node = node ?
-        malloc(sizeof(asm_parser_instruction_t)) : NULL;
+    parser_instruction_t *const new_node = node ?
+        malloc(sizeof(parser_instruction_t)) : NULL;
 
     RETURN_VALUE_IF(!new_node, false);
     while (node->next) {
@@ -56,10 +56,10 @@ bool asm_parser_instruction_append_word
 @note
     Does nothing if instruction or node is NULL.
 */
-void asm_parser_line_append_instruction
-    (asm_parser_instruction_t **node, asm_parser_instruction_t *instruction)
+void parser_line_append_instruction
+    (parser_instruction_t **node, parser_instruction_t *instruction)
 {
-    asm_parser_instruction_t *end = node ? *node : NULL;
+    parser_instruction_t *end = node ? *node : NULL;
 
     RETURN_IF(!node || !instruction);
     if (!(*node)) {
@@ -89,8 +89,8 @@ void asm_parser_line_append_instruction
 @note
     Does nothing if file or line is NULL.
 */
-void asm_parser_file_append_line
-    (asm_parser_line_t *file, asm_parser_line_t *line)
+void parser_file_append_line
+    (parser_line_t *file, parser_line_t *line)
 {
     RETURN_IF(!file || !line);
     while (file->next) {

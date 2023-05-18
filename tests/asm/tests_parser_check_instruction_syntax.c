@@ -79,7 +79,7 @@ Test(check_instruction_syntax, check_arg_type) {
 }
 
 Test(check_instruction_syntax, check_instruction) {
-    char *arg_types[PARAMETER_MAX] = {
+    [[maybe_unused]] char *arg_types[PARAMETER_MAX] = {
         [PARAMETER_DIRECT] = "Direct",
         [PARAMETER_INDIRECT] = "Indirect",
         [PARAMETER_LABEL] = "Label",

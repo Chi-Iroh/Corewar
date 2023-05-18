@@ -17,7 +17,7 @@
 @returns
     false if either word is NULL or isn't a mnemonic, otherwise true.
 */
-bool asm_parser_is_mnemonic(char *word)
+bool parser_is_mnemonic(char *word)
 {
     RETURN_VALUE_IF(!word, false);
     for (unsigned i = 0; i < LAST_OP; i++) {
@@ -39,7 +39,7 @@ bool asm_parser_is_mnemonic(char *word)
 @returns
     false if either word is NULL or isn't a label, otherwise true.
 */
-bool asm_parser_is_label(char *word, asm_parser_label_colon_pos_t colon_pos)
+bool parser_is_label(char *word, parser_label_colon_pos_t colon_pos)
 {
     size_t i = 0;
     char c = word ? word[0] : '\0';
@@ -68,7 +68,7 @@ bool asm_parser_is_label(char *word, asm_parser_label_colon_pos_t colon_pos)
 @returns
     false if either word is NULL or isn't a direct value, otherwise true.
 */
-bool asm_parser_is_direct_value(char *word)
+bool parser_is_direct_value(char *word)
 {
     const bool begins_with_percent = word ? word[0] == DIRECT_CHAR : false;
 
@@ -76,7 +76,7 @@ bool asm_parser_is_direct_value(char *word)
     if (word[1] && !str_find_not_pred(&word[1], my_isdigit)) {
         return true;
     }
-    return asm_parser_is_label(&word[1], LABEL_COLON_BEGIN);
+    return parser_is_label(&word[1], LABEL_COLON_BEGIN);
 }
 
 /*
@@ -87,13 +87,13 @@ bool asm_parser_is_direct_value(char *word)
 @returns
     false if either word is NULL or isn't an indirect value, otherwise true.
 */
-bool asm_parser_is_indirect_value(char *word)
+bool parser_is_indirect_value(char *word)
 {
     RETURN_VALUE_IF(!word || !word[0], false);
     if (!str_find_not_pred(word, my_isdigit)) {
         return true;
     }
-    return asm_parser_is_label(word, LABEL_COLON_BEGIN);
+    return parser_is_label(word, LABEL_COLON_BEGIN);
 }
 
 /*
@@ -104,7 +104,7 @@ bool asm_parser_is_indirect_value(char *word)
 @returns
     false if either word is NULL or isn't a register, otherwise true.
 */
-bool asm_parser_is_register(char *word)
+bool parser_is_register(char *word)
 {
     const bool status = word && word[0] == 'r' && word[1];
     const intmax_t n = status ? my_getnbr(&word[1]) : 0;

@@ -11,24 +11,24 @@
 
 /*
 \brief
-    Wraps the function asm_parser_is_label with a "default value", to be used
+    Wraps the function parser_is_label with a "default value", to be used
         in the below array of function pointers.
 \note
-    Exactly the same as asm_parser_is_label(word, LABEL_COLON_END)
+    Exactly the same as parser_is_label(word, LABEL_COLON_END)
 */
-STATIC_FUNCTION bool asm_parser_is_arg_label(char *word)
+STATIC_FUNCTION bool parser_is_arg_label(char *word)
 {
-    return asm_parser_is_label(word, LABEL_COLON_END);
+    return parser_is_label(word, LABEL_COLON_END);
 }
 
-bool (*asm_parser_syntax_functions[PARAMETER_MAX])(char*) = {
-    [PARAMETER_REGISTER] = asm_parser_is_register,
-    [PARAMETER_DIRECT] = asm_parser_is_direct_value,
-    [PARAMETER_INDIRECT] = asm_parser_is_indirect_value,
-    [PARAMETER_LABEL] = asm_parser_is_arg_label
+bool (*parser_syntax_functions[PARAMETER_MAX])(char*) = {
+    [PARAMETER_REGISTER] = parser_is_register,
+    [PARAMETER_DIRECT] = parser_is_direct_value,
+    [PARAMETER_INDIRECT] = parser_is_indirect_value,
+    [PARAMETER_LABEL] = parser_is_arg_label
 };
 
-const unsigned asm_parser_word_types[ASM_PARSER_WORD_TYPES] = {
+const unsigned parser_word_types[PARSER_WORD_TYPES] = {
     PARAMETER_REGISTER,
     PARAMETER_DIRECT,
     PARAMETER_INDIRECT,
@@ -43,7 +43,7 @@ const unsigned asm_parser_word_types[ASM_PARSER_WORD_TYPES] = {
 @returns
     N_OP if not found (op_tab's size), otherwise its index
 */
-STATIC_FUNCTION unsigned asm_parser_op_tab_mnemonic_index(char *mnemonic)
+STATIC_FUNCTION unsigned parser_op_tab_mnemonic_index(char *mnemonic)
 {
     RETURN_VALUE_IF(!mnemonic, N_OP);
     for (unsigned i = 0; i < LAST_OP; i++) {
@@ -64,7 +64,7 @@ STATIC_FUNCTION unsigned asm_parser_op_tab_mnemonic_index(char *mnemonic)
 @returns
     true if arg is in a legal type, otherwise false
 */
-STATIC_FUNCTION bool asm_parser_is_arg_type_ok
+STATIC_FUNCTION bool parser_is_arg_type_ok
 (char *arg, unsigned arg_i, unsigned op_tab_index)
 {
     op_t *const instruction = &op_tab[op_tab_index];
@@ -74,12 +74,12 @@ STATIC_FUNCTION bool asm_parser_is_arg_type_ok
     if (arg_i == 0) {
         return my_strcmp(instruction->mnemonique, arg) == 0;
     }
-    for (unsigned j = 0; j < ASM_PARSER_WORD_TYPES; j++) {
-        parser_word_type = asm_parser_word_types[j];
+    for (unsigned j = 0; j < PARSER_WORD_TYPES; j++) {
+        parser_word_type = parser_word_types[j];
         if (!(instruction->type[arg_i - 1] & parser_word_type)) {
             continue;
         }
-        if (asm_parser_syntax_functions[parser_word_type](arg)) {
+        if (parser_syntax_functions[parser_word_type](arg)) {
             return true;
         }
     }
@@ -99,15 +99,15 @@ STATIC_FUNCTION bool asm_parser_is_arg_type_ok
     If instruction isn't NULL, it means that it is connected with another node
     we don't want.
 */
-STATIC_FUNCTION bool asm_parser_check_instruction_syntax
-    (asm_parser_instruction_t *instruction)
+STATIC_FUNCTION bool parser_check_instruction_syntax
+    (parser_instruction_t *instruction)
 {
     unsigned index = 0;
     unsigned nb_args = 0;
 
     RETURN_VALUE_IF(!instruction || !instruction->word, false);
-    RETURN_VALUE_IF(!asm_parser_is_mnemonic(instruction->word), false);
-    index = asm_parser_op_tab_mnemonic_index(instruction->word);
+    RETURN_VALUE_IF(!parser_is_mnemonic(instruction->word), false);
+    index = parser_op_tab_mnemonic_index(instruction->word);
     RETURN_VALUE_IF(index == N_OP, false);
     instruction = instruction->next;
     nb_args = op_tab[index].nbr_args;
@@ -115,7 +115,7 @@ STATIC_FUNCTION bool asm_parser_check_instruction_syntax
         if (!instruction) {
             return false;
         }
-        if (!asm_parser_is_arg_type_ok(instruction->word, i, index)) {
+        if (!parser_is_arg_type_ok(instruction->word, i, index)) {
             return false;
         }
         instruction = instruction->next;
@@ -131,22 +131,22 @@ STATIC_FUNCTION bool asm_parser_check_instruction_syntax
 @returns
     true if syntax is ok, false otherwise (or if file is NULL).
 */
-bool asm_parser_check_syntax(asm_parser_line_t *file)
+bool parser_check_syntax(parser_line_t *file)
 {
-    asm_parser_instruction_t *after_labels = file ? file->instruction : NULL;
+    parser_instruction_t *after_labels = file ? file->instruction : NULL;
     bool status = false;
 
     RETURN_VALUE_IF(!file, false);
-    asm_parser_remove_operand_separator(file);
+    parser_remove_operand_separator(file);
     while (file) {
         after_labels = file->instruction;
         while (after_labels &&
-            asm_parser_is_label(after_labels->word, LABEL_COLON_END)) {
+            parser_is_label(after_labels->word, LABEL_COLON_END)) {
             after_labels = after_labels->next;
         }
         if (after_labels) {
-            status = asm_parser_is_instruction_header(after_labels);
-            status |= asm_parser_check_instruction_syntax(after_labels);
+            status = parser_is_instruction_header(after_labels);
+            status |= parser_check_instruction_syntax(after_labels);
             RETURN_VALUE_IF(!status, false);
         }
         file = file->next;

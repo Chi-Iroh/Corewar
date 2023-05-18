@@ -11,26 +11,26 @@
 #include "../include/asm.h"
 
 STATIC_FUNCTION void free_main
-    (asm_parser_line_t **file, asm_parser_label_t **labels)
+    (parser_line_t **file, parser_label_t **labels)
 {
-    asm_parser_free_line(file);
-    asm_parser_free_labels(labels);
+    parser_free_line(file);
+    parser_free_labels(labels);
 }
 
 int main(int argc, char *argv[])
 {
     RETURN_VALUE_IF(!argv[1], 84);
-    asm_parser_line_t *file = asm_parse_file(argv[1]);
-    asm_parser_line_t *const file_copy = file;
-    asm_parser_instruction_t *instruction = file->instruction;
-    asm_parser_label_t *labels = NULL;
+    parser_line_t *file = parse_file(argv[1]);
+    parser_line_t *const file_copy = file;
+    parser_instruction_t *instruction = file->instruction;
+    parser_label_t *labels = NULL;
 
     RETURN_VALUE_IF(!file || !instruction, 84);
-    if (!asm_parse_labels(file, &labels)) {
+    if (!parse_labels(file, &labels)) {
         free_main(&file, &labels);
         return 84;
     }
-    my_printf("Syntax %s\n", asm_parser_check_syntax(file) ? "OK" : "KO");
+    my_printf("Syntax %s\n", parser_check_syntax(file) ? "OK" : "KO");
     while (file) {
         instruction = file->instruction;
         while (instruction) {
