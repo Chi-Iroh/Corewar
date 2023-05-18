@@ -132,6 +132,7 @@ bool asm_parser_check_syntax(asm_parser_line_t *file)
     RETURN_VALUE_IF(!file, false);
     asm_parser_remove_operand_separator(file);
     while (file) {
+        after_labels = file->instruction;
         while (after_labels &&
             asm_parser_is_label(after_labels->word, LABEL_COLON_BEGIN)) {
             after_labels = after_labels->next;
