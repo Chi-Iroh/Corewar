@@ -116,16 +116,6 @@ STATIC_FUNCTION bool asm_parser_check_instruction_syntax
     return instruction == NULL;
 }
 
-STATIC_FUNCTION asm_parser_instruction_t *asm_parser_syntax_skip_labels
-    (asm_parser_instruction_t *instruction)
-{
-    RETURN_VALUE_IF(!instruction, NULL);
-    while (instruction && asm_parser_is_label(instruction->word, LABEL_COLON_BEGIN)) {
-        instruction = instruction->next;
-    }
-    return instruction;
-}
-
 /*
 @brief
     Checks if a file's syntax is OK.
