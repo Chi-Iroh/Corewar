@@ -7,7 +7,7 @@
 
 #include "../include/my.h"
 #include "../include/my_macros.h"
-#include "../include/asm.h"
+#include "../include/asm/asm.h"
 
 STATIC_FUNCTION bool parser_is_arg_label(char *word);
 

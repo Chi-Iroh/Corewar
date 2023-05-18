@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include "../include/my_macros.h"
 #include "../include/my.h"
-#include "../include/asm.h"
+#include "../include/asm/asm.h"
 
 STATIC_FUNCTION void free_main
     (parser_line_t **file, parser_label_t **labels)

@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2023
 ** asm_config.h
 ** File description:
-** -> Config header for build / tests
+** -> Config header for VM build / tests
 */
 
 #pragma once

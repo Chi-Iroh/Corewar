@@ -5,7 +5,7 @@
 ** -> Remove trailing comma after each operand
 */
 
-#include "../include/asm.h"
+#include "../include/asm/asm.h"
 #include "../include/my.h"
 
 STATIC_FUNCTION void parser_remove_single_instruction_separator

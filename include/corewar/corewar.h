@@ -9,7 +9,8 @@
 
 #include <limits.h>
 #include <stdint.h>
-#include "op.h"
+#include "corewar_config.h"
+#include "../op.h"
 
 #if REG_SIZE == 1
     typedef uint8_t register_t;

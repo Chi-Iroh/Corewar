@@ -9,7 +9,7 @@
 
 #include <stddef.h>
 #include <stdbool.h>
-#include "op.h"
+#include "../op.h"
 #include "asm_config.h"
 #include "asm_types.h"
 

@@ -5,7 +5,8 @@
 ** -> Corewar main
 */
 
-#include "../include/corewar.h"
+#include "../include/corewar/corewar.h"
+
 
 int main(void)
 {

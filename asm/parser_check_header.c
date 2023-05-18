@@ -7,7 +7,7 @@
 
 #include "../include/my.h"
 #include "../include/my_macros.h"
-#include "../include/asm.h"
+#include "../include/asm/asm.h"
 
 STATIC_FUNCTION bool parser_is_instruction_string
     (parser_instruction_t *instruction)

@@ -10,7 +10,7 @@
 #include <errno.h>
 #include "../include/my.h"
 #include "../include/my_macros.h"
-#include "../include/asm.h"
+#include "../include/asm/asm.h"
 
 const parser_line_t PARSER_EMPTY_LINE = {
     .instruction = NULL,

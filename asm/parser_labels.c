@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include "../include/my.h"
 #include "../include/my_macros.h"
-#include "../include/asm.h"
+#include "../include/asm/asm.h"
 
 /*STATIC_FUNCTION void parser_free_single_instruction
     (parser_instruction_t **instruction, bool free_word)
