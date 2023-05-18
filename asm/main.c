@@ -34,11 +34,24 @@ int main(int argc, char *argv[])
     while (file) {
         instruction = file->instruction;
         while (instruction) {
-            my_printf("%s ", instruction->word);
+            my_printf("%p : %s\n", instruction, instruction->word);
             instruction = instruction->next;
+            if (instruction) {
+                my_putchar('\t');
+            }
         }
         my_putchar('\n');
         file = file->next;
+    }
+    while (labels) {
+        printf("%p : LABEL %s\n", labels->line, labels->name);
+        if (!labels->next) {
+            break;
+        }
+        labels = labels->next;
+    }
+    while (labels->previous) {
+        labels = labels->previous;
     }
     file = file_copy;
     free_main(&file, &labels);
