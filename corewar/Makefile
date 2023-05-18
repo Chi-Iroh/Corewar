@@ -5,7 +5,9 @@
 ## Makefile
 ##
 
-SRC_NO_MAIN = op.c
+SRC_NO_MAIN = \
+	op.c \
+	champion_linked_list.c
 
 SRC	=	$(SRC_NO_MAIN) main.c
 

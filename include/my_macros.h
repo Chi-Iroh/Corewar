@@ -8,6 +8,16 @@
 #pragma once
 #include <stddef.h>
 
+#ifdef STRINGIFY_IMPL
+    #undef STRINGIFY_IMPL
+#endif
+#define STRINGIFY_IMPL(...) #__VA_ARGS__
+
+#ifdef STRINGIFY
+    #undef STRINGIFY
+#endif
+#define STRINGIFY(...) STRINGIFY_IMPL(__VA_ARGS__)
+
 #ifdef ABS
     #undef ABS
 #endif
@@ -27,6 +37,15 @@
     #undef UNSIGNED_ABS
 #endif
 #define UNSIGNED_ABS(n1, n2) (ABS(MAX(n1, n2) - MIN(n1, n2)))
+
+#ifdef FREE_CONST_IF_ALLOCATED
+    #undef FREE_CONST_IF_ALLOCATED
+#endif
+#define FREE_CONST_IF_ALLOCATED(ptr, destructor) {  \
+    if (ptr) {                                      \
+        (destructor)(ptr);                          \
+    }                                               \
+}
 
 #ifdef FREE_IF_ALLOCATED
     #undef FREE_IF_ALLOCATED

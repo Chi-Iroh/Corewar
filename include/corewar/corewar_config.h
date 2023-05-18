@@ -42,8 +42,3 @@
 #else
     #define STATIC_FUNCTION static
 #endif
-
-#ifdef ALWAYS_STATIC
-    #undef ALWAYS_STATIC
-#endif
-#define ALWAYS_STATIC static
