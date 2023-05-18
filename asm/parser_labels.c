@@ -57,7 +57,8 @@ STATIC_FUNCTION bool asm_parser_init_label
 }
 
 STATIC_FUNCTION bool asm_parser_add_label
-    (asm_parser_label_t **label, asm_parser_instruction_t **instruction, asm_parser_line_t *line)
+    (asm_parser_label_t **label, asm_parser_instruction_t **instruction,
+    asm_parser_line_t *line)
 {
     asm_parser_label_t *node = label && instruction && *instruction ?
         malloc(sizeof(asm_parser_label_t)) : NULL;
@@ -87,7 +88,8 @@ STATIC_FUNCTION bool asm_parse_line_labels
 
     RETURN_VALUE_IF(!single_line || !(*single_line) || !label, false);
     instruction = &(*single_line)->instruction;
-    while (*instruction && status && asm_parser_is_label((*instruction)->word, LABEL_COLON_END)) {
+    while (*instruction && status &&
+        asm_parser_is_label((*instruction)->word, LABEL_COLON_END)) {
         copy_next = (*instruction)->next;
         status &= asm_parser_add_label(label, instruction, *single_line);
         *instruction = copy_next;

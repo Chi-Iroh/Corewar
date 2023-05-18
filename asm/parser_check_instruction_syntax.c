@@ -9,23 +9,30 @@
 #include "../include/my_macros.h"
 #include "../include/asm.h"
 
+/*
+\brief
+    Wraps the function asm_parser_is_label with a "default value", to be used
+        in the below array of function pointers.
+\note
+    Exactly the same as asm_parser_is_label(word, LABEL_COLON_END)
+*/
 STATIC_FUNCTION bool asm_parser_is_arg_label(char *word)
 {
     return asm_parser_is_label(word, LABEL_COLON_END);
 }
 
-bool (*asm_parser_syntax_functions[ARG_TYPE_MAX])(char*) = {
-    [T_REG] = asm_parser_is_register,
-    [T_DIR] = asm_parser_is_direct_value,
-    [T_IND] = asm_parser_is_indirect_value,
-    [T_LAB] = asm_parser_is_arg_label
+bool (*asm_parser_syntax_functions[PARAMETER_MAX])(char*) = {
+    [PARAMETER_REGISTER] = asm_parser_is_register,
+    [PARAMETER_DIRECT] = asm_parser_is_direct_value,
+    [PARAMETER_INDIRECT] = asm_parser_is_indirect_value,
+    [PARAMETER_LABEL] = asm_parser_is_arg_label
 };
 
 const unsigned asm_parser_word_types[ASM_PARSER_WORD_TYPES] = {
-    T_REG,
-    T_DIR,
-    T_IND,
-    T_LAB
+    PARAMETER_REGISTER,
+    PARAMETER_DIRECT,
+    PARAMETER_INDIRECT,
+    PARAMETER_LABEL
 };
 
 /*

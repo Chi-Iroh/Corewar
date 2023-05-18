@@ -32,16 +32,14 @@
 
     typedef char args_type_t;
 
-    // register
-    #define T_REG           1
-    // direct (ld #1, r1 = put 1 into r1)
-    #define T_DIR           2
-    // indirect (ld 1, r1 = put what's in the address (1+pc) into r1 (4bytes))
-    #define T_IND           4
 
-    // Label
-    #define T_LAB           8
-    #define ARG_TYPE_MAX (T_LAB + 1)
+    typedef enum {
+        PARAMETER_REGISTER = 1 << 0,
+        PARAMETER_DIRECT = 1 << 1,
+        PARAMETER_INDIRECT = 1 << 2,
+        PARAMETER_LABEL = 1 << 3,
+        PARAMETER_MAX = 1 + (1 << 3)
+    } asm_parameter_t;
 
     typedef struct op_s {
         char *mnemonique;

@@ -28,17 +28,17 @@ Test(check_instruction_syntax, get_mnemonic_index) {
 }
 
 Test(check_instruction_syntax, check_arg_type) {
-    char *arg_types[ARG_TYPE_MAX] = {
-        [T_DIR] = "T_DIR",
-        [T_IND] = "T_IND",
-        [T_LAB] = "T_LAB",
-        [T_REG] = "T_REG"
+    char *arg_types[PARAMETER_MAX] = {
+        [PARAMETER_DIRECT] = "PARAMETER_DIRECT",
+        [PARAMETER_INDIRECT] = "PARAMETER_INDIRECT",
+        [PARAMETER_LABEL] = "PARAMETER_LABEL",
+        [PARAMETER_REGISTER] = "PARAMETER_REGISTER"
     };
-    char *arg_examples[ARG_TYPE_MAX][4] = {
-        [T_DIR] = { "%142", "%49", "%:goto_is_fun", "%:helloworld" },
-        [T_IND] = { "139", ":goto_is_fun", ":helloworld", "0" },
-        [T_LAB] = { "label", "goto_is_fun", "helloworld", "coredumped" },
-        [T_REG] = { "r1", "r5", "r8", REG_MAX_STR }
+    char *arg_examples[PARAMETER_MAX][4] = {
+        [PARAMETER_DIRECT] = { "%142", "%49", "%:goto_is_fun", "%:helloworld" },
+        [PARAMETER_INDIRECT] = { "139", ":goto_is_fun", ":helloworld", "0" },
+        [PARAMETER_LABEL] = { "label", "goto_is_fun", "helloworld", "coredumped" },
+        [PARAMETER_REGISTER] = { "r1", "r5", "r8", REG_MAX_STR }
     };
     char buf[256] = { 0 };
     char *mnemonic_str = NULL;
@@ -79,23 +79,23 @@ Test(check_instruction_syntax, check_arg_type) {
 }
 
 Test(check_instruction_syntax, check_instruction) {
-    char *arg_types[ARG_TYPE_MAX] = {
-        [T_DIR] = "T_DIR",
-        [T_IND] = "T_IND",
-        [T_LAB] = "T_LAB",
-        [T_REG] = "T_REG"
+    char *arg_types[PARAMETER_MAX] = {
+        [PARAMETER_DIRECT] = "Direct",
+        [PARAMETER_INDIRECT] = "Indirect",
+        [PARAMETER_LABEL] = "Label",
+        [PARAMETER_REGISTER] = "Register"
     };
-    char *arg_examples_ok[ARG_TYPE_MAX][4] = {
-        [T_DIR] = { "%142", "%49", "%:goto_is_fun", "%:helloworld" },
-        [T_IND] = { "139", ":goto_is_fun", ":helloworld", "0" },
-        [T_LAB] = { "label", "goto_is_fun", "helloworld", "coredumped" },
-        [T_REG] = { "r1", "r5", "r8", REG_MAX_STR }
+    char *arg_examples_ok[PARAMETER_MAX][4] = {
+        [PARAMETER_DIRECT] = { "%142", "%49", "%:goto_is_fun", "%:helloworld" },
+        [PARAMETER_INDIRECT] = { "139", ":goto_is_fun", ":helloworld", "0" },
+        [PARAMETER_LABEL] = { "label", "goto_is_fun", "helloworld", "coredumped" },
+        [PARAMETER_REGISTER] = { "r1", "r5", "r8", REG_MAX_STR }
     };
-    char *arg_examples_nok[ARG_TYPE_MAX][4] = {
-        [T_DIR] = { "142", "%:49", ":goto_is_fun", REG_MAX_STR },
-        [T_IND] = { "%139", "r1", "%:helloworld", "%:0" },
-        [T_LAB] = { ":label", "%:goto_is_fun", "r3", "%49" },
-        [T_REG] = { "%4", ":hello", "%:world", "45" }
+    char *arg_examples_nok[PARAMETER_MAX][4] = {
+        [PARAMETER_DIRECT] = { "142", "%:49", ":goto_is_fun", REG_MAX_STR },
+        [PARAMETER_INDIRECT] = { "%139", "r1", "%:helloworld", "%:0" },
+        [PARAMETER_LABEL] = { ":label", "%:goto_is_fun", "r3", "%49" },
+        [PARAMETER_REGISTER] = { "%4", ":hello", "%:world", "45" }
     };
     asm_parser_instruction_t arg4;
     asm_parser_instruction_t arg3;

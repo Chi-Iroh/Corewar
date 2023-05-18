@@ -39,7 +39,8 @@ bool asm_parser_check_syntax(asm_parser_line_t *file);
 
 /*
 @brief
-    Number of types (register, label... -> T_REG, T_LAB ...)
+    Number of types
+        (register, label... -> PARAMETER_REGISTER, PARAMETER_LABEL...)
 @note
     Macro because a const variable cannot be used as a static array length.
 @note
@@ -48,5 +49,5 @@ bool asm_parser_check_syntax(asm_parser_line_t *file);
 */
 #define ASM_PARSER_WORD_TYPES 4
 
-extern bool (*asm_parser_syntax_functions[ARG_TYPE_MAX])(char*);
+extern bool (*asm_parser_syntax_functions[PARAMETER_MAX])(char*);
 extern const unsigned asm_parser_word_types[4];

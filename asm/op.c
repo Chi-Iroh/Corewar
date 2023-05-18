@@ -12,7 +12,9 @@ op_t op_tab[N_OP] = {
     {
         .mnemonique = "live",
         .nbr_args = 1,
-        .type = {T_DIR},
+        .type = {
+            PARAMETER_DIRECT
+        },
         .code = 1,
         .nbr_cycles = 10,
         .comment = "alive"
@@ -20,7 +22,10 @@ op_t op_tab[N_OP] = {
     {
         .mnemonique = "ld",
         .nbr_args = 2,
-        .type = {T_DIR | T_IND, T_REG},
+        .type = {
+            PARAMETER_DIRECT | PARAMETER_INDIRECT,
+            PARAMETER_REGISTER
+        },
         .code = 2,
         .nbr_cycles = 5,
         .comment = "load"
@@ -28,7 +33,10 @@ op_t op_tab[N_OP] = {
     {
         .mnemonique = "st",
         .nbr_args = 2,
-        .type = {T_REG, T_IND | T_REG},
+        .type = {
+            PARAMETER_REGISTER,
+            PARAMETER_INDIRECT | PARAMETER_REGISTER
+        },
         .code = 3,
         .nbr_cycles = 5,
         .comment = "store"
@@ -36,7 +44,11 @@ op_t op_tab[N_OP] = {
     {
         .mnemonique = "add",
         .nbr_args = 3,
-        .type = {T_REG, T_REG, T_REG},
+        .type = {
+            PARAMETER_REGISTER,
+            PARAMETER_REGISTER,
+            PARAMETER_REGISTER
+        },
         .code = 4,
         .nbr_cycles = 10,
         .comment = "addition"
@@ -44,7 +56,11 @@ op_t op_tab[N_OP] = {
     {
         .mnemonique = "sub",
         .nbr_args = 3,
-        .type = {T_REG, T_REG, T_REG},
+        .type = {
+            PARAMETER_REGISTER,
+            PARAMETER_REGISTER,
+            PARAMETER_REGISTER
+        },
         .code = 5,
         .nbr_cycles = 10,
         .comment = "soustraction"
@@ -52,7 +68,11 @@ op_t op_tab[N_OP] = {
     {
         .mnemonique = "and",
         .nbr_args = 3,
-        .type = {T_REG | T_DIR | T_IND, T_REG | T_IND | T_DIR, T_REG},
+        .type = {
+            PARAMETER_REGISTER | PARAMETER_DIRECT | PARAMETER_INDIRECT,
+            PARAMETER_REGISTER | PARAMETER_INDIRECT | PARAMETER_DIRECT,
+            PARAMETER_REGISTER
+        },
         .code = 6,
         .nbr_cycles = 6,
         .comment = "et (and  r1, r2, r3   r1&r2 -> r3"
@@ -60,7 +80,11 @@ op_t op_tab[N_OP] = {
     {
         .mnemonique = "or",
         .nbr_args = 3,
-        .type = {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG},
+        .type = {
+            PARAMETER_REGISTER | PARAMETER_INDIRECT | PARAMETER_DIRECT,
+            PARAMETER_REGISTER | PARAMETER_INDIRECT | PARAMETER_DIRECT,
+            PARAMETER_REGISTER
+        },
         .code = 7,
         .nbr_cycles = 6,
         .comment = "ou  (or   r1, r2, r3   r1 | r2 -> r3"
@@ -68,7 +92,11 @@ op_t op_tab[N_OP] = {
     {
         .mnemonique = "xor",
         .nbr_args = 3,
-        .type = {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG},
+        .type = {
+            PARAMETER_REGISTER | PARAMETER_INDIRECT | PARAMETER_DIRECT,
+            PARAMETER_REGISTER | PARAMETER_INDIRECT | PARAMETER_DIRECT,
+            PARAMETER_REGISTER
+        },
         .code = 8,
         .nbr_cycles = 6,
         .comment = "ou (xor  r1, r2, r3   r1^r2 -> r3"
@@ -76,7 +104,7 @@ op_t op_tab[N_OP] = {
     {
         .mnemonique = "zjmp",
         .nbr_args = 1,
-        .type = {T_DIR},
+        .type = {PARAMETER_DIRECT},
         .code = 9,
         .nbr_cycles = 20,
         .comment = "jump if zero"
@@ -84,7 +112,11 @@ op_t op_tab[N_OP] = {
     {
         .mnemonique = "ldi",
         .nbr_args = 3,
-        .type = {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG},
+        .type = {
+            PARAMETER_REGISTER | PARAMETER_DIRECT | PARAMETER_INDIRECT,
+            PARAMETER_DIRECT | PARAMETER_REGISTER,
+            PARAMETER_REGISTER
+        },
         .code = 10,
         .nbr_cycles = 25,
         .comment = "load index"
@@ -92,7 +124,11 @@ op_t op_tab[N_OP] = {
     {
         .mnemonique = "sti",
         .nbr_args = 3,
-        .type = {T_REG, T_REG | T_DIR | T_IND, T_DIR | T_REG},
+        .type = {
+            PARAMETER_REGISTER,
+            PARAMETER_REGISTER | PARAMETER_DIRECT | PARAMETER_INDIRECT,
+            PARAMETER_DIRECT | PARAMETER_REGISTER
+        },
         .code = 11,
         .nbr_cycles = 25,
         .comment = "store index"
@@ -100,7 +136,9 @@ op_t op_tab[N_OP] = {
     {
         .mnemonique = "fork",
         .nbr_args = 1,
-        .type = {T_DIR},
+        .type = {
+            PARAMETER_DIRECT
+        },
         .code = 12,
         .nbr_cycles = 800,
         .comment = "fork"
@@ -108,7 +146,10 @@ op_t op_tab[N_OP] = {
     {
         .mnemonique = "lld",
         .nbr_args = 2,
-        .type = {T_DIR | T_IND, T_REG},
+        .type = {
+            PARAMETER_DIRECT | PARAMETER_INDIRECT,
+            PARAMETER_REGISTER
+        },
         .code = 13,
         .nbr_cycles = 10,
         .comment = "long load"
@@ -116,7 +157,11 @@ op_t op_tab[N_OP] = {
     {
         .mnemonique = "lldi",
         .nbr_args = 3,
-        .type = {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG},
+        .type = {
+            PARAMETER_REGISTER | PARAMETER_DIRECT | PARAMETER_INDIRECT,
+            PARAMETER_DIRECT | PARAMETER_REGISTER,
+            PARAMETER_REGISTER
+        },
         .code = 14,
         .nbr_cycles = 50,
         .comment = "long load index"
@@ -124,7 +169,9 @@ op_t op_tab[N_OP] = {
     {
         .mnemonique = "lfork",
         .nbr_args = 1,
-        .type = {T_DIR},
+        .type = {
+            PARAMETER_DIRECT
+        },
         .code = 15,
         .nbr_cycles = 1000,
         .comment = "long fork"
@@ -132,7 +179,9 @@ op_t op_tab[N_OP] = {
     {
         .mnemonique = "aff",
         .nbr_args = 1,
-        .type = {T_REG},
+        .type = {
+            PARAMETER_REGISTER
+        },
         .code = 16,
         .nbr_cycles = 2,
         .comment = "aff"
