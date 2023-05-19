@@ -18,7 +18,8 @@ void champion_free_struct(vm_champion_t *champion_address);
 void champion_free_node(vm_champion_t *champion_node);
 void champions_free(vm_champion_t **champions_address);
 
-typedef bool (*mnemonic_function_t)(char*, vm_champion_t*, vm_mnemonic_args_t);
+typedef bool (*mnemonic_function_t)
+    (char *, vm_champion_t *, vm_mnemonic_args_t);
 
 void my_memcpy(void *destination, void *source, size_t size);
 
