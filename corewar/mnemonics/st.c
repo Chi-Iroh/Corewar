@@ -12,6 +12,7 @@ bool mnemonic_st(vm_t *vm, vm_champion_t *champion, vm_mnemonic_args_t args)
 {
     vm_register_t *register_address = NULL;
     uintmax_t arg1 = 0;
+    uint8_t *memory_address = NULL;
 
     RETURN_VALUE_IF(!vm || !champion, false);
     RETURN_VALUE_IF(!mnemonic_are_args_ok("st", args), false);
@@ -20,7 +21,8 @@ bool mnemonic_st(vm_t *vm, vm_champion_t *champion, vm_mnemonic_args_t args)
     if (args.type[1] == PARAMETER_REGISTER) {
         *register_address = champion->registers[args.args[1]];
     } else {
-        my_memcpy(&vm->memory[arg1], register_address, REGISTER_SIZE);
+        memory_address = &vm->memory[champion->pc + (arg1 % INDEX_MODULO)];
+        my_memcpy(memory_address, register_address, REGISTER_SIZE);
     }
     return true;
 }
