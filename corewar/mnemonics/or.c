@@ -1,14 +1,14 @@
 /*
 ** EPITECH PROJECT, 2023
-** and.c
+** or.c
 ** File description:
-** -> and mnemonic
+** -> or mnemonic
 */
 
 #include "../../include/my_macros.h"
 #include "../../include/corewar/corewar.h"
 
-bool mnemonic_and(vm_t *vm, vm_champion_t *champion, vm_mnemonic_args_t args)
+bool mnemonic_or(vm_t *vm, vm_champion_t *champion, vm_mnemonic_args_t args)
 {
     vm_register_t result = 0;
     uintmax_t arg1 = 0;
@@ -21,7 +21,7 @@ bool mnemonic_and(vm_t *vm, vm_champion_t *champion, vm_mnemonic_args_t args)
     arg2 = mnemonic_get_arg(args, 1, champion);
     arg2 = mnemonic_get_indirect_address_value(vm, args.type[1], arg2);
     result |= arg1;
-    result &= arg2;
+    result |= arg2;
     champion->registers[args.args[2]] = result;
     champion->carry = result == 0 ? CARRY_ON : CARRY_OFF;
     return true;

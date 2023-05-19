@@ -11,18 +11,16 @@
 bool mnemonic_ld(vm_t *vm, vm_champion_t *champion, vm_mnemonic_args_t args)
 {
     vm_register_t *register_address = NULL;
-    vm_address_t indirect_arg_address = 0;
-    uint8_t *memory_address = NULL;
+    uintmax_t arg1 = 0;
 
     RETURN_VALUE_IF(!vm || !champion, false);
     RETURN_VALUE_IF(!mnemonic_are_args_ok("ld", args), false);
+    arg1 = mnemonic_get_arg(args, 0, champion);
     register_address = &champion->registers[args.args[1]];
-    if (args.args_type[0] == PARAMETER_DIRECT) {
+    if (args.type[0] == PARAMETER_DIRECT) {
         *register_address = args.args[0];
     } else {
-        indirect_arg_address = (champion->pc + args.args[0]) % INDEX_MODULO;
-        memory_address = &vm->memory[indirect_arg_address];
-        my_memcpy(memory_address, register_address, REGISTER_SIZE);
+        my_memcpy(&vm->memory[arg1], register_address, REGISTER_SIZE);
     }
     champion->carry = args.args[0] == 0 ? CARRY_ON : CARRY_OFF;
     return true;

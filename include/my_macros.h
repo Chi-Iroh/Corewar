@@ -155,3 +155,12 @@ free_all((void*[(n)])allocs, (void*[(n)])destructors, (n))
     #undef IS_NAN
 #endif
 #define IS_NAN(x) ((x) != (x))
+
+#ifdef WRITE_IF_NOT_NULL
+    #undef WRITE_IF_NOT_NULL
+#endif
+#define WRITE_IF_NOT_NULL(ptr, value) {  \
+    if (ptr) {                  \
+        *(ptr) = (value);       \
+    }                           \
+}

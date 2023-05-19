@@ -25,10 +25,10 @@ bool mnemonic_are_args_ok(char *mnemonic, vm_mnemonic_args_t args)
     const unsigned mnemonic_index = mnemonic_get_op_tab_index(mnemonic);
 
     for (unsigned i = 0; i < op_tab[mnemonic_index].nbr_args; i++) {
-        if (!(op_tab[mnemonic_index].type[i] & args.args_type[i])) {
+        if (!(op_tab[mnemonic_index].type[i] & args.type[i])) {
             return false;
         }
-        if (args.args_type[i] == PARAMETER_REGISTER) {
+        if (args.type[i] == PARAMETER_REGISTER) {
             RETURN_VALUE_IF(args.args[i] > REGISTERS_NUMBER, false);
         }
     }

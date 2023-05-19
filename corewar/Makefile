@@ -5,16 +5,20 @@
 ## Makefile
 ##
 
-SRC_NO_MAIN = 				\
-	op.c 					\
-	champion_linked_list.c 	\
-	my_memcpy.c 			\
-	mnemonics/check_args.c	\
-	mnemonics/ld.c 			\
-	mnemonics/st.c 			\
-	mnemonics/add.c			\
-	mnemonics/sub.c			\
-	mnemonics/and.c
+SRC_NO_MAIN = 								\
+	op.c 									\
+	champion_linked_list.c 					\
+	my_memcpy.c 							\
+	mnemonics/check_args.c					\
+	mnemonics/get_arg.c						\
+	mnemonics/get_indirect_address_value.c	\
+	mnemonics/ld.c 							\
+	mnemonics/st.c 							\
+	mnemonics/add.c							\
+	mnemonics/sub.c							\
+	mnemonics/and.c							\
+	mnemonics/or.c							\
+	mnemonics/xor.c
 
 SRC	=	$(SRC_NO_MAIN) main.c
 
