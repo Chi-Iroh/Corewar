@@ -11,6 +11,8 @@ SRC_NO_MAIN = 				\
 	my_memcpy.c 			\
 	mnemonics/check_args.c	\
 	mnemonics/ld.c 			\
+	mnemonics/st.c 			\
+	mnemonics/add.c
 
 SRC	=	$(SRC_NO_MAIN) main.c
 
