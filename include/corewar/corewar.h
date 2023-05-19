@@ -24,3 +24,6 @@ void my_memcpy(void *destination, void *source, size_t size);
 
 bool mnemonic_are_args_ok(char *mnemonic, vm_mnemonic_args_t args);
 bool mnemonic_ld(vm_t *vm, vm_champion_t *champion, vm_mnemonic_args_t args);
+bool mnemonic_st(vm_t *vm, vm_champion_t *champion, vm_mnemonic_args_t args);
+bool mnemonic_add(vm_t *vm, vm_champion_t *champion, vm_mnemonic_args_t args);
+bool mnemonic_sub(vm_t *vm, vm_champion_t *champion, vm_mnemonic_args_t args);

@@ -12,7 +12,8 @@ SRC_NO_MAIN = 				\
 	mnemonics/check_args.c	\
 	mnemonics/ld.c 			\
 	mnemonics/st.c 			\
-	mnemonics/add.c
+	mnemonics/add.c			\
+	mnemonics/sub.c
 
 SRC	=	$(SRC_NO_MAIN) main.c
 
