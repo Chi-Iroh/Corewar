@@ -8,7 +8,7 @@
 #include "../../include/my_macros.h"
 #include "../../include/corewar/corewar.h"
 
-bool mnemonic_ldi(vm_t *vm, vm_champion_t *champion, vm_mnemonic_args_t args)
+bool mnemonic_lldi(vm_t *vm, vm_champion_t *champion, vm_mnemonic_args_t args)
 {
     vm_register_t *register_address = NULL;
     uintmax_t arg1 = 0;

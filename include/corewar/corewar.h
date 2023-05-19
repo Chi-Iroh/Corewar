@@ -18,6 +18,8 @@ void champion_free_struct(vm_champion_t *champion_address);
 void champion_free_node(vm_champion_t *champion_node);
 void champions_free(vm_champion_t **champions_address);
 
+bool binary_add(char *binary, vm_t *vm);
+
 uintmax_t mnemonic_get_arg
     (vm_mnemonic_args_t args, unsigned index, vm_champion_t *champion);
 uintmax_t mnemonic_get_indirect_address_value

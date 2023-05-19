@@ -6,6 +6,7 @@
 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "../include/my_macros.h"
 #include "../include/my.h"
 #include "../include/asm/asm.h"
@@ -17,8 +18,27 @@ STATIC_FUNCTION void free_main
     parser_free_labels(labels);
 }
 
+STATIC_FUNCTION void display_help(char *argv[])
+{
+    if (!argv[1]) {
+        return;
+    }
+    if (my_strcmp(argv[1], "-h") * my_strcmp(argv[1], "--help") == 0) {
+        my_puts(
+            "USAGE\n"
+            "./asm file_name[.s]\n"
+            "DESCRIPTION\n"
+            "file_name file in assembly language to be converted info "
+                "file_name.cor, an\n"
+            "executable in the Virtual Machine."
+        );
+        exit(0);
+    }
+}
+
 int main(int argc, char *argv[])
 {
+    display_help(argv);
     RETURN_VALUE_IF(!argv[1], 84);
     parser_line_t *file = parse_file(argv[1]);
     parser_line_t *const file_copy = file;

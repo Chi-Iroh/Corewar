@@ -53,6 +53,7 @@ typedef struct vm_champion_s {
     char *filename;
     uint8_t *code;
     size_t code_size;
+    unsigned clock_cycles_to_wait;
     struct vm_champion_s *previous;
     struct vm_champion_s *next;
 } vm_champion_t;

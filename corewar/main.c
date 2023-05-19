@@ -12,48 +12,6 @@
 #include "../include/my_macros.h"
 #include "../include/corewar/corewar.h"
 
-STATIC_FUNCTION size_t binary_get_size(FILE *binary)
-{
-    const size_t size = lseek(binary->_fileno, 0, SEEK_END);
-
-    lseek(binary->_fileno, 0, SEEK_SET);
-    return size;
-}
-
-STATIC_FUNCTION bool binary_open(char *binary, vm_champion_t *champion)
-{
-    static unsigned champion_number = 0;
-    FILE *const file = binary && champion ? fopen(binary, "rb") : NULL;
-
-    RETURN_VALUE_IF(!file, false);
-    *champion = (vm_champion_t) {
-        .carry = CARRY_OFF,
-        .number = champion_number,
-        .filename = binary,
-        .pc = 0,
-        .registers = { champion_number },
-        .code_size = binary_get_size(file),
-        .code = NULL
-    };
-    champion->code = malloc(sizeof(uint8_t) * champion->code_size);
-    champion_number++;
-    fclose(file);
-    return champion->code != NULL;
-}
-
-STATIC_FUNCTION bool binary_add(char *binary, vm_t *vm)
-{
-    vm_champion_t new_champion = {};
-
-    RETURN_VALUE_IF(!vm || !binary, false);
-    RETURN_VALUE_IF(!binary_open(binary, &new_champion), NULL);
-    if (!champion_add(&vm->champions, &new_champion)) {
-        champion_free_struct(&new_champion);
-        return false;
-    }
-    return true;
-}
-
 STATIC_FUNCTION void main_free(vm_t *vm)
 {
     RETURN_IF(!vm);
@@ -74,6 +32,10 @@ int main(int argc, char *argv[])
     printf("%d\n", status);
     while (vm.champions) {
         printf("%s -> %zu bytes\n", vm.champions->filename, vm.champions->code_size);
+        for (unsigned i = 0; i < vm.champions->code_size; i++) {
+            putchar(vm.champions->code[i]);
+        }
+        putchar('\n');
         if (!vm.champions->next) {
             break;
         }
