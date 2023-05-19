@@ -51,6 +51,8 @@ typedef struct vm_champion_s {
     unsigned number;
     vm_address_t pc;
     char *filename;
+    vm_address_t load_address;
+    size_t size;
     unsigned clock_cycles_to_wait;
     struct vm_champion_s *previous;
     struct vm_champion_s *next;
