@@ -14,6 +14,7 @@ SRC_NO_MAIN = 								\
 	mnemonics/get_indirect_address_value.c	\
 	mnemonics/ld.c 							\
 	mnemonics/st.c 							\
+	mnemonics/lldi.c						\
 	mnemonics/add.c							\
 	mnemonics/sub.c							\
 	mnemonics/and.c							\
