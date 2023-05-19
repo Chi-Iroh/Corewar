@@ -46,6 +46,7 @@ typedef uint8_t vm_memory_t[MEMORY_SIZE];
 
 typedef struct vm_champion_s {
     vm_register_t registers[REGISTERS_NUMBER];
+    // CARRY_ON if last operation returned 0, otherwise CARRY_OFF
     vm_carry_t carry;
     unsigned number;
     uintmax_t pc;
@@ -60,3 +61,10 @@ typedef struct {
     vm_memory_t memory;
     vm_champion_t *champions;
 } vm_t;
+
+typedef struct {
+    // values given as arguments
+    uintmax_t args[MAX_ARGS_NUMBER];
+    // type of each arg, PARAMETER_MAX or invalid value means end of parameters
+    asm_parameter_t args_type[MAX_ARGS_NUMBER];
+} vm_mnemonic_args_t;

@@ -31,7 +31,7 @@ corewar/corewar
 !**/.gitignore
 
 # trash
-**/*test*
+**/*test*.*
 !tests/**
 .trash
 **/*.log

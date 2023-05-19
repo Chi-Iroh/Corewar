@@ -5,9 +5,12 @@
 ## Makefile
 ##
 
-SRC_NO_MAIN = \
-	op.c \
-	champion_linked_list.c
+SRC_NO_MAIN = 				\
+	op.c 					\
+	champion_linked_list.c 	\
+	my_memcpy.c 			\
+	mnemonics/check_args.c	\
+	mnemonics/ld.c 			\
 
 SRC	=	$(SRC_NO_MAIN) main.c
 
