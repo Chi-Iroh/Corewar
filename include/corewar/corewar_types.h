@@ -49,7 +49,9 @@ typedef struct vm_champion_s {
     vm_carry_t carry;
     unsigned number;
     uintmax_t pc;
-    FILE *code;
+    char *filename;
+    uint8_t *code;
+    size_t code_size;
     struct vm_champion_s *previous;
     struct vm_champion_s *next;
 } vm_champion_t;

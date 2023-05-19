@@ -8,8 +8,17 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "../include/my_macros.h"
 #include "../include/corewar/corewar.h"
+
+STATIC_FUNCTION size_t binary_get_size(FILE *binary)
+{
+    const size_t size = lseek(binary->_fileno, 0, SEEK_END);
+
+    lseek(binary->_fileno, 0, SEEK_SET);
+    return size;
+}
 
 STATIC_FUNCTION bool binary_open(char *binary, vm_champion_t *champion)
 {
@@ -20,12 +29,16 @@ STATIC_FUNCTION bool binary_open(char *binary, vm_champion_t *champion)
     *champion = (vm_champion_t) {
         .carry = CARRY_OFF,
         .number = champion_number,
-        .code = file,
+        .filename = binary,
         .pc = 0,
-        .registers = { champion_number }
+        .registers = { champion_number },
+        .code_size = binary_get_size(file),
+        .code = NULL
     };
+    champion->code = malloc(sizeof(uint8_t) * champion->code_size);
     champion_number++;
-    return true;
+    fclose(file);
+    return champion->code != NULL;
 }
 
 STATIC_FUNCTION bool binary_add(char *binary, vm_t *vm)
@@ -56,10 +69,19 @@ int main(int argc, char *argv[])
     bool status = true;
 
     for (unsigned i = 1; i < (unsigned)argc; i++) {
-        puts(argv[i]);
         status &= binary_add(argv[i], &vm);
     }
     printf("%d\n", status);
+    while (vm.champions) {
+        printf("%s -> %zu bytes\n", vm.champions->filename, vm.champions->code_size);
+        if (!vm.champions->next) {
+            break;
+        }
+        vm.champions = vm.champions->next;
+    }
+    while (vm.champions && vm.champions->previous) {
+        vm.champions = vm.champions->previous;
+    }
     main_free(&vm);
     return !status * 84;
 }

@@ -20,7 +20,7 @@
     #define MEMORY_SIZE             (6 * 1'024)
     // Modulo of the index
     #define INDEX_MODULO            512
-    // this may not be changed 2^*IND_SIZE
+    // this may not be changed 2^*INDIRECT_SIZE
     #define MAX_ARGS_NUMBER         4
 
     #define COMMENT_CHAR            '#'
@@ -56,7 +56,7 @@
     } op_t;
 
 
-    // Size
+    // Size of parameters
     #define INDIRECT_SIZE           2
     #define DIRECT_SIZE             4
     #define REGISTER_SIZE           DIRECT_SIZE
@@ -78,7 +78,7 @@
     } header_t;
 
     // Live
-    // number of cycle before beig declared dead
+    // number of cycle before being declared dead
     #define CYCLE_TO_DIE            1'536
     #define CYCLE_DELTA             5
     #define NBR_LIVE                40

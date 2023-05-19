@@ -32,7 +32,7 @@ bool champion_add
 void champion_free_struct(vm_champion_t *champion_address)
 {
     RETURN_IF(!champion_address);
-    FREE_IF_ALLOCATED(champion_address->code, fclose);
+    FREE_IF_ALLOCATED(champion_address->code, free);
 }
 
 void champion_free_node(vm_champion_t *champion_node)
