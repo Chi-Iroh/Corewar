@@ -18,7 +18,7 @@ void dump_memory(vm_t *vm)
         for (unsigned j = 0; j < 32; j++) {
             my_printf("%c", hex[(vm->memory[i + j] & 0xF0) >> 4]);
             my_printf("%c", hex[vm->memory[i + j] & 0x0F]);
+            my_putchar(j == 31 ? '\n' : ' ');
         }
-        my_putchar('\n');
     }
 }
