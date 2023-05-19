@@ -10,6 +10,7 @@ SRC_NO_MAIN = 								\
 	champion_linked_list.c 					\
 	my_memcpy.c 							\
 	binary_file.c							\
+	dump_memory.c							\
 	mnemonics/check_args.c					\
 	mnemonics/get_arg.c						\
 	mnemonics/get_indirect_address_value.c	\

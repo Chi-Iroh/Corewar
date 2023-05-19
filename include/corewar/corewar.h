@@ -27,6 +27,8 @@ uintmax_t mnemonic_get_indirect_address_value
 
 void my_memcpy(void *destination, void *source, size_t size);
 
+void dump_memory(vm_t *vm);
+
 bool mnemonic_are_args_ok(char *mnemonic, vm_mnemonic_args_t args);
 bool mnemonic_ld(vm_t *vm, vm_champion_t *champion, vm_mnemonic_args_t args);
 bool mnemonic_st(vm_t *vm, vm_champion_t *champion, vm_mnemonic_args_t args);

@@ -40,6 +40,7 @@ int main(int argc, char *argv[])
     while (vm.champions && vm.champions->previous) {
         vm.champions = vm.champions->previous;
     }
+    dump_memory(&vm);
     main_free(&vm);
     return !status * 84;
 }
