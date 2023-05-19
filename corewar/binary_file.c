@@ -19,17 +19,12 @@ STATIC_FUNCTION size_t binary_get_size(int fd)
     return size;
 }
 
-STATIC_FUNCTION void binary_read(uint8_t *buffer, int fd, size_t size)
-{
-    if (buffer) {
-        read(fd, buffer, size);
-    }
-}
-
-STATIC_FUNCTION bool binary_open(char *binary, vm_champion_t *champion)
+STATIC_FUNCTION bool binary_open
+    (vm_t *vm, char *binary,
+    vm_champion_t *champion, vm_address_t load_address)
 {
     static unsigned champion_number = 0;
-    const int fd = binary && champion ? open(binary, O_RDONLY) : -1;
+    const int fd = vm && binary && champion ? open(binary, O_RDONLY) : -1;
 
     RETURN_VALUE_IF(fd < 0, false);
     *champion = (vm_champion_t) {
@@ -38,24 +33,21 @@ STATIC_FUNCTION bool binary_open(char *binary, vm_champion_t *champion)
         .filename = binary,
         .pc = 0,
         .registers = { champion_number++ },
-        .code_size = binary_get_size(fd),
-        .code = NULL,
         .clock_cycles_to_wait = 0
     };
-    champion->code = malloc(sizeof(uint8_t) * champion->code_size);
-    binary_read(champion->code, fd, champion->code_size);
+    read(fd, &vm->memory[load_address], binary_get_size(fd));
     close(fd);
-    return champion->code != NULL;
+    return true;
 }
 
-bool binary_add(char *binary, vm_t *vm)
+bool binary_load_at(char *binary, vm_t *vm, vm_address_t load_address)
 {
     vm_champion_t new_champion = {};
+    bool status = vm && binary;
 
-    RETURN_VALUE_IF(!vm || !binary, false);
-    RETURN_VALUE_IF(!binary_open(binary, &new_champion), NULL);
+    status = status && binary_open(vm, binary, &new_champion, load_address);
+    RETURN_VALUE_IF(!status, false);
     if (!champion_add(&vm->champions, &new_champion)) {
-        champion_free_struct(&new_champion);
         return false;
     }
     return true;

@@ -29,15 +29,8 @@ bool champion_add
     return true;
 }
 
-void champion_free_struct(vm_champion_t *champion_address)
-{
-    RETURN_IF(!champion_address);
-    FREE_IF_ALLOCATED(champion_address->code, free);
-}
-
 void champion_free_node(vm_champion_t *champion_node)
 {
-    champion_free_struct(champion_node);
     if (champion_node) {
         free(champion_node);
     }
@@ -51,7 +44,7 @@ void champions_free(vm_champion_t **champions_address)
     while (*champions_address && (*champions_address)->previous) {
         *champions_address = (*champions_address)->previous;
     }
-    while (true) {
+    while (*champions_address) {
         next = (*champions_address)->next;
         FREE_IF_ALLOCATED(*champions_address, champion_free_node);
         if (!next) {

@@ -104,7 +104,7 @@ $(NAME): $(OBJ)
 clean_vgcore:
 	@echo [ASM] Removing Core Dumped files.
 	@rm -f vgcore.*
-	@rm -f valgring*.log.core.*
+	@rm -f valgrind*.log.core.*
 
 .PHONY: clean
 clean: clean_tests clean_vgcore

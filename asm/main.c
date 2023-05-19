@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
         file = file->next;
     }
     while (labels) {
-        printf("%p : LABEL %s\n", labels->line, labels->name);
+        printf("%p : LABEL %s\n", (void*)labels->line, labels->name);
         if (!labels->next) {
             break;
         }

@@ -49,10 +49,8 @@ typedef struct vm_champion_s {
     // CARRY_ON if last operation returned 0, otherwise CARRY_OFF
     vm_carry_t carry;
     unsigned number;
-    uintmax_t pc;
+    vm_address_t pc;
     char *filename;
-    uint8_t *code;
-    size_t code_size;
     unsigned clock_cycles_to_wait;
     struct vm_champion_s *previous;
     struct vm_champion_s *next;

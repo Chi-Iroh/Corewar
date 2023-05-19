@@ -27,15 +27,11 @@ int main(int argc, char *argv[])
     bool status = true;
 
     for (unsigned i = 1; i < (unsigned)argc; i++) {
-        status &= binary_add(argv[i], &vm);
+        status &= binary_load_at(argv[i], &vm, 0);
     }
     printf("%d\n", status);
     while (vm.champions) {
-        printf("%s -> %zu bytes\n", vm.champions->filename, vm.champions->code_size);
-        for (unsigned i = 0; i < vm.champions->code_size; i++) {
-            putchar(vm.champions->code[i]);
-        }
-        putchar('\n');
+        puts(vm.champions->filename);
         if (!vm.champions->next) {
             break;
         }
