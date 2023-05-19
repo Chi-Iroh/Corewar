@@ -36,6 +36,6 @@ fi
 make --no-print-directory -C lib/ redebug
 make --no-print-directory -C $1 redebug
 echo "-----PROGRAM OUTPUT-------"
-valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -s --malloc-fill=0x42 --free-fill=0x84 --log-file=valgrind_$1.log $1/$1 ${@:2}
+valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -s --malloc-fill=0x42 --free-fill=0x84 --log-file=$1/valgrind.log $1/$1 ${@:2}
 echo "--------------------------"
-echo "Open ./valgrind_$1.log to see valgrind's output !"
+echo "Open ./$1/valgrind.log to see valgrind's output !"
