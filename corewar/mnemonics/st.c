@@ -22,7 +22,7 @@ bool mnemonic_st(vm_t *vm, vm_champion_t *champion, vm_mnemonic_args_t args)
     } else {
         indirect_arg_address = (champion->pc + args.args[0]) % INDEX_MODULO;
         memory_address = &vm->memory[indirect_arg_address];
-        my_memcpy(register_address, memory_address, REGISTER_SIZE);
+        my_memcpy(memory_address, register_address, REGISTER_SIZE);
     }
     return true;
 }
