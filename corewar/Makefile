@@ -13,7 +13,8 @@ SRC_NO_MAIN = 				\
 	mnemonics/ld.c 			\
 	mnemonics/st.c 			\
 	mnemonics/add.c			\
-	mnemonics/sub.c
+	mnemonics/sub.c			\
+	mnemonics/and.c
 
 SRC	=	$(SRC_NO_MAIN) main.c
 
