@@ -32,3 +32,5 @@ bool mnemonic_add(vm_t *vm, vm_champion_t *champion, vm_mnemonic_args_t args);
 bool mnemonic_sub(vm_t *vm, vm_champion_t *champion, vm_mnemonic_args_t args);
 bool mnemonic_and(vm_t *vm, vm_champion_t *champion, vm_mnemonic_args_t args);
 bool mnemonic_or(vm_t *vm, vm_champion_t *champion, vm_mnemonic_args_t args);
+bool mnemonic_xor(vm_t *vm, vm_champion_t *champion, vm_mnemonic_args_t args);
+bool mnemonic_zjmp(vm_t *vm, vm_champion_t *champion, vm_mnemonic_args_t args);

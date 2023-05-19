@@ -18,7 +18,8 @@ SRC_NO_MAIN = 								\
 	mnemonics/sub.c							\
 	mnemonics/and.c							\
 	mnemonics/or.c							\
-	mnemonics/xor.c
+	mnemonics/xor.c							\
+	mnemonics/zjmp.c
 
 SRC	=	$(SRC_NO_MAIN) main.c
 
