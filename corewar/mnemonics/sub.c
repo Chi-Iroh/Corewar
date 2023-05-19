@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2023
 ** sub.c
 ** File description:
-** -> add mnemonic
+** -> sub mnemonic
 */
 
 #include "../../include/my_macros.h"

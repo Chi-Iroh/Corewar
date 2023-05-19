@@ -28,3 +28,4 @@ bool mnemonic_ld(vm_t *vm, vm_champion_t *champion, vm_mnemonic_args_t args);
 bool mnemonic_st(vm_t *vm, vm_champion_t *champion, vm_mnemonic_args_t args);
 bool mnemonic_add(vm_t *vm, vm_champion_t *champion, vm_mnemonic_args_t args);
 bool mnemonic_sub(vm_t *vm, vm_champion_t *champion, vm_mnemonic_args_t args);
+bool mnemonic_and(vm_t *vm, vm_champion_t *champion, vm_mnemonic_args_t args);
