@@ -6,7 +6,7 @@
 ##
 
 SRC_NO_MAIN = 								\
-	op.c 									\
+	../op.c 								\
 	champion_linked_list.c 					\
 	my_memcpy.c 							\
 	binary_file.c							\
