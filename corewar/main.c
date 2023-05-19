@@ -35,7 +35,7 @@ STATIC_FUNCTION bool binary_add(char *binary, vm_t *vm)
     RETURN_VALUE_IF(!vm || !binary, false);
     RETURN_VALUE_IF(!binary_open(binary, &new_champion), NULL);
     if (!champion_add(&vm->champions, &new_champion)) {
-        champion_free(&new_champion);
+        champion_free_struct(&new_champion);
         return false;
     }
     return true;

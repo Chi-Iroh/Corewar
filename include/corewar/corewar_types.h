@@ -44,21 +44,17 @@ typedef enum {
 
 typedef uint8_t vm_memory_t[MEMORY_SIZE];
 
-typedef struct {
+typedef struct vm_champion_s {
     vm_register_t registers[REGISTERS_NUMBER];
     vm_carry_t carry;
     unsigned number;
     uintmax_t pc;
     FILE *code;
+    struct vm_champion_s *previous;
+    struct vm_champion_s *next;
 } vm_champion_t;
-
-typedef struct vm_champion_list_s {
-    struct vm_champion_list_s *previous;
-    struct vm_champion_list_s *next;
-    vm_champion_t champion;
-} vm_champion_list_t;
 
 typedef struct {
     vm_memory_t memory;
-    vm_champion_list_t *champions;
+    vm_champion_t *champions;
 } vm_t;
