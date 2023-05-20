@@ -85,6 +85,8 @@ typedef struct vm_champion_s {
 typedef struct {
     vm_memory_t memory;
     vm_champion_t *champions;
+    unsigned cycles_before_memory_dump;
+    bool must_dump_memory;
 } vm_t;
 
 typedef struct {

@@ -12,6 +12,7 @@ SRC_NO_MAIN = 								\
 	binary_file.c							\
 	dump_memory.c							\
 	parse_instruction.c						\
+	parse_argv.c							\
 	mnemonics/check_args.c					\
 	mnemonics/get_arg.c						\
 	mnemonics/get_indirect_address_value.c	\

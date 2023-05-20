@@ -55,3 +55,4 @@ extern const unsigned ARGS_NAME_TO_BITS[PARAMETER_MAX + 1];
 extern const unsigned ARGS_SIZE[PARAMETER_MAX + 1];
 
 vm_mnemonic_t parse_instruction(vm_t *vm, vm_address_t address);
+void parse_argv(vm_t *vm, unsigned argc, char *argv[]);
