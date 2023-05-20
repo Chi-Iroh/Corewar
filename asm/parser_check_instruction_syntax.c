@@ -49,7 +49,7 @@ STATIC_FUNCTION unsigned parser_op_tab_mnemonic_index(char *mnemonic)
 {
     RETURN_VALUE_IF(!mnemonic, N_OP);
     for (unsigned i = 0; i < LAST_OP; i++) {
-        if (my_strcmp(mnemonic, op_tab[i].mnemonique) == 0) {
+        if (my_strcmp(mnemonic, op_tab[i].mnemonic) == 0) {
             return i;
         }
     }
@@ -74,7 +74,7 @@ STATIC_FUNCTION bool parser_is_arg_type_ok
 
     RETURN_VALUE_IF(!arg, false);
     if (arg_i == 0) {
-        return my_strcmp(instruction->mnemonique, arg) == 0;
+        return my_strcmp(instruction->mnemonic, arg) == 0;
     }
     for (unsigned j = 0; j < PARSER_WORD_TYPES; j++) {
         parser_word_type = parser_word_types[j];

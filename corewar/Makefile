@@ -11,12 +11,14 @@ SRC_NO_MAIN = 								\
 	my_memcpy.c 							\
 	binary_file.c							\
 	dump_memory.c							\
+	parse_instruction.c						\
 	mnemonics/check_args.c					\
 	mnemonics/get_arg.c						\
 	mnemonics/get_indirect_address_value.c	\
 	mnemonics/ld.c 							\
 	mnemonics/st.c 							\
 	mnemonics/ldi.c							\
+	mnemonics/sti.c							\
 	mnemonics/add.c							\
 	mnemonics/sub.c							\
 	mnemonics/and.c							\

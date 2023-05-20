@@ -44,13 +44,13 @@
         PARAMETER_INDIRECT = 1 << 2,
         PARAMETER_LABEL = 1 << 3,
         PARAMETER_MAX = 1 + (1 << 3)
-    } asm_parameter_t;
+    } mnemonic_parameter_t;
 
     typedef struct op_s {
-        char *mnemonique;
+        char *mnemonic;
         unsigned char nbr_args;
         args_type_t type[MAX_ARGS_NUMBER];
-        uint8_t code;
+        uint8_t opcode;
         uint16_t nbr_cycles;
         char *comment;
     } op_t;

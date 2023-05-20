@@ -8,7 +8,7 @@
 #include "../../include/corewar/corewar.h"
 
 uintmax_t mnemonic_get_indirect_address_value
-    (vm_t *vm, asm_parameter_t type, uintmax_t value)
+    (vm_t *vm, mnemonic_parameter_t type, uintmax_t value)
 {
     if (type == PARAMETER_INDIRECT) {
         return vm->memory[value];

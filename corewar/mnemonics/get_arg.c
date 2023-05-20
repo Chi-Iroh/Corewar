@@ -30,7 +30,7 @@
     an indirect type means returning (program counter + arg) % INDEX_MODULO.
 */
 uintmax_t mnemonic_get_arg
-    (vm_mnemonic_args_t args, unsigned index, vm_champion_t *champion)
+    (vm_mnemonic_t args, unsigned index, vm_champion_t *champion)
 {
     if (index >= MAX_ARGS_NUMBER) {
         return UINTMAX_MAX;

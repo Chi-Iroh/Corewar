@@ -10,187 +10,187 @@
 
 op_t op_tab[N_OP] = {
     {
-        .mnemonique = "live",
+        .mnemonic = "live",
         .nbr_args = 1,
         .type = {
             PARAMETER_DIRECT
         },
-        .code = 1,
+        .opcode = 1,
         .nbr_cycles = 10,
         .comment = "alive"
     },
     {
-        .mnemonique = "ld",
+        .mnemonic = "ld",
         .nbr_args = 2,
         .type = {
             PARAMETER_DIRECT | PARAMETER_INDIRECT,
             PARAMETER_REGISTER
         },
-        .code = 2,
+        .opcode = 2,
         .nbr_cycles = 5,
         .comment = "load"
     },
     {
-        .mnemonique = "st",
+        .mnemonic = "st",
         .nbr_args = 2,
         .type = {
             PARAMETER_REGISTER,
             PARAMETER_INDIRECT | PARAMETER_REGISTER
         },
-        .code = 3,
+        .opcode = 3,
         .nbr_cycles = 5,
         .comment = "store"
     },
     {
-        .mnemonique = "add",
+        .mnemonic = "add",
         .nbr_args = 3,
         .type = {
             PARAMETER_REGISTER,
             PARAMETER_REGISTER,
             PARAMETER_REGISTER
         },
-        .code = 4,
+        .opcode = 4,
         .nbr_cycles = 10,
         .comment = "addition"
     },
     {
-        .mnemonique = "sub",
+        .mnemonic = "sub",
         .nbr_args = 3,
         .type = {
             PARAMETER_REGISTER,
             PARAMETER_REGISTER,
             PARAMETER_REGISTER
         },
-        .code = 5,
+        .opcode = 5,
         .nbr_cycles = 10,
         .comment = "soustraction"
     },
     {
-        .mnemonique = "and",
+        .mnemonic = "and",
         .nbr_args = 3,
         .type = {
             PARAMETER_REGISTER | PARAMETER_DIRECT | PARAMETER_INDIRECT,
             PARAMETER_REGISTER | PARAMETER_INDIRECT | PARAMETER_DIRECT,
             PARAMETER_REGISTER
         },
-        .code = 6,
+        .opcode = 6,
         .nbr_cycles = 6,
         .comment = "et (and  r1, r2, r3   r1&r2 -> r3"
     },
     {
-        .mnemonique = "or",
+        .mnemonic = "or",
         .nbr_args = 3,
         .type = {
             PARAMETER_REGISTER | PARAMETER_INDIRECT | PARAMETER_DIRECT,
             PARAMETER_REGISTER | PARAMETER_INDIRECT | PARAMETER_DIRECT,
             PARAMETER_REGISTER
         },
-        .code = 7,
+        .opcode = 7,
         .nbr_cycles = 6,
         .comment = "ou  (or   r1, r2, r3   r1 | r2 -> r3"
     },
     {
-        .mnemonique = "xor",
+        .mnemonic = "xor",
         .nbr_args = 3,
         .type = {
             PARAMETER_REGISTER | PARAMETER_INDIRECT | PARAMETER_DIRECT,
             PARAMETER_REGISTER | PARAMETER_INDIRECT | PARAMETER_DIRECT,
             PARAMETER_REGISTER
         },
-        .code = 8,
+        .opcode = 8,
         .nbr_cycles = 6,
         .comment = "ou (xor  r1, r2, r3   r1^r2 -> r3"
     },
     {
-        .mnemonique = "zjmp",
+        .mnemonic = "zjmp",
         .nbr_args = 1,
         .type = {PARAMETER_DIRECT},
-        .code = 9,
+        .opcode = 9,
         .nbr_cycles = 20,
         .comment = "jump if zero"
     },
     {
-        .mnemonique = "ldi",
+        .mnemonic = "ldi",
         .nbr_args = 3,
         .type = {
             PARAMETER_REGISTER | PARAMETER_DIRECT | PARAMETER_INDIRECT,
             PARAMETER_DIRECT | PARAMETER_REGISTER,
             PARAMETER_REGISTER
         },
-        .code = 10,
+        .opcode = 10,
         .nbr_cycles = 25,
         .comment = "load index"
     },
     {
-        .mnemonique = "sti",
+        .mnemonic = "sti",
         .nbr_args = 3,
         .type = {
             PARAMETER_REGISTER,
             PARAMETER_REGISTER | PARAMETER_DIRECT | PARAMETER_INDIRECT,
             PARAMETER_DIRECT | PARAMETER_REGISTER
         },
-        .code = 11,
+        .opcode = 11,
         .nbr_cycles = 25,
         .comment = "store index"
     },
     {
-        .mnemonique = "fork",
+        .mnemonic = "fork",
         .nbr_args = 1,
         .type = {
             PARAMETER_DIRECT
         },
-        .code = 12,
+        .opcode = 12,
         .nbr_cycles = 800,
         .comment = "fork"
     },
     {
-        .mnemonique = "lld",
+        .mnemonic = "lld",
         .nbr_args = 2,
         .type = {
             PARAMETER_DIRECT | PARAMETER_INDIRECT,
             PARAMETER_REGISTER
         },
-        .code = 13,
+        .opcode = 13,
         .nbr_cycles = 10,
         .comment = "long load"
     },
     {
-        .mnemonique = "lldi",
+        .mnemonic = "lldi",
         .nbr_args = 3,
         .type = {
             PARAMETER_REGISTER | PARAMETER_DIRECT | PARAMETER_INDIRECT,
             PARAMETER_DIRECT | PARAMETER_REGISTER,
             PARAMETER_REGISTER
         },
-        .code = 14,
+        .opcode = 14,
         .nbr_cycles = 50,
         .comment = "long load index"
     },
     {
-        .mnemonique = "lfork",
+        .mnemonic = "lfork",
         .nbr_args = 1,
         .type = {
             PARAMETER_DIRECT
         },
-        .code = 15,
+        .opcode = 15,
         .nbr_cycles = 1000,
         .comment = "long fork"
     },
     {
-        .mnemonique = "aff",
+        .mnemonic = "aff",
         .nbr_args = 1,
         .type = {
             PARAMETER_REGISTER
         },
-        .code = 16,
+        .opcode = 16,
         .nbr_cycles = 2,
         .comment = "aff"
     },
     {
-        .mnemonique = NULL,
+        .mnemonic = NULL,
         .nbr_args = 0,
         .type = {0},
-        .code = 0,
+        .opcode = 0,
         .nbr_cycles = 0,
         .comment = NULL
     }

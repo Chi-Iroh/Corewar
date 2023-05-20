@@ -67,8 +67,9 @@ typedef struct {
     // values given as arguments
     uintmax_t args[MAX_ARGS_NUMBER];
     // type of each arg, PARAMETER_MAX or invalid value means end of parameters
-    asm_parameter_t type[MAX_ARGS_NUMBER];
-} vm_mnemonic_args_t;
+    mnemonic_parameter_t type[MAX_ARGS_NUMBER];
+    char *mnemonic;
+} vm_mnemonic_t;
 
 typedef bool (*mnemonic_function_t)
-    (char *, vm_champion_t *, vm_mnemonic_args_t);
+    (char *, vm_champion_t *, vm_mnemonic_t);
