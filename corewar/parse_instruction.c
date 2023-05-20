@@ -9,18 +9,25 @@
 #include "../include/corewar/corewar.h"
 
 // Byte coding of each parameter type (00 = PARAMETER_MAX = no parameter)
-const mnemonic_parameter_t ARGS_BYTES[1 << PARAMETER_TYPE_BITS] = {
-    [0x0] = PARAMETER_MAX,
-    [0x1] = PARAMETER_REGISTER,
-    [0x2] = PARAMETER_DIRECT,
-    [0x3] = PARAMETER_INDIRECT
+const mnemonic_parameter_t ARGS_BITS_TO_NAME[1 << PARAMETER_TYPE_BITS] = {
+    [0b00] = PARAMETER_MAX,
+    [0b01] = PARAMETER_REGISTER,
+    [0b10] = PARAMETER_DIRECT,
+    [0b11] = PARAMETER_INDIRECT
+};
+
+const unsigned ARGS_NAME_TO_BITS[PARAMETER_MAX + 1] = {
+    [PARAMETER_MAX] = 0b00,
+    [PARAMETER_REGISTER] = 0b01,
+    [PARAMETER_DIRECT] = 0b10,
+    [PARAMETER_INDIRECT] = 0b11
 };
 
 // Size of each parameter type
-const unsigned ARGS_SIZE[PARAMETER_MAX] = {
+const unsigned ARGS_SIZE[PARAMETER_MAX + 1] = {
     [PARAMETER_DIRECT] = DIRECT_SIZE,
     [PARAMETER_INDIRECT] = INDIRECT_SIZE,
-    [PARAMETER_REGISTER] = REGISTER_SIZE
+    [PARAMETER_REGISTER] = REGISTER_SIZE,
 };
 
 STATIC_FUNCTION char *mnemonic_get_from_opcode(uint8_t opcode)
@@ -86,9 +93,9 @@ vm_mnemonic_t parse_instruction(vm_t *vm, vm_address_t address)
     RETURN_VALUE_IF(!vm, error);
     mnemonic.mnemonic = mnemonic_get_from_opcode(vm->memory[address++]);
     RETURN_VALUE_IF(!mnemonic.mnemonic, error);
-    mnemonic.type[0] = ARGS_BYTES[(vm->memory[address] & 0xC0) >> 6];
-    mnemonic.type[1] = ARGS_BYTES[(vm->memory[address] & 0x30) >> 4];
-    mnemonic.type[2] = ARGS_BYTES[(vm->memory[address] & 0x0C) >> 2];
-    mnemonic.type[3] = ARGS_BYTES[(vm->memory[address++] & 0x03)];
+    mnemonic.type[0] = ARGS_BITS_TO_NAME[(vm->memory[address] & 0xC0) >> 6];
+    mnemonic.type[1] = ARGS_BITS_TO_NAME[(vm->memory[address] & 0x30) >> 4];
+    mnemonic.type[2] = ARGS_BITS_TO_NAME[(vm->memory[address] & 0x0C) >> 2];
+    mnemonic.type[3] = ARGS_BITS_TO_NAME[(vm->memory[address++] & 0x03)];
     return mnemonic_get_args(vm, address, &mnemonic) ? mnemonic : error;
 }

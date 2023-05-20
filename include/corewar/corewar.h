@@ -27,7 +27,7 @@ uintmax_t mnemonic_get_indirect_address_value
 
 void my_memcpy(void *destination, void *source, size_t size);
 
-void dump_memory(vm_t *vm);
+void dump_memory(vm_t *vm, unsigned n_32bytes_chunks);
 
 bool mnemonic_are_args_ok(vm_mnemonic_t args);
 bool mnemonic_ld(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args);
@@ -50,7 +50,8 @@ bool mnemonic_aff(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args);
 // Number of bits which encodes one parameter type
 #define PARAMETER_TYPE_BITS 2
 
-extern const mnemonic_parameter_t ARGS_BYTES[1 << PARAMETER_TYPE_BITS];
-extern const unsigned ARGS_SIZE[PARAMETER_MAX];
+extern const mnemonic_parameter_t ARGS_BITS_TO_NAME[1 << PARAMETER_TYPE_BITS];
+extern const unsigned ARGS_NAME_TO_BITS[PARAMETER_MAX + 1];
+extern const unsigned ARGS_SIZE[PARAMETER_MAX + 1];
 
 vm_mnemonic_t parse_instruction(vm_t *vm, vm_address_t address);
