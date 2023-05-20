@@ -94,10 +94,10 @@ run_tests: clean_tests tests
 	@echo "[COREWAR] Running tests :"
 	@./$(NAME)
 	@echo "[COREWAR] Writing line coverage log in corewar/line_coverage.log."
-	@gcovr --exclude tests/ > line_coverage.log
+	@gcovr --exclude ../tests/ > line_coverage.log
 	@echo -n "[COREWAR] Writing branch coverage log in "
 	@echo "corewar/branch_coverage.log."
-	@gcovr --exclude tests/ --branches > branch_coverage.log
+	@gcovr --exclude ../tests/ --branches > branch_coverage.log
 
 $(NAME): $(OBJ)
 	@echo -------------

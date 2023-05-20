@@ -34,15 +34,15 @@ STATIC_FUNCTION char *mnemonic_get_from_opcode(uint8_t opcode)
 }
 
 STATIC_FUNCTION bool mnemonic_arg_read_n_bytes
-    (vm_t *vm, vm_address_t *address, unsigned n_bytes, uintmax_t *arg)
+    (vm_t *vm, vm_address_t *address, vm_address_t n_bytes, uintmax_t *arg)
 {
     RETURN_VALUE_IF(!vm || !address || !arg, false);
     RETURN_VALUE_IF(n_bytes >= MEMORY_SIZE, false);
     RETURN_VALUE_IF(*address >= MEMORY_SIZE - n_bytes, false);
     *arg = 0;
-    while (n_bytes--) {
+    for (vm_address_t i = 0; i < n_bytes; i++) {
         *arg <<= 8;
-        *arg |= vm->memory[*(address++)];
+        *arg |= vm->memory[*address + i];
     }
     return true;
 }
@@ -61,7 +61,7 @@ STATIC_FUNCTION bool mnemonic_get_args
         if (!mnemonic_arg_read_n_bytes(vm, &address, arg_size, arg)) {
             return false;
         }
-        address++;
+        address += arg_size;
     }
     return true;
 }

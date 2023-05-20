@@ -14,8 +14,8 @@ Test(check_word_syntax, mnemonic) {
     char buf[256] = { 0 };
 
     for (unsigned i = 0; i < LAST_OP; i++) {
-        sprintf(&buf[0], "%s is a valid mnemonic", op_tab[i].mnemonique);
-        cr_expect(parser_is_mnemonic(op_tab[i].mnemonique), "%s", &buf[0]);
+        sprintf(&buf[0], "%s is a valid mnemonic", op_tab[i].mnemonic);
+        cr_expect(parser_is_mnemonic(op_tab[i].mnemonic), "%s", &buf[0]);
         memset(&buf[0], 0, 256);
     }
     cr_expect(!parser_is_mnemonic("LD"), "LD isn't a mnemonic");

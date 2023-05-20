@@ -17,8 +17,8 @@ Test(check_instruction_syntax, get_mnemonic_index) {
     char buf[256] = { 0 };
 
     for (unsigned i = 0; i < LAST_OP; i++) {
-        sprintf(&buf[0], "%s is the %u-th mnemonic", op_tab[i].mnemonique, i);
-        cr_expect(parser_op_tab_mnemonic_index(op_tab[i].mnemonique) == i, "%s", &buf[0]);
+        sprintf(&buf[0], "%s is the %u-th mnemonic", op_tab[i].mnemonic, i);
+        cr_expect(parser_op_tab_mnemonic_index(op_tab[i].mnemonic) == i, "%s", &buf[0]);
         memset(&buf[0], 0, 256);
     }
     cr_expect(parser_op_tab_mnemonic_index("helloworld") == N_OP, "helloworld isn't a mnemonic (out-of-bounds index expected)");
@@ -45,7 +45,7 @@ Test(check_instruction_syntax, check_arg_type) {
     int type_val = 0;
 
     for (unsigned mnemonic = 0; mnemonic < LAST_OP; mnemonic++) {
-        mnemonic_str = op_tab[mnemonic].mnemonique;
+        mnemonic_str = op_tab[mnemonic].mnemonic;
 
         for (unsigned arg = 0; arg <= op_tab[mnemonic].nbr_args; arg++) {
 
@@ -135,7 +135,7 @@ Test(check_instruction_syntax, check_instruction) {
 
     for (unsigned mnemonic = 0; mnemonic < LAST_OP; mnemonic++) {
         op = &op_tab[mnemonic];
-        instruction[0]->word = op->mnemonique;
+        instruction[0]->word = op->mnemonic;
         for (unsigned ok_example = 0; ok_example < 4; ok_example++) {
             for (unsigned arg = 1; arg <= op->nbr_args; arg++) {
                 for (unsigned arg_type_index = 0; arg_type_index < PARSER_WORD_TYPES; arg_type_index++) {

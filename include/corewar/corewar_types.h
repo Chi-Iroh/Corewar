@@ -27,6 +27,30 @@
     #error "REGISTER_SIZE not 1, 2, 4 or 8 !"
 #endif
 
+#if DIRECT_SIZE == 1
+    typedef uint8_t vm_direct_arg_t;
+#elif DIRECT_SIZE == 2
+    typedef uint16_t vm_direct_arg_t;
+#elif DIRECT_SIZE == 4
+    typedef uint32_t vm_direct_arg_t;
+#elif DIRECT_SIZE == 8
+    typedef uint64_t vm_direct_arg_t;
+#else
+    #error "DIRECT_SIZE not 1, 2, 4 or 8 !"
+#endif
+
+#if INDIRECT_SIZE == 1
+    typedef uint8_t vm_indirect_arg_t;
+#elif INDIRECT_SIZE == 2
+    typedef uint16_t vm_indirect_arg_t;
+#elif INDIRECT_SIZE == 4
+    typedef uint32_t vm_indirect_arg_t;
+#elif INDIRECT_SIZE == 8
+    typedef uint64_t vm_indirect_arg_t;
+#else
+    #error "DIRECT_SIZE not 1, 2, 4 or 8 !"
+#endif
+
 #if MEMORY_SIZE <= UINT8_MAX
     typedef uint8_t vm_address_t;
 #elif MEMORY_SIZE <= UINT16_MAX

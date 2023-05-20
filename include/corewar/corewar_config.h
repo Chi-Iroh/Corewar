@@ -19,6 +19,20 @@
 
     // Declare any static function here.
 
+    STATIC_FUNCTION size_t binary_get_size(int fd);
+
+    STATIC_FUNCTION bool binary_open
+    (vm_t *vm, char *binary,
+    vm_champion_t *champion, vm_address_t load_address);
+
+    STATIC_FUNCTION char *mnemonic_get_from_opcode(uint8_t opcode);
+
+    STATIC_FUNCTION bool mnemonic_get_args
+    (vm_t *vm, vm_address_t address, vm_mnemonic_t *mnemonic);
+
+    STATIC_FUNCTION bool mnemonic_get_args
+        (vm_t *vm, vm_address_t address, vm_mnemonic_t *mnemonic);
+
 #else
     #define STATIC_FUNCTION static
 #endif
