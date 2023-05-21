@@ -9,6 +9,7 @@
     #define _OP_H_
 
     #include <stdint.h>
+    #include <stdbool.h>
 
     // Should replace all these defines with constexpr variables
     // But GCC 13 doesn't fully support constexpr for now
@@ -46,6 +47,12 @@
         PARAMETER_MAX = 1 + (1 << 3)
     } mnemonic_parameter_t;
 
+    #ifdef ARGS_NO_INDEX
+        #undef ARGS_NO_INDEX
+    #endif
+    #define ARGS_NO_INDEX { \
+    }
+
     typedef struct op_s {
         char *mnemonic;
         unsigned char nbr_args;
@@ -53,11 +60,13 @@
         uint8_t opcode;
         uint16_t nbr_cycles;
         char *comment;
+        bool are_args_indexes[MAX_ARGS_NUMBER];
     } op_t;
 
 
     // Size of parameters
     #define INDIRECT_SIZE           2
+    #define INDEX_SIZE              INDIRECT_SIZE
     #define DIRECT_SIZE             4
     #define REGISTER_SIZE           DIRECT_SIZE
 

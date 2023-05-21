@@ -15,6 +15,7 @@ op_t op_tab[N_OP] = {
         .type = {
             PARAMETER_DIRECT
         },
+        .are_args_indexes = ARGS_NO_INDEX,
         .opcode = 1,
         .nbr_cycles = 10,
         .comment = "alive"
@@ -26,6 +27,7 @@ op_t op_tab[N_OP] = {
             PARAMETER_DIRECT | PARAMETER_INDIRECT,
             PARAMETER_REGISTER
         },
+        .are_args_indexes = ARGS_NO_INDEX,
         .opcode = 2,
         .nbr_cycles = 5,
         .comment = "load"
@@ -37,6 +39,7 @@ op_t op_tab[N_OP] = {
             PARAMETER_REGISTER,
             PARAMETER_INDIRECT | PARAMETER_REGISTER
         },
+        .are_args_indexes = ARGS_NO_INDEX,
         .opcode = 3,
         .nbr_cycles = 5,
         .comment = "store"
@@ -49,6 +52,7 @@ op_t op_tab[N_OP] = {
             PARAMETER_REGISTER,
             PARAMETER_REGISTER
         },
+        .are_args_indexes = ARGS_NO_INDEX,
         .opcode = 4,
         .nbr_cycles = 10,
         .comment = "addition"
@@ -61,6 +65,7 @@ op_t op_tab[N_OP] = {
             PARAMETER_REGISTER,
             PARAMETER_REGISTER
         },
+        .are_args_indexes = ARGS_NO_INDEX,
         .opcode = 5,
         .nbr_cycles = 10,
         .comment = "soustraction"
@@ -73,6 +78,7 @@ op_t op_tab[N_OP] = {
             PARAMETER_REGISTER | PARAMETER_INDIRECT | PARAMETER_DIRECT,
             PARAMETER_REGISTER
         },
+        .are_args_indexes = ARGS_NO_INDEX,
         .opcode = 6,
         .nbr_cycles = 6,
         .comment = "et (and  r1, r2, r3   r1&r2 -> r3"
@@ -85,6 +91,7 @@ op_t op_tab[N_OP] = {
             PARAMETER_REGISTER | PARAMETER_INDIRECT | PARAMETER_DIRECT,
             PARAMETER_REGISTER
         },
+        .are_args_indexes = ARGS_NO_INDEX,
         .opcode = 7,
         .nbr_cycles = 6,
         .comment = "ou  (or   r1, r2, r3   r1 | r2 -> r3"
@@ -97,6 +104,7 @@ op_t op_tab[N_OP] = {
             PARAMETER_REGISTER | PARAMETER_INDIRECT | PARAMETER_DIRECT,
             PARAMETER_REGISTER
         },
+        .are_args_indexes = ARGS_NO_INDEX,
         .opcode = 8,
         .nbr_cycles = 6,
         .comment = "ou (xor  r1, r2, r3   r1^r2 -> r3"
@@ -106,6 +114,9 @@ op_t op_tab[N_OP] = {
         .nbr_args = 1,
         .type = {
             PARAMETER_DIRECT
+        },
+        .are_args_indexes = {
+            [0] = true
         },
         .opcode = 9,
         .nbr_cycles = 20,
@@ -119,6 +130,10 @@ op_t op_tab[N_OP] = {
             PARAMETER_DIRECT | PARAMETER_REGISTER,
             PARAMETER_REGISTER
         },
+        .are_args_indexes = {
+            [0] = true,
+            [1] = true
+        },
         .opcode = 10,
         .nbr_cycles = 25,
         .comment = "load index"
@@ -131,6 +146,10 @@ op_t op_tab[N_OP] = {
             PARAMETER_REGISTER | PARAMETER_DIRECT | PARAMETER_INDIRECT,
             PARAMETER_DIRECT | PARAMETER_REGISTER
         },
+        .are_args_indexes = {
+            [1] = true,
+            [2] = true
+        },
         .opcode = 11,
         .nbr_cycles = 25,
         .comment = "store index"
@@ -140,6 +159,9 @@ op_t op_tab[N_OP] = {
         .nbr_args = 1,
         .type = {
             PARAMETER_DIRECT
+        },
+        .are_args_indexes = {
+            [0] = true
         },
         .opcode = 12,
         .nbr_cycles = 800,
@@ -152,6 +174,7 @@ op_t op_tab[N_OP] = {
             PARAMETER_DIRECT | PARAMETER_INDIRECT,
             PARAMETER_REGISTER
         },
+        .are_args_indexes = ARGS_NO_INDEX,
         .opcode = 13,
         .nbr_cycles = 10,
         .comment = "long load"
@@ -164,6 +187,10 @@ op_t op_tab[N_OP] = {
             PARAMETER_DIRECT | PARAMETER_REGISTER,
             PARAMETER_REGISTER
         },
+        .are_args_indexes = {
+            [0] = true,
+            [1] = true
+        },
         .opcode = 14,
         .nbr_cycles = 50,
         .comment = "long load index"
@@ -173,6 +200,9 @@ op_t op_tab[N_OP] = {
         .nbr_args = 1,
         .type = {
             PARAMETER_DIRECT
+        },
+        .are_args_indexes = {
+            [0] = true
         },
         .opcode = 15,
         .nbr_cycles = 1000,
@@ -184,6 +214,7 @@ op_t op_tab[N_OP] = {
         .type = {
             PARAMETER_REGISTER
         },
+        .are_args_indexes = ARGS_NO_INDEX,
         .opcode = 16,
         .nbr_cycles = 2,
         .comment = "aff"

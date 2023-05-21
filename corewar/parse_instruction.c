@@ -5,6 +5,7 @@
 ** -> Parses a binary instruction
 */
 
+#include "../include/my.h"
 #include "../include/my_macros.h"
 #include "../include/corewar/corewar.h"
 
@@ -80,6 +81,34 @@ STATIC_FUNCTION bool mnemonic_arg_read_n_bytes
 
 /*
 @brief
+    Checks if a mnemonic's n-th arg is an index or not.
+@param
+    mnemonic is the mnemonic name (and, fork...)
+@param
+    arg_index is the index of the arg to check
+        (MUST be smaller than MAX_ARGS_NUMBER)
+@returns
+    true if mnemonic's n-th param is an index, false otherwise
+@note
+    No check is performed on arg_index, so it must be smaller than
+        MAX_ARGS_NUMBER, otherwise it will lead to undefined behaviour.
+@note
+    As no check is performed on the arg's type, this function MUST ONLY be
+        called when the parameter is a direct value.
+*/
+STATIC_FUNCTION bool mnemonic_is_nth_arg_index
+    (char *mnemonic, unsigned arg_index)
+{
+    for (unsigned i = 0; i < LAST_OP; i++) {
+        if (my_strcmp(op_tab[i].mnemonic, mnemonic) == 0) {
+            return op_tab[i].are_args_indexes[i];
+        }
+    }
+    return false;
+}
+
+/*
+@brief
     Parses the memory to get mnemonic args.
 @param
     vm is the Virtual Machine
@@ -100,6 +129,9 @@ STATIC_FUNCTION bool mnemonic_get_args
         RETURN_VALUE_IF(address >= MEMORY_SIZE, false);
         RETURN_VALUE_IF(mnemonic->type[i] == PARAMETER_MAX, true);
         arg_size = ARGS_SIZE[mnemonic->type[i]];
+        if (mnemonic_is_nth_arg_index(mnemonic->mnemonic, i)) {
+            arg_size = INDEX_SIZE;
+        }
         arg = &mnemonic->args[i];
         if (!mnemonic_arg_read_n_bytes(vm, &address, arg_size, arg)) {
             return false;
