@@ -71,6 +71,20 @@ STATIC_FUNCTION bool binary_open
     return true;
 }
 
+/*
+@brief
+    Loads a binary at a given memory address.
+@param
+    vm is the Virtual Machine
+@param
+    binary is the champion filename
+@param
+    load_address is where to load the code in the memory
+@returns
+    true on success, false on failure
+@note
+    A MEMORY_SIZE modulo will be applied to the load address.
+*/
 bool binary_load_at(vm_t *vm, char *binary, vm_address_t load_address)
 {
     static unsigned n_champions = 0;

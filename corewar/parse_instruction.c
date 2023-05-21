@@ -30,6 +30,16 @@ const unsigned ARGS_SIZE[PARAMETER_MAX + 1] = {
     [PARAMETER_REGISTER] = REGISTER_SIZE,
 };
 
+/*
+@brief
+    Reads op_tab and gets the instruction name (live, add etc..) corresponding
+        to an opcode.
+@param
+    opcode is the înstruction code
+@returns
+    NULL is the opcode doesn't match to any instruction, otherwise a static
+        string whoch is the instruction name.
+*/
 STATIC_FUNCTION char *mnemonic_get_from_opcode(uint8_t opcode)
 {
     for (unsigned i = 0; i < LAST_OP; i++) {
@@ -40,6 +50,20 @@ STATIC_FUNCTION char *mnemonic_get_from_opcode(uint8_t opcode)
     return NULL;
 }
 
+/*
+@brief
+    Reads instruction argument, a given number of bytes in the memory.
+@param
+    vm is the Virtual Machine
+@param
+    address is the address to read from in the memory
+@param
+    n_bytes is the number of bytes to read
+@param
+    arg is where to store the read bytes
+@returns
+    true on success, false on failure
+*/
 STATIC_FUNCTION bool mnemonic_arg_read_n_bytes
     (vm_t *vm, vm_address_t *address, vm_address_t n_bytes, uintmax_t *arg)
 {
@@ -54,6 +78,18 @@ STATIC_FUNCTION bool mnemonic_arg_read_n_bytes
     return true;
 }
 
+/*
+@brief
+    Parses the memory to get mnemonic args.
+@param
+    vm is the Virtual Machine
+@param
+    address is the address of the args in memory
+@param
+    mnemonic is the mnemonic to read the args (only contains types initialized)
+@returns
+    true on success, false on failure
+*/
 STATIC_FUNCTION bool mnemonic_get_args
     (vm_t *vm, vm_address_t address, vm_mnemonic_t *mnemonic)
 {

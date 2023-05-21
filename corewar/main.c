@@ -13,12 +13,6 @@
 #include "../include/my_macros.h"
 #include "../include/corewar/corewar.h"
 
-STATIC_FUNCTION void main_free(vm_t *vm)
-{
-    RETURN_IF(!vm);
-    FREE_IF_ALLOCATED(vm->champions, free);
-}
-
 STATIC_FUNCTION void display_help(char *argv[])
 {
     RETURN_IF(!argv[1] || argv[2]);
@@ -53,6 +47,6 @@ int main(int argc, char *argv[])
         puts(vm.champions[i].filename);
     }
     dump_memory(&vm, 0);
-    main_free(&vm);
+    free(vm.champions);
     return !status * 84;
 }
