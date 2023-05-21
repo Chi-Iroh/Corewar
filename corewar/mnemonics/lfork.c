@@ -28,7 +28,6 @@
 bool mnemonic_lfork(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args)
 {
     uintmax_t arg1 = 0;
-    uint8_t *memory_address = NULL;
     vm_champion_t *duplicated = NULL;
 
     RETURN_VALUE_IF(!vm || !champion, false);
