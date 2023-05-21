@@ -30,7 +30,16 @@ STATIC_FUNCTION char *binary_argv_search_filename
     return argv[index];
 }
 
-STATIC_FUNCTION void binary_argv_handle_flags_before_load_binary
+STATIC_FUNCTION void binary_argv_handle_dump_flag
+    (vm_t *vm, char *argv[], unsigned *index)
+{
+    if (my_strcmp(argv[*index], "-dump") == 0) {
+        vm->cycles_before_memory_dump = my_getnbr(argv[*index + 1]);
+        (*index) += 2;
+    }
+}
+
+STATIC_FUNCTION void binary_argv_handle_number_and_address_flags
     (char *argv[], unsigned *index,
     vm_address_t *load_address, vm_address_t *prog_number)
 {
@@ -38,18 +47,13 @@ STATIC_FUNCTION void binary_argv_handle_flags_before_load_binary
     bool is_load_address_flag = false;
     bool is_prog_number_flag = false;
 
-    while (true) {
-        while (my_strcmp(argv[*index], "-dump") == 0) {
-            *index += 2;
-        }
-        is_load_address_flag = my_strcmp(argv[*index], "-a") == 0;
-        is_prog_number_flag = my_strcmp(argv[*index], "-n") == 0;
-        if (!is_load_address_flag && !is_prog_number_flag) {
-            break;
-        }
-        *(params[is_prog_number_flag]) = my_getnbr(argv[*index + 1]);
-        *index += 2;
+    is_load_address_flag = my_strcmp(argv[*index], "-a") == 0;
+    is_prog_number_flag = my_strcmp(argv[*index], "-n") == 0;
+    if (!is_load_address_flag && !is_prog_number_flag) {
+        return;
     }
+    *(params[is_prog_number_flag]) = my_getnbr(argv[*index + 1]);
+    *index += 2;
 }
 
 /*
@@ -79,8 +83,11 @@ bool binary_argv_load_single_binary
 
     RETURN_VALUE_IF(!vm || !index || *index >= argc, false);
     binary_name = binary_argv_search_filename(argv, *index);
-    binary_argv_handle_flags_before_load_binary
-        (argv, index, &load_address, &prog_number);
+    while (parse_argv_is_flag(argv[*index])) {
+        binary_argv_handle_dump_flag(vm, argv, index);
+        binary_argv_handle_number_and_address_flags
+            (argv, index, &load_address, &prog_number);
+    }
     load_address %= MEMORY_SIZE;
     return binary_load_at(vm, binary_name, load_address);
 }

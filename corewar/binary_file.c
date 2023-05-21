@@ -62,7 +62,7 @@ STATIC_FUNCTION bool binary_open
     champion->clock_cycles_to_wait = 0;
     champion->load_address = load_address;
     champion->size = binary_get_size(fd);
-    if (champion->size <= MEMORY_SIZE - load_address) {
+    if (champion->size > MEMORY_SIZE - load_address) {
         close(fd);
         return false;
     }
