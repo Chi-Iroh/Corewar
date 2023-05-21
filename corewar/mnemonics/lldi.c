@@ -8,6 +8,23 @@
 #include "../../include/my_macros.h"
 #include "../../include/corewar/corewar.h"
 
+/*
+@brief
+    LLDI mnemonic : loads the sum of two values into a register,
+        but without applying modulo to the memory address.
+@param
+    vm is the Virtual Machine
+@param
+    champion is the champion who executed the instruction
+@param
+    args are the arguments types and values
+@returns
+    true on success, false on failure
+@note
+    lldi REGISTER | DIRECT | INDIRECT, DIRECT | INDIRECT, REGISTER
+@note
+    Sets the carry to 1 (CARRY_ON) if value is 0, otherwise to 0 (CARRY_OFF).
+*/
 bool mnemonic_lldi(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args)
 {
     vm_register_t *register_address = NULL;

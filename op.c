@@ -104,7 +104,9 @@ op_t op_tab[N_OP] = {
     {
         .mnemonic = "zjmp",
         .nbr_args = 1,
-        .type = {PARAMETER_DIRECT},
+        .type = {
+            PARAMETER_DIRECT
+        },
         .opcode = 9,
         .nbr_cycles = 20,
         .comment = "jump if zero"

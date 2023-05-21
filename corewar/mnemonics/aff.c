@@ -9,6 +9,22 @@
 #include "../../include/my.h"
 #include "../../include/corewar/corewar.h"
 
+/*
+@brief
+    AFF mnemonic : displays the value in a register as a char.
+@param
+    vm is the Virtual Machine
+@param
+    champion is the champion who executed the instruction
+@param
+    args are the arguments types and values
+@returns
+    true on success, false on failure
+@note
+    aff REGISTER
+@note
+    Doesn't change the carry.
+*/
 bool mnemonic_aff(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args)
 {
     uintmax_t arg1 = 0;

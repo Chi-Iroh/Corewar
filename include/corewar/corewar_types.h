@@ -82,6 +82,7 @@ typedef struct vm_champion_s {
     vm_address_t load_address;
     vm_address_t size;
     unsigned clock_cycles_to_wait;
+    bool is_alive;
 } vm_champion_t;
 
 typedef struct {
@@ -90,6 +91,8 @@ typedef struct {
     vm_address_t n_champions;
     unsigned cycles_before_memory_dump;
     bool must_dump_memory;
+    unsigned cycle_to_die;
+    vm_address_t last_process_alive;
 } vm_t;
 
 typedef struct {

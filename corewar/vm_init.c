@@ -9,6 +9,18 @@
 #include "../include/my_macros.h"
 #include "../include/corewar/corewar.h"
 
+const vm_champion_t CHAMPION_DEFAULT = {
+    .carry = CARRY_OFF,
+    .clock_cycles_to_wait = 0,
+    .filename = NULL,
+    .is_alive = false,
+    .load_address = VM_ADDRESS_MAX,
+    .number = 0,
+    .pc = 0,
+    .registers = {},
+    .size = 0
+};
+
 /*
 @brief
     Counts how many champions there are in argv.
@@ -47,13 +59,13 @@ bool vm_init(vm_t *vm, char *argv[])
         .n_champions = binary_argv_count_champions(argv),
         .champions = NULL,
         .must_dump_memory = false,
-        .cycles_before_memory_dump = 0
+        .cycles_before_memory_dump = 0,
+        .cycle_to_die = CYCLE_TO_DIE,
+        .last_process_alive = VM_ADDRESS_MAX
     };
     vm->champions = malloc(sizeof(vm_champion_t) * vm->n_champions);
     for (unsigned i = 0; vm->champions && i < vm->n_champions; i++) {
-        vm->champions[i] = (vm_champion_t){
-            .number = VM_ADDRESS_MAX
-        };
+        vm->champions[i] = CHAMPION_DEFAULT;
     }
     return vm->champions != NULL;
 }

@@ -68,3 +68,5 @@ bool champions_next_prog_number
 bool binary_argv_load_single_binary
     (vm_t *vm, unsigned argc, char *argv[], unsigned *index);
 bool binary_load_all(vm_t *vm, unsigned argc, char *argv[]);
+
+extern const vm_champion_t CHAMPION_DEFAULT;

@@ -8,6 +8,23 @@
 #include "../../include/my_macros.h"
 #include "../../include/corewar/corewar.h"
 
+/*
+@brief
+    LLD mnemonic :loads a value into a register,
+        but without applying modulo on the memory address.
+@param
+    vm is the Virtual Machine
+@param
+    champion is the champion who executed the instruction
+@param
+    args are the arguments types and values
+@returns
+    true on success, false on failure
+@note
+    lld DIRECT | INDIRECT, REGISTER
+@note
+    Sets the carry to 1 (CARRY_ON) if value is 0, otherwise to 0 (CARRY_OFF).
+*/
 bool mnemonic_lld(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args)
 {
     vm_register_t *register_address = NULL;

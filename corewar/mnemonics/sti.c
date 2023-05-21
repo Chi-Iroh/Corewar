@@ -8,6 +8,23 @@
 #include "../../include/my_macros.h"
 #include "../../include/corewar/corewar.h"
 
+/*
+@brief
+    STI mnemonic :
+        stores a register into memory (at specific index) or another register.
+@param
+    vm is the Virtual Machine
+@param
+    champion is the champion who executed the instruction
+@param
+    args are the arguments types and values
+@returns
+    true on success, false on failure
+@note:
+    sti REGISTER, REGISTER | DIRECT | INDIRECT, DIRECT | REGISTER
+@note
+    Doesn't change the carry.
+*/
 bool mnemonic_sti(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args)
 {
     vm_register_t *register_address = NULL;

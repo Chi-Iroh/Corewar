@@ -8,6 +8,22 @@
 #include "../../include/my_macros.h"
 #include "../../include/corewar/corewar.h"
 
+/*
+@brief
+    AND mnemonic : stores a bitwise AND operation result into a register.
+@param
+    vm is the Virtual Machine
+@param
+    champion is the champion who executed the instruction
+@param
+    args are the arguments types and values
+@returns
+    true on success, false on failure
+@note
+    and REGISTER | DIRECT | INDIRECT, REGISTER | DIRECT | INDIRECT, REGISTER
+@note
+    Sets the carry to 1 (CARRY_ON) if result is 0, otherwise to 0 (CARRY_OFF).
+*/
 bool mnemonic_and(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args)
 {
     vm_register_t result = 0;
