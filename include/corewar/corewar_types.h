@@ -102,6 +102,7 @@ typedef struct {
     // type of each arg, PARAMETER_MAX or invalid value means end of parameters
     mnemonic_parameter_t type[MAX_ARGS_NUMBER];
     char *mnemonic;
+    bool (*are_args_indexes)[MAX_ARGS_NUMBER];
 } vm_mnemonic_t;
 
 typedef bool (*mnemonic_function_t)

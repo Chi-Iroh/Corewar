@@ -33,26 +33,6 @@ const unsigned ARGS_SIZE[PARAMETER_MAX + 1] = {
 
 /*
 @brief
-    Reads op_tab and gets the instruction name (live, add etc..) corresponding
-        to an opcode.
-@param
-    opcode is the înstruction code
-@returns
-    NULL is the opcode doesn't match to any instruction, otherwise a static
-        string whoch is the instruction name.
-*/
-STATIC_FUNCTION char *mnemonic_get_from_opcode(uint8_t opcode)
-{
-    for (unsigned i = 0; i < LAST_OP; i++) {
-        if (op_tab[i].opcode == opcode) {
-            return op_tab[i].mnemonic;
-        }
-    }
-    return NULL;
-}
-
-/*
-@brief
     Reads instruction argument, a given number of bytes in the memory.
 @param
     vm is the Virtual Machine
@@ -65,7 +45,7 @@ STATIC_FUNCTION char *mnemonic_get_from_opcode(uint8_t opcode)
 @returns
     true on success, false on failure
 */
-STATIC_FUNCTION bool mnemonic_arg_read_n_bytes
+bool memory_read_n_bytes
     (vm_t *vm, vm_address_t *address, vm_address_t n_bytes, uintmax_t *arg)
 {
     RETURN_VALUE_IF(!vm || !address || !arg, false);
@@ -77,34 +57,6 @@ STATIC_FUNCTION bool mnemonic_arg_read_n_bytes
         *arg |= vm->memory[*address + i];
     }
     return true;
-}
-
-/*
-@brief
-    Checks if a mnemonic's n-th arg is an index or not.
-@param
-    mnemonic is the mnemonic name (and, fork...)
-@param
-    arg_index is the index of the arg to check
-        (MUST be smaller than MAX_ARGS_NUMBER)
-@returns
-    true if mnemonic's n-th param is an index, false otherwise
-@note
-    No check is performed on arg_index, so it must be smaller than
-        MAX_ARGS_NUMBER, otherwise it will lead to undefined behaviour.
-@note
-    As no check is performed on the arg's type, this function MUST ONLY be
-        called when the parameter is a direct value.
-*/
-STATIC_FUNCTION bool mnemonic_is_nth_arg_index
-    (char *mnemonic, unsigned arg_index)
-{
-    for (unsigned i = 0; i < LAST_OP; i++) {
-        if (my_strcmp(op_tab[i].mnemonic, mnemonic) == 0) {
-            return op_tab[i].are_args_indexes[i];
-        }
-    }
-    return false;
 }
 
 /*
@@ -124,16 +76,16 @@ STATIC_FUNCTION bool mnemonic_get_args
 {
     unsigned arg_size = 0;
     uintmax_t *arg = NULL;
+    bool is_arg_index = false;
 
     for (unsigned i = 0; i < MAX_ARGS_NUMBER; i++) {
         RETURN_VALUE_IF(address >= MEMORY_SIZE, false);
         RETURN_VALUE_IF(mnemonic->type[i] == PARAMETER_MAX, true);
-        arg_size = ARGS_SIZE[mnemonic->type[i]];
-        if (mnemonic_is_nth_arg_index(mnemonic->mnemonic, i)) {
-            arg_size = INDEX_SIZE;
-        }
+        is_arg_index = mnemonic->type[i] == PARAMETER_DIRECT;
+        is_arg_index &= (*mnemonic->are_args_indexes)[i];
+        arg_size = is_arg_index ? INDEX_SIZE : ARGS_SIZE[mnemonic->type[i]];
         arg = &mnemonic->args[i];
-        if (!mnemonic_arg_read_n_bytes(vm, &address, arg_size, arg)) {
+        if (!memory_read_n_bytes(vm, &address, arg_size, arg)) {
             return false;
         }
         address += arg_size;
@@ -159,8 +111,15 @@ vm_mnemonic_t parse_instruction(vm_t *vm, vm_address_t address)
     vm_mnemonic_t mnemonic = {};
 
     RETURN_VALUE_IF(!vm, error);
-    mnemonic.mnemonic = mnemonic_get_from_opcode(vm->memory[address++]);
+    for (unsigned i = 0; i < LAST_OP; i++) {
+        if (op_tab[i].opcode == vm->memory[address]) {
+            mnemonic.mnemonic = op_tab[i].mnemonic;
+            mnemonic.are_args_indexes = &op_tab[i].are_args_indexes;
+            break;
+        }
+    }
     RETURN_VALUE_IF(!mnemonic.mnemonic, error);
+    address++;
     mnemonic.type[0] = ARGS_BITS_TO_NAME[(vm->memory[address] & 0xC0) >> 6];
     mnemonic.type[1] = ARGS_BITS_TO_NAME[(vm->memory[address] & 0x30) >> 4];
     mnemonic.type[2] = ARGS_BITS_TO_NAME[(vm->memory[address] & 0x0C) >> 2];

@@ -12,6 +12,7 @@ SRC_NO_MAIN = 								\
 	binary_load_all.c 						\
 	champion_duplicate.c 					\
 	dump_memory.c							\
+	index_apply_to_pc.c 					\
 	my_memcpy.c 							\
 	parse_argv.c							\
 	parse_instruction.c						\

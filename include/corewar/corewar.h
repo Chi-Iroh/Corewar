@@ -11,8 +11,8 @@
 #include "corewar_types.h"
 #include "../op.h"
 
-bool binary_load_at(vm_t *vm, char *binary, vm_address_t load_address);
-
+bool mnemonic_is_nth_arg_index
+    (char *mnemonic, unsigned arg_index);
 uintmax_t mnemonic_get_arg
     (vm_mnemonic_t args, unsigned index, vm_champion_t *champion);
 uintmax_t mnemonic_get_indirect_address_value
@@ -60,11 +60,17 @@ bool champions_has_prog_number
     (vm_t *champions, vm_address_t prog_number);
 bool champions_next_prog_number
     (vm_t *vm, vm_address_t *prog_number);
+void champion_duplicate(vm_t *vm, vm_champion_t *parent);
 
+bool binary_load_at(vm_t *vm, char *binary, vm_address_t load_address);
 bool binary_argv_load_single_binary
     (vm_t *vm, unsigned argc, char *argv[], unsigned *index);
 bool binary_load_all(vm_t *vm, unsigned argc, char *argv[]);
 
-void champion_duplicate(vm_t *vm, vm_champion_t *parent);
+bool memory_read_n_bytes
+    (vm_t *vm, vm_address_t *address, vm_address_t n_bytes, uintmax_t *arg);
+vm_address_t index_apply_to_pc
+    (vm_address_t pc, vm_indirect_arg_t index,
+    bool apply_index_modulo);
 
 extern const vm_champion_t CHAMPION_DEFAULT;

@@ -21,12 +21,6 @@ corewar/corewar
 **/*.old
 **/*~
 
-# test files
-**/*.s
-**/*.S
-**/*.asm
-!asm_files/**
-
 # .gitignore
 !**/.gitignore
 
@@ -46,3 +40,10 @@ corewar_binaries
 **/*.gz
 **/*.tgz
 **/*.tar
+
+# test files
+**/*.s
+**/*.S
+**/*.cor
+**/*.asm
+!custom_champions/**.S
