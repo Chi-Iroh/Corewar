@@ -11,6 +11,16 @@
 #include "../include/my_macros.h"
 #include "../include/corewar/corewar.h"
 
+/*
+@brief
+    Checks the size of a file.
+@param
+    fd is the file descriptor returned by an open syscall
+@returns
+    the size in bytes of the file corresponding to fd.
+@note
+    fd MUST be a valid file descriptor.
+*/
 STATIC_FUNCTION size_t binary_get_size(int fd)
 {
     const size_t size = lseek(fd, 0, SEEK_END);
@@ -19,39 +29,36 @@ STATIC_FUNCTION size_t binary_get_size(int fd)
     return size;
 }
 
+/*
+@brief
+
+*/
 STATIC_FUNCTION bool binary_open
     (vm_t *vm, char *binary,
     vm_champion_t *champion, vm_address_t load_address)
 {
-    static unsigned champion_number = 0;
     const bool status = vm && binary && champion && load_address < MEMORY_SIZE;
     const int fd = status ? open(binary, O_RDONLY) : -1;
 
     RETURN_VALUE_IF(fd < 0, false);
-    *champion = (vm_champion_t) {
-        .carry = CARRY_OFF,
-        .number = champion_number,
-        .filename = binary,
-        .pc = 0,
-        .registers = { champion_number++ },
-        .clock_cycles_to_wait = 0,
-        .load_address = load_address,
-        .size = binary_get_size(fd)
-    };
+    champion->carry = CARRY_OFF;
+    champion->filename = binary;
+    champion->pc = 0;
+    champion->clock_cycles_to_wait = 0;
+    champion->load_address = load_address;
+    champion->size = binary_get_size(fd);
     read(fd, &vm->memory[load_address], champion->size);
     close(fd);
-    return champion->size < MEMORY_SIZE;
+    return champion->size <= MEMORY_SIZE - load_address;
 }
 
-bool binary_load_at(char *binary, vm_t *vm, vm_address_t load_address)
+bool binary_load_at(vm_t *vm, char *binary, vm_address_t load_address)
 {
-    vm_champion_t new_champion = {};
+    static unsigned n_champions = 0;
+    vm_champion_t *new_champion = &vm->champions[n_champions++];
     bool status = vm && binary;
 
-    status = status && binary_open(vm, binary, &new_champion, load_address);
+    status = status && binary_open(vm, binary, new_champion, load_address);
     RETURN_VALUE_IF(!status, false);
-    if (!champion_add(&vm->champions, &new_champion)) {
-        return false;
-    }
     return true;
 }

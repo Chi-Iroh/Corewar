@@ -7,12 +7,15 @@
 
 SRC_NO_MAIN = 								\
 	../op.c 								\
-	champion_linked_list.c 					\
 	my_memcpy.c 							\
 	binary_file.c							\
+	binary_argv_load_single_binary.c		\
+	binary_load_all.c 						\
 	dump_memory.c							\
 	parse_instruction.c						\
 	parse_argv.c							\
+	prog_number.c 							\
+	vm_init.c								\
 	mnemonics/check_args.c					\
 	mnemonics/get_arg.c						\
 	mnemonics/get_indirect_address_value.c	\

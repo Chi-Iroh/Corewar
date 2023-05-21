@@ -18,7 +18,7 @@ void champion_free_struct(vm_champion_t *champion_address);
 void champion_free_node(vm_champion_t *champion_node);
 void champions_free(vm_champion_t **champions_address);
 
-bool binary_load_at(char *binary, vm_t *vm, vm_address_t load_address);
+bool binary_load_at(vm_t *vm, char *binary, vm_address_t load_address);
 
 uintmax_t mnemonic_get_arg
     (vm_mnemonic_t args, unsigned index, vm_champion_t *champion);
@@ -54,5 +54,17 @@ extern const mnemonic_parameter_t ARGS_BITS_TO_NAME[1 << PARAMETER_TYPE_BITS];
 extern const unsigned ARGS_NAME_TO_BITS[PARAMETER_MAX + 1];
 extern const unsigned ARGS_SIZE[PARAMETER_MAX + 1];
 
+bool vm_init(vm_t *vm, char *argv[]);
+
 vm_mnemonic_t parse_instruction(vm_t *vm, vm_address_t address);
+bool parse_argv_is_flag(char *str);
 void parse_argv(vm_t *vm, unsigned argc, char *argv[]);
+
+bool champions_has_prog_number
+    (vm_t *champions, vm_address_t prog_number);
+bool champions_next_prog_number
+    (vm_t *vm, vm_address_t *prog_number);
+
+bool binary_argv_load_single_binary
+    (vm_t *vm, unsigned argc, char *argv[], unsigned *index);
+bool binary_load_all(vm_t *vm, unsigned argc, char *argv[]);

@@ -16,7 +16,7 @@
 STATIC_FUNCTION void main_free(vm_t *vm)
 {
     RETURN_IF(!vm);
-    champions_free(&vm->champions);
+    FREE_IF_ALLOCATED(vm->champions, free);
 }
 
 STATIC_FUNCTION void display_help(char *argv[])
@@ -43,27 +43,14 @@ STATIC_FUNCTION void display_help(char *argv[])
 
 int main(int argc, char *argv[])
 {
-    vm_t vm = {
-        .champions = NULL,
-        .memory = {}
-    };
     bool status = true;
+    vm_t vm = {};
 
     display_help(argv);
-    parse_argv(&vm, argc, argv);
-    for (unsigned i = 1; i < (unsigned)argc; i++) {
-        status &= binary_load_at(argv[i], &vm, 0);
-    }
+    status = binary_load_all(&vm, argc, argv);
     printf("%d\n", status);
-    while (vm.champions) {
-        puts(vm.champions->filename);
-        if (!vm.champions->next) {
-            break;
-        }
-        vm.champions = vm.champions->next;
-    }
-    while (vm.champions && vm.champions->previous) {
-        vm.champions = vm.champions->previous;
+    for (vm_address_t i = 0; i < vm.n_champions && vm.champions[i].filename; i++) {
+        puts(vm.champions[i].filename);
     }
     dump_memory(&vm, 0);
     main_free(&vm);

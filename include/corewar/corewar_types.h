@@ -53,12 +53,16 @@
 
 #if MEMORY_SIZE <= UINT8_MAX
     typedef uint8_t vm_address_t;
+    #define VM_ADDRESS_MAX UINT8_MAX
 #elif MEMORY_SIZE <= UINT16_MAX
     typedef uint16_t vm_address_t;
+    #define VM_ADDRESS_MAX UINT16_MAX
 #elif MEMORY_SIZE <= UINT32_MAX
     typedef uint32_t vm_address_t;
+    #define VM_ADDRESS_MAX UINT32_MAX
 #else
     typedef uint64_t vm_address_t;
+    #define VM_ADDRESS_MAX UINT64_MAX
 #endif
 
 typedef enum {
@@ -72,19 +76,18 @@ typedef struct vm_champion_s {
     vm_register_t registers[REGISTERS_NUMBER];
     // CARRY_ON if last operation returned 0, otherwise CARRY_OFF
     vm_carry_t carry;
-    unsigned number;
+    vm_address_t number;
     vm_address_t pc;
     char *filename;
     vm_address_t load_address;
-    size_t size;
+    vm_address_t size;
     unsigned clock_cycles_to_wait;
-    struct vm_champion_s *previous;
-    struct vm_champion_s *next;
 } vm_champion_t;
 
 typedef struct {
     vm_memory_t memory;
     vm_champion_t *champions;
+    vm_address_t n_champions;
     unsigned cycles_before_memory_dump;
     bool must_dump_memory;
 } vm_t;

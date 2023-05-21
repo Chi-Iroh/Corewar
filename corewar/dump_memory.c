@@ -26,12 +26,12 @@ void dump_memory(vm_t *vm, unsigned n_32bytes_chunks)
     static const char *hex = "0123456789ABCDEF";
     const unsigned n_32bytes_chunks_in_mem =
         MEMORY_SIZE / 32 + MEMORY_SIZE % 32;
-    vm_address_t dumped_bytes = n_32bytes_chunks == 0 ?
+    const vm_address_t n_32bytes_dumped_chunks = n_32bytes_chunks == 0 ?
         n_32bytes_chunks_in_mem :
-        32 * MIN(n_32bytes_chunks, n_32bytes_chunks_in_mem);
+        MIN(n_32bytes_chunks, n_32bytes_chunks_in_mem);
 
     RETURN_IF(!vm);
-    for (vm_address_t i = 0; i < dumped_bytes; i += 32) {
+    for (vm_address_t i = 0; i < 32 * n_32bytes_dumped_chunks; i += 32) {
         for (unsigned j = 0; j < 32; j++) {
             my_printf("%c", hex[(vm->memory[i + j] & 0xF0) >> 4]);
             my_printf("%c", hex[vm->memory[i + j] & 0x0F]);
