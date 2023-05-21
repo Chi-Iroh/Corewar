@@ -17,7 +17,7 @@
 @param
     fd is the file descriptor returned by an open syscall
 @returns
-    the size in bytes of the file corresponding to fd.
+    the size in bytes of the file corresponding to fd (including header).
 @note
     fd MUST be a valid file descriptor.
 */
@@ -26,7 +26,28 @@ STATIC_FUNCTION size_t binary_get_size(int fd)
     const size_t size = lseek(fd, 0, SEEK_END);
 
     lseek(fd, 0, SEEK_SET);
-    return size >= HEADER_LENGTH ? size - HEADER_LENGTH : 0;
+    return size;
+}
+
+/*
+@brief
+    Checks if a champion's size is valid or not, depending on its load address.
+@param
+    size is the file size in bytes
+@param
+    load_address is where to load the champion's code in memory
+@returns
+    true if file content (without header) fits in memory at given address,
+        otherwise false.
+*/
+STATIC_FUNCTION bool binary_is_size_valid
+    (size_t size, vm_address_t load_address)
+{
+    const vm_address_t memory_free_space = MEMORY_SIZE - load_address;
+
+    RETURN_VALUE_IF(size <= HEADER_LENGTH, false);
+    RETURN_VALUE_IF(size - HEADER_LENGTH > memory_free_space, false);
+    return true;
 }
 
 /*
@@ -62,10 +83,12 @@ STATIC_FUNCTION bool binary_open
     champion->clock_cycles_to_wait = 0;
     champion->load_address = load_address;
     champion->size = binary_get_size(fd);
-    if (champion->size > MEMORY_SIZE - load_address || champion->size == 0) {
+
+    if (!binary_is_size_valid(champion->size, load_address)) {
         close(fd);
         return false;
     }
+    champion->size -= HEADER_LENGTH;
     lseek(fd, HEADER_LENGTH, SEEK_SET);
     read(fd, &vm->memory[load_address], champion->size);
     close(fd);

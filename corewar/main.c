@@ -43,7 +43,10 @@ int main(int argc, char *argv[])
     display_help(argv);
     status = binary_load_all(&vm, argc, argv);
     printf("%d\n", status);
-    for (vm_address_t i = 0; i < vm.n_champions && vm.champions[i].filename; i++) {
+    for (vm_address_t i = 0; i < vm.n_champions; i++) {
+        if (!vm.champions[i].filename) {
+            break;
+        }
         puts(vm.champions[i].filename);
     }
     dump_memory(&vm, 0);
