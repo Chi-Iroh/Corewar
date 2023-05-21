@@ -41,7 +41,7 @@ bool mnemonic_ldi(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args)
     memory_read_n_bytes(vm, &memory_address, INDIRECT_SIZE, (uintmax_t*)&tmp);
     tmp = arg2 > MEMORY_SIZE ? tmp - (0x01'00'00 - arg2) : tmp + arg2;
     memory_address = index_apply_to_pc(champion->pc, tmp, true);
-    register_address = &champion->registers[args.args[2]];
+    register_address = &champion->registers[args.args[2] - 1];
     my_memcpy(register_address, &vm->memory[memory_address], REGISTER_SIZE);
     champion->carry = vm->memory[memory_address] == 0 ? CARRY_ON : CARRY_OFF;
     return true;

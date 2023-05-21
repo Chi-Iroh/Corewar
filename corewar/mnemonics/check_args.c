@@ -30,6 +30,7 @@ bool mnemonic_are_args_ok(vm_mnemonic_t args)
         }
         if (args.type[i] == PARAMETER_REGISTER) {
             RETURN_VALUE_IF(args.args[i] > REGISTERS_NUMBER, false);
+            RETURN_VALUE_IF(args.args[i] == 0, false);
         }
     }
     return true;

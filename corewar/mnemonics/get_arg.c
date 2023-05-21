@@ -37,7 +37,7 @@ uintmax_t mnemonic_get_arg
     }
     if (args.type[index] == PARAMETER_REGISTER) {
         if (args.args[index] < REGISTERS_NUMBER) {
-            return champion->registers[args.args[index]];
+            return champion->registers[args.args[index] - 1];
         }
     } else if (args.type[index] == PARAMETER_INDIRECT) {
         return champion->pc + (args.args[index] % INDEX_MODULO);

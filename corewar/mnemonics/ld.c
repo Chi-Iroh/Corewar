@@ -32,11 +32,15 @@ bool mnemonic_ld(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args)
     RETURN_VALUE_IF(!vm || !champion, false);
     RETURN_VALUE_IF(!mnemonic_are_args_ok(args), false);
     arg1 = mnemonic_get_arg(args, 0, champion);
-    register_address = &champion->registers[args.args[1]];
+    register_address = &champion->registers[args.args[1] - 1];
     if (args.type[0] == PARAMETER_DIRECT) {
         *register_address = args.args[0];
     } else {
-        my_memcpy(register_address, &vm->memory[arg1], REGISTER_SIZE);
+        *register_address = 0;
+        for (vm_address_t i = arg1; i < arg1 + REGISTER_SIZE; i++) {
+            *register_address <<= 8;
+            *register_address |= vm->memory[i];
+        }
     }
     champion->carry = args.args[0] == 0 ? CARRY_ON : CARRY_OFF;
     return true;

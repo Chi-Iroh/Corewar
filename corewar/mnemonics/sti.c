@@ -46,7 +46,7 @@ bool mnemonic_sti(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args)
     arg2 = mnemonic_get_arg(args, 1, champion);
     arg2 = mnemonic_get_indirect_address_value(vm, args.type[0], arg2);
     arg3 = mnemonic_get_arg(args, 2, champion);
-    register_address = &champion->registers[args.args[0]];
+    register_address = &champion->registers[args.args[0] - 1];
     memory_address = index_apply_to_pc
         (champion->pc, index_add(arg2, arg3), true);
     my_memcpy(register_address, &vm->memory[memory_address], REGISTER_SIZE);

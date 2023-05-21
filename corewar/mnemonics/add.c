@@ -32,7 +32,7 @@ bool mnemonic_add(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args)
     RETURN_VALUE_IF(!mnemonic_are_args_ok(args), false);
     sum += mnemonic_get_arg(args, 0, champion);
     sum += mnemonic_get_arg(args, 1, champion);
-    champion->registers[args.args[2]] = sum;
+    champion->registers[args.args[2] - 1] = sum;
     champion->carry = sum == 0 ? CARRY_ON : CARRY_OFF;
     return true;
 }
