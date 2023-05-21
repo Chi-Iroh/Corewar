@@ -74,3 +74,4 @@ vm_address_t index_apply_to_pc
     bool apply_index_modulo);
 
 extern const vm_champion_t CHAMPION_DEFAULT;
+extern const char *const HELP_MSG;
