@@ -31,7 +31,22 @@ STATIC_FUNCTION size_t binary_get_size(int fd)
 
 /*
 @brief
-
+    Opens a binary and copies its content in the memory, according to its
+        load address.
+@param
+    vm is the Virtual Machine
+@param
+    binary is the file name
+@param
+    champion is champion address (default-initialized)
+@param
+    load address is the memory address where the champion code will be written
+@returns
+    true is success, false if failure
+@note
+    Trying to load a program at a too big address
+        (not enough memory to write the champion code) is considered as a
+        failure, thus returns false.
 */
 STATIC_FUNCTION bool binary_open
     (vm_t *vm, char *binary,
@@ -47,9 +62,13 @@ STATIC_FUNCTION bool binary_open
     champion->clock_cycles_to_wait = 0;
     champion->load_address = load_address;
     champion->size = binary_get_size(fd);
+    if (champion->size <= MEMORY_SIZE - load_address) {
+        close(fd);
+        return false;
+    }
     read(fd, &vm->memory[load_address], champion->size);
     close(fd);
-    return champion->size <= MEMORY_SIZE - load_address;
+    return true;
 }
 
 bool binary_load_at(vm_t *vm, char *binary, vm_address_t load_address)

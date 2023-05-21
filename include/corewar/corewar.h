@@ -11,13 +11,6 @@
 #include "corewar_types.h"
 #include "../op.h"
 
-bool champion_add
-    (vm_champion_t **champions_address, vm_champion_t *champion);
-
-void champion_free_struct(vm_champion_t *champion_address);
-void champion_free_node(vm_champion_t *champion_node);
-void champions_free(vm_champion_t **champions_address);
-
 bool binary_load_at(vm_t *vm, char *binary, vm_address_t load_address);
 
 uintmax_t mnemonic_get_arg
@@ -43,6 +36,9 @@ bool mnemonic_sti(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args);
 bool mnemonic_lld(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args);
 bool mnemonic_lldi(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args);
 bool mnemonic_aff(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args);
+bool mnemonic_live(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args);
+bool mnemonic_fork(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args);
+bool mnemonic_lfork(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args);
 
 #ifdef ARG_CODING_BITS
     #undef ARG_CODING_BITS
@@ -68,5 +64,7 @@ bool champions_next_prog_number
 bool binary_argv_load_single_binary
     (vm_t *vm, unsigned argc, char *argv[], unsigned *index);
 bool binary_load_all(vm_t *vm, unsigned argc, char *argv[]);
+
+void champion_duplicate(vm_t *vm, vm_champion_t *parent);
 
 extern const vm_champion_t CHAMPION_DEFAULT;

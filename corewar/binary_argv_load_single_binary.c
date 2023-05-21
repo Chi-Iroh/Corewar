@@ -67,6 +67,8 @@ STATIC_FUNCTION void binary_argv_handle_flags_before_load_binary
     false on error, true otherwise
 @note
     The argv syntax MUST be valid when calling this function.
+@note
+    A modulo MEMORY_SIZE is applied to the load address.
 */
 bool binary_argv_load_single_binary
     (vm_t *vm, unsigned argc, char *argv[], unsigned *index)
@@ -79,5 +81,6 @@ bool binary_argv_load_single_binary
     binary_name = binary_argv_search_filename(argv, *index);
     binary_argv_handle_flags_before_load_binary
         (argv, index, &load_address, &prog_number);
+    load_address %= MEMORY_SIZE;
     return binary_load_at(vm, binary_name, load_address);
 }

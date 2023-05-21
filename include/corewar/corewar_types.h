@@ -78,6 +78,7 @@ typedef struct vm_champion_s {
     vm_carry_t carry;
     vm_address_t number;
     vm_address_t pc;
+    // not malloc'd, same pointer as in argv
     char *filename;
     vm_address_t load_address;
     vm_address_t size;

@@ -7,32 +7,35 @@
 
 SRC_NO_MAIN = 								\
 	../op.c 								\
-	my_memcpy.c 							\
-	binary_file.c							\
 	binary_argv_load_single_binary.c		\
+	binary_file.c							\
 	binary_load_all.c 						\
+	champion_duplicate.c 					\
 	dump_memory.c							\
-	parse_instruction.c						\
+	my_memcpy.c 							\
 	parse_argv.c							\
+	parse_instruction.c						\
 	prog_number.c 							\
 	vm_init.c								\
 	mnemonics/check_args.c					\
 	mnemonics/get_arg.c						\
 	mnemonics/get_indirect_address_value.c	\
+	mnemonics/live.c						\
 	mnemonics/ld.c 							\
 	mnemonics/st.c 							\
-	mnemonics/ldi.c							\
-	mnemonics/sti.c							\
 	mnemonics/add.c							\
 	mnemonics/sub.c							\
 	mnemonics/and.c							\
 	mnemonics/or.c							\
 	mnemonics/xor.c							\
 	mnemonics/zjmp.c						\
+	mnemonics/ldi.c							\
+	mnemonics/sti.c							\
+	mnemonics/fork.c						\
 	mnemonics/lld.c							\
 	mnemonics/lldi.c						\
-	mnemonics/aff.c							\
-	mnemonics/live.c
+	mnemonics/lfork.c						\
+	mnemonics/aff.c
 
 SRC	=	$(SRC_NO_MAIN) main.c
 
