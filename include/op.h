@@ -76,6 +76,7 @@
     // Header
     #define PROG_NAME_LENGTH        128
     #define COMMENT_LENGTH          2'048
+    #define HEADER_LENGTH   (PROG_NAME_LENGTH + COMMENT_LENGTH)
     // Magic number in the binary header
     #define COREWAR_EXEC_MAGIC      0xEA'83'F3
 

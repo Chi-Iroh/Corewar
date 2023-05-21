@@ -26,7 +26,7 @@ STATIC_FUNCTION size_t binary_get_size(int fd)
     const size_t size = lseek(fd, 0, SEEK_END);
 
     lseek(fd, 0, SEEK_SET);
-    return size;
+    return size >= HEADER_LENGTH ? size - HEADER_LENGTH : 0;
 }
 
 /*
@@ -62,10 +62,11 @@ STATIC_FUNCTION bool binary_open
     champion->clock_cycles_to_wait = 0;
     champion->load_address = load_address;
     champion->size = binary_get_size(fd);
-    if (champion->size > MEMORY_SIZE - load_address) {
+    if (champion->size > MEMORY_SIZE - load_address || champion->size == 0) {
         close(fd);
         return false;
     }
+    lseek(fd, HEADER_LENGTH, SEEK_SET);
     read(fd, &vm->memory[load_address], champion->size);
     close(fd);
     return true;
