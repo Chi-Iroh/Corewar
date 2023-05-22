@@ -72,17 +72,28 @@ typedef enum {
 
 typedef uint8_t vm_memory_t[MEMORY_SIZE];
 
+typedef struct {
+    // values given as arguments
+    uintmax_t args[MAX_ARGS_NUMBER];
+    // type of each arg, PARAMETER_MAX or invalid value means end of parameters
+    mnemonic_parameter_t type[MAX_ARGS_NUMBER];
+    char *mnemonic;
+    op_t *op;
+} vm_mnemonic_t;
+
 typedef struct vm_champion_s {
     vm_register_t registers[REGISTERS_NUMBER];
     // CARRY_ON if last operation returned 0, otherwise CARRY_OFF
     vm_carry_t carry;
+    vm_mnemonic_t current_mnemonic;
     vm_address_t number;
     vm_address_t pc;
     // not malloc'd, same pointer as in argv
     char *filename;
     vm_address_t load_address;
     vm_address_t size;
-    unsigned clock_cycles_to_wait;
+    unsigned cycles_to_wait;
+    bool is_waiting;
     bool is_alive;
 } vm_champion_t;
 
@@ -95,15 +106,6 @@ typedef struct {
     unsigned cycle_to_die;
     vm_address_t last_process_alive;
 } vm_t;
-
-typedef struct {
-    // values given as arguments
-    uintmax_t args[MAX_ARGS_NUMBER];
-    // type of each arg, PARAMETER_MAX or invalid value means end of parameters
-    mnemonic_parameter_t type[MAX_ARGS_NUMBER];
-    char *mnemonic;
-    bool (*are_args_indexes)[MAX_ARGS_NUMBER];
-} vm_mnemonic_t;
 
 typedef bool (*mnemonic_function_t)
     (char *, vm_champion_t *, vm_mnemonic_t);

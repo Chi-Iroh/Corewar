@@ -1,1 +1,5 @@
-sti r1, %:label, %1 # h
+.name ""
+.comment ""
+
+#ld %139, r1
+st r1, 4

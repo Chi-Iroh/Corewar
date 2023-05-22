@@ -11,14 +11,16 @@
 
 const vm_champion_t CHAMPION_DEFAULT = {
     .carry = CARRY_OFF,
-    .clock_cycles_to_wait = 0,
+    .cycles_to_wait = 0,
+    .current_mnemonic = {},
     .filename = NULL,
     .is_alive = false,
+    .is_waiting = false,
     .load_address = VM_ADDRESS_MAX,
     .number = 0,
     .pc = 0,
     .registers = {},
-    .size = 0
+    .size = 0,
 };
 
 /*

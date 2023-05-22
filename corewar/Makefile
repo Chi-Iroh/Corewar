@@ -10,13 +10,14 @@ SRC_NO_MAIN = 								\
 	binary_argv_load_single_binary.c		\
 	binary_file.c							\
 	binary_load_all.c 						\
-	champion_duplicate.c 					\
+	champion_duplicate_remove.c				\
 	dump_memory.c							\
 	index_apply_to_pc.c 					\
 	my_memcpy.c 							\
 	parse_argv.c							\
 	parse_instruction.c						\
 	prog_number.c 							\
+	scheduler.c								\
 	vm_init.c								\
 	mnemonics/check_args.c					\
 	mnemonics/get_arg.c						\

@@ -49,7 +49,9 @@ int main(int argc, char *argv[])
         }
         puts(vm.champions[i].filename);
     }
-    dump_memory(&vm, 0);
+    if (status) {
+        scheduler_execute(&vm);
+    }
     free(vm.champions);
     return !status * 84;
 }

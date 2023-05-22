@@ -18,7 +18,7 @@
     n_32_bytes_chunks is the number of chunks (thus, lines) to display.
     0 displays the whole memory, n displays n chunks.
 @note
-    If n_32bytes_chunks it greater than the number of chunks in memory,
+    If n_32bytes_chunks is greater than the number of chunks in memory,
         displays the whole memory (similar than 0).
 */
 void dump_memory(vm_t *vm, unsigned n_32bytes_chunks)

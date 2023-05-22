@@ -80,7 +80,7 @@ STATIC_FUNCTION bool binary_open
     champion->carry = CARRY_OFF;
     champion->filename = binary;
     champion->pc = 0;
-    champion->clock_cycles_to_wait = 0;
+    champion->cycles_to_wait = 0;
     champion->load_address = load_address;
     champion->size = binary_get_size(fd);
 

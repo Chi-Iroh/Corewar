@@ -82,7 +82,7 @@ STATIC_FUNCTION bool mnemonic_get_args
         RETURN_VALUE_IF(address >= MEMORY_SIZE, false);
         RETURN_VALUE_IF(mnemonic->type[i] == PARAMETER_MAX, true);
         is_arg_index = mnemonic->type[i] == PARAMETER_DIRECT;
-        is_arg_index &= (*mnemonic->are_args_indexes)[i];
+        is_arg_index &= mnemonic->op->are_args_indexes[i];
         arg_size = is_arg_index ? INDEX_SIZE : ARGS_SIZE[mnemonic->type[i]];
         arg = &mnemonic->args[i];
         if (!memory_read_n_bytes(vm, &address, arg_size, arg)) {
@@ -114,7 +114,7 @@ vm_mnemonic_t parse_instruction(vm_t *vm, vm_address_t address)
     for (unsigned i = 0; i < LAST_OP; i++) {
         if (op_tab[i].opcode == vm->memory[address]) {
             mnemonic.mnemonic = op_tab[i].mnemonic;
-            mnemonic.are_args_indexes = &op_tab[i].are_args_indexes;
+            mnemonic.op = &op_tab[i];
             break;
         }
     }
