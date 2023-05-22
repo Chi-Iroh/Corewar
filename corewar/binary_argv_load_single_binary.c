@@ -30,16 +30,7 @@ STATIC_FUNCTION char *binary_argv_search_filename
     return argv[index];
 }
 
-STATIC_FUNCTION void binary_argv_handle_dump_flag
-    (vm_t *vm, char *argv[], unsigned *index)
-{
-    if (my_strcmp(argv[*index], "-dump") == 0) {
-        vm->cycles_before_memory_dump = my_getnbr(argv[*index + 1]);
-        (*index) += 2;
-    }
-}
-
-STATIC_FUNCTION void binary_argv_handle_number_and_address_flags
+STATIC_FUNCTION void binary_argv_handle_single_number_and_address_flags
     (char *argv[], unsigned *index,
     vm_address_t *load_address, vm_address_t *prog_number)
 {
@@ -84,8 +75,10 @@ bool binary_argv_load_single_binary
     RETURN_VALUE_IF(!vm || !index || *index >= argc, false);
     binary_name = binary_argv_search_filename(argv, *index);
     while (parse_argv_is_flag(argv[*index])) {
-        binary_argv_handle_dump_flag(vm, argv, index);
-        binary_argv_handle_number_and_address_flags
+        while (my_strcmp(argv[*index], "-dump") == 0) {
+            *index += 2;
+        }
+        binary_argv_handle_single_number_and_address_flags
             (argv, index, &load_address, &prog_number);
     }
     load_address %= MEMORY_SIZE;
