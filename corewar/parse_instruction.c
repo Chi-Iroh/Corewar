@@ -110,7 +110,7 @@ STATIC_FUNCTION bool mnemonic_get_args
 @param
     address is the memory address where we must parse the eventual coding byte
 @note
-    Certain instructions doesn't have a coding byte
+    Some instructions doesn't have a coding byte
         (LIVE, ZJMP, FORK and LFORK), because they only take one parameter
         with only one possible type.
 @note

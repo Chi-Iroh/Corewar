@@ -31,7 +31,7 @@ const parser_instruction_t PARSER_EMPTY_INSTRUCTION = {
     filename is the path to the target file.
 @returns
     NULL on error, otherwise a valid linked list head.
-@attention
+@note
     [CODE] Don't swap the order of str_begin and parser_add_line !
 */
 parser_line_t *parse_file(char *filename)

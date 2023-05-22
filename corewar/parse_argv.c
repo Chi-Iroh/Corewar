@@ -21,7 +21,7 @@
     argv are the command-line arguments
 @param
     index is the index where beginning to search
-@retruns
+@returns
     true if there's a valid -dump flag at the given index
 */
 STATIC_FUNCTION bool parse_argv_dump

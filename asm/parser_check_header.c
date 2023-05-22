@@ -9,6 +9,14 @@
 #include "../include/my_macros.h"
 #include "../include/asm/asm.h"
 
+/*
+@brief
+    Checks if an instruction is a string (text surrounded by double quotes).
+@param
+    instruction is the instruction to check
+@returns
+    false if NULL pointer or instruction isn't a string, otherwise true
+*/
 STATIC_FUNCTION bool parser_is_instruction_string
     (parser_instruction_t *instruction)
 {
@@ -21,6 +29,16 @@ STATIC_FUNCTION bool parser_is_instruction_string
     return status;
 }
 
+/*
+@brief
+    Checks if an instruction is a header instruction (.name or .comment)
+        and has a following string.
+@param
+    instruction is the instruction to check
+@returns
+    false if NULL pointer or instruction isn't a header instruction,
+        otherwise true
+*/
 bool parser_is_instruction_header(parser_instruction_t *instruction)
 {
     static bool has_name = false;

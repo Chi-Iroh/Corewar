@@ -10,40 +10,44 @@
 #include "../include/my_macros.h"
 #include "../include/asm/asm.h"
 
-/*STATIC_FUNCTION void parser_free_single_instruction
-    (parser_instruction_t **instruction, bool free_word)
+/*
+@brief
+    Searches a label's 
+*/
+STATIC_FUNCTION parser_instruction_t *parser_label_get_start
+    (parser_instruction_t *label, parser_line_t *line)
 {
-    parser_instruction_t *copy_next = NULL;
-
-    RETURN_IF(!instruction || !(*instruction));
-    copy_next = (*instruction)->next;
-    if (free_word) {
-        FREE_IF_ALLOCATED((*instruction)->word, free);
-    }
-    free(*instruction);
-    *instruction = copy_next;
-}*/
-
-STATIC_FUNCTION parser_instruction_t *parser_get_instruction_start
-    (parser_instruction_t *instruction, parser_line_t *line)
-{
-    parser_instruction_t *copy_instruction =
+    parser_instruction_t *copy_label =
         line ? line->instruction : NULL;
 
-    RETURN_VALUE_IF(!instruction, NULL);
-    while (copy_instruction != instruction && copy_instruction) {
-        copy_instruction = copy_instruction->next;
+    RETURN_VALUE_IF(!label || !line, NULL);
+    while (copy_label != label && copy_label) {
+        copy_label = copy_label->next;
     }
-    RETURN_VALUE_IF(!copy_instruction, NULL);
+    RETURN_VALUE_IF(!copy_label, NULL);
     while (line) {
-        while (instruction && !parser_is_mnemonic(instruction->word)) {
-            instruction = instruction->next;
+        while (label && !parser_is_mnemonic(label->word)) {
+            label = label->next;
         }
         line = line->next;
     }
-    return instruction ? instruction : NULL;
+    return label;
 }
 
+/*
+@brief
+    Initialized a label node.
+@param
+    node is the node to initialize
+@param
+    previous is the previous label node
+@param
+    instruction is the instruction right after the label
+@param
+    line is the line containing instruction
+@returns
+    true on success, false on failure
+*/
 STATIC_FUNCTION bool parser_init_label
     (parser_label_t *node, parser_label_t *previous,
     parser_instruction_t *instruction, parser_line_t *line)
@@ -51,11 +55,23 @@ STATIC_FUNCTION bool parser_init_label
     RETURN_VALUE_IF(!node || !instruction || !line, false);
     node->name = my_strdup(instruction->word);
     node->previous = previous;
-    node->line = parser_get_instruction_start(instruction, line);
+    node->line = parser_label_get_start(instruction, line);
     node->next = NULL;
     return node->name != NULL;
 }
 
+/*
+@brief
+    Adds a label at the end of the linked list.
+@param
+    label is the node to add at the end
+@param
+    instruction is the address of the linked list
+@param
+    line is the line containing the label
+@returns
+    true on success, false on failure
+*/
 STATIC_FUNCTION bool parser_add_label
     (parser_label_t **label, parser_instruction_t **instruction,
     parser_line_t *line)
@@ -79,24 +95,44 @@ STATIC_FUNCTION bool parser_add_label
     return true;
 }
 
+/*
+@brief
+    Parses all the labels of a line.
+@param
+    single_line is the address of the line to parse
+@param
+    labels is the address of the labels linked list
+@returns
+    true on success, false on failure
+*/
 STATIC_FUNCTION bool parse_line_labels
-    (parser_line_t **single_line, parser_label_t **label)
+    (parser_line_t **single_line, parser_label_t **labels)
 {
     bool status = true;
     parser_instruction_t **instruction = NULL;
     parser_instruction_t *copy_next = NULL;
 
-    RETURN_VALUE_IF(!single_line || !(*single_line) || !label, false);
+    RETURN_VALUE_IF(!single_line || !(*single_line) || !labels, false);
     instruction = &(*single_line)->instruction;
-    while (*instruction && status &&
-        parser_is_label((*instruction)->word, LABEL_COLON_END)) {
+    while (*instruction && status) {
+        BREAK_IF(!parser_is_label((*instruction)->word, LABEL_COLON_END));
         copy_next = (*instruction)->next;
-        status &= parser_add_label(label, instruction, *single_line);
+        status &= parser_add_label(labels, instruction, *single_line);
         *instruction = copy_next;
     }
     return status;
 }
 
+/*
+@brief
+    Parses all the labels of a file.
+@param
+    file is the file's content
+@param
+    labels is the address of the label linked list
+@returns
+    true on success, false on failure
+*/
 bool parse_labels(parser_line_t *file, parser_label_t **labels)
 {
     bool status = true;

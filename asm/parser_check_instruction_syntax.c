@@ -26,10 +26,10 @@ const unsigned parser_word_types[PARSER_WORD_TYPES] = {
 };
 
 /*
-\brief
+@brief
     Wraps the function parser_is_label with a "default value", to be used
         in the below array of function pointers.
-\note
+@note
     Exactly the same as parser_is_label(word, LABEL_COLON_END)
 */
 STATIC_FUNCTION bool parser_is_arg_label(char *word)

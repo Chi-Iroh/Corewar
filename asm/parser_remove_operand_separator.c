@@ -8,6 +8,12 @@
 #include "../include/asm/asm.h"
 #include "../include/my.h"
 
+/*
+@brief
+    Removes operand separators of an instruction.
+@param
+    instruction is the instruction to "clean"
+*/
 STATIC_FUNCTION void parser_remove_single_instruction_separator
     (parser_instruction_t *instruction)
 {
@@ -25,6 +31,12 @@ STATIC_FUNCTION void parser_remove_single_instruction_separator
     }
 }
 
+/*
+@brief
+    Removes all operand separators in a file.
+@param
+    file is the file's content
+*/
 void parser_remove_operand_separator(parser_line_t *file)
 {
     while (file && file->instruction) {
