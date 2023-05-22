@@ -52,6 +52,7 @@ int main(int argc, char *argv[])
     if (status) {
         scheduler_execute(&vm);
     }
+    dump_memory(&vm, 0);
     free(vm.champions);
     return !status * 84;
 }

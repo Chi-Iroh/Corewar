@@ -50,7 +50,8 @@ char *my_strrchr(char *str, char c);
 char *my_strstr(char *str, const char *to_find);
 char **my_str_to_word_array(const char *str);
 
-int my_put_nbr(int nb);
+void my_put_nbr(long long n);
+void my_sput_nbr(long long n, char *buffer);
 char *my_itoa_base(intmax_t n, const char *base);
 char *my_utoa_base(uintmax_t n, const char *base);
 char *my_itoa(intmax_t n);

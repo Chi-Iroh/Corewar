@@ -17,6 +17,7 @@ uintmax_t mnemonic_get_indirect_address_value
     (vm_t *vm, mnemonic_parameter_t type, uintmax_t value);
 
 void my_memcpy(void *destination, void *source, size_t size);
+void my_memset(void *destination, uint8_t byte, size_t size);
 
 void dump_memory(vm_t *vm, unsigned n_32bytes_chunks);
 
@@ -78,3 +79,8 @@ extern const vm_champion_t CHAMPION_DEFAULT;
 extern const char *const HELP_MSG;
 
 extern bool (*MNEMONICS[N_OP])(vm_t *, vm_champion_t *, vm_mnemonic_t);
+
+extern const char *const PRINTF_COLOR_RED;
+extern const char *const PRINTF_COLOR_GREEN;
+extern const char *const PRINTF_COLOR_CYAN;
+extern const char *const PRINTF_COLOR_RESET;

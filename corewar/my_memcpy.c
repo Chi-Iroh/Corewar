@@ -28,3 +28,24 @@ void my_memcpy(void *destination, void *source, size_t size)
         *((uint8_t*)destination + i) = *((uint8_t*)source + i);
     }
 }
+
+/*
+@brief
+    Same as libc memset, initializes raw data to a given value.
+@param
+    destination is where to copy the data
+@param
+    byte is the value to copy in each byte
+@param
+    size is the number of bytes to copy
+@note
+    No check on address can be performed in this function, be sure the pointer
+        is valid and the size won't overflow, otherwise it will lead to
+        undefined behaviour.
+*/
+void my_memset(void *destination, uint8_t byte, size_t size)
+{
+    for (size_t i = 0; i < size; i++) {
+        *((uint8_t*)destination + i) = byte;
+    }
+}
