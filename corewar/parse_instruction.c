@@ -31,6 +31,13 @@ const unsigned ARGS_SIZE[PARAMETER_MAX + 1] = {
     [PARAMETER_REGISTER] = REGISTER_SIZE,
 };
 
+const bool MNEMONIC_HAS_NO_CODING_BYTE[MNEMONIC_MAX] = {
+    [MNEMONIC_LIVE] = true,
+    [MNEMONIC_ZJMP] = true,
+    [MNEMONIC_FORK] = true,
+    [MNEMONIC_LFORK] = true
+};
+
 /*
 @brief
     Reads instruction argument, a given number of bytes in the memory.
@@ -95,6 +102,36 @@ STATIC_FUNCTION bool mnemonic_get_args
 
 /*
 @brief
+    Parses a mnemonic's coding byte to know what type are its args in binary.
+@param
+    vm is the Virtual Machine
+@param
+    mnemonic is the mnemonic read (mnemonic->op MUST be valid)
+@param
+    address is the memory address where we must parse the eventual coding byte
+@note
+    Certain instructions doesn't have a coding byte
+        (LIVE, ZJMP, FORK and LFORK), because they only take one parameter
+        with only one possible type.
+@note
+    Strangely, others instructions as ADD which takes multiple parameters
+        but with only one type still has a coding byte...
+*/
+STATIC_FUNCTION void mnemonic_parse_args_type
+    (vm_t *vm, vm_mnemonic_t *mnemonic, vm_address_t address)
+{
+    RETURN_IF(!mnemonic || address >= MEMORY_SIZE);
+    if (MNEMONIC_HAS_NO_CODING_BYTE[mnemonic->op->opcode]) {
+        return;
+    }
+    mnemonic->type[0] = ARGS_BITS_TO_NAME[(vm->memory[address] & 0xC0) >> 6];
+    mnemonic->type[1] = ARGS_BITS_TO_NAME[(vm->memory[address] & 0x30) >> 4];
+    mnemonic->type[2] = ARGS_BITS_TO_NAME[(vm->memory[address] & 0x0C) >> 2];
+    mnemonic->type[3] = ARGS_BITS_TO_NAME[(vm->memory[address++] & 0x03)];
+}
+
+/*
+@brief
     Parses a binary instruction.
 @returns
     a structure containing the mnemonic and its parameters
@@ -120,9 +157,6 @@ vm_mnemonic_t parse_instruction(vm_t *vm, vm_address_t address)
     }
     RETURN_VALUE_IF(!mnemonic.mnemonic, error);
     address++;
-    mnemonic.type[0] = ARGS_BITS_TO_NAME[(vm->memory[address] & 0xC0) >> 6];
-    mnemonic.type[1] = ARGS_BITS_TO_NAME[(vm->memory[address] & 0x30) >> 4];
-    mnemonic.type[2] = ARGS_BITS_TO_NAME[(vm->memory[address] & 0x0C) >> 2];
-    mnemonic.type[3] = ARGS_BITS_TO_NAME[(vm->memory[address++] & 0x03)];
+    mnemonic_parse_args_type(vm, &mnemonic, address);
     return mnemonic_get_args(vm, address, &mnemonic) ? mnemonic : error;
 }

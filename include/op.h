@@ -87,6 +87,27 @@
         char comment[COMMENT_LENGTH + 1];
     } header_t;
 
+    enum {
+        MNEMONIC_ERROR = 0x00,
+        MNEMONIC_LIVE = 0x01,
+        MNEMONIC_LD = 0x02,
+        MNEMONIC_ST = 0x03,
+        MNEMONIC_ADD = 0x04,
+        MNEMONIC_SUB = 0x05,
+        MNEMONIC_AND = 0x06,
+        MNEMONIC_OR = 0x07,
+        MNEMONIC_XOR = 0x08,
+        MNEMONIC_ZJMP = 0x09,
+        MNEMONIC_LDI = 0x0A,
+        MNEMONIC_STI = 0x0B,
+        MNEMONIC_FORK = 0x0C,
+        MNEMONIC_LLD = 0x0D,
+        MNEMONIC_LLDI = 0x0E,
+        MNEMONIC_LFORK = 0x0F,
+        MNEMONIC_AFF = 0x10,
+        MNEMONIC_MAX = MNEMONIC_AFF
+    };
+
     // Live
     // number of cycle before being declared dead
     #define CYCLE_TO_DIE            1'536

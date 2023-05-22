@@ -8,23 +8,23 @@
 #include "../include/my_macros.h"
 #include "../include/corewar/corewar.h"
 
-bool (*MNEMONICS[N_OP])(vm_t *, vm_champion_t *, vm_mnemonic_t) = {
-    [0x01] = mnemonic_live,
-    [0x02] = mnemonic_ld,
-    [0x03] = mnemonic_st,
-    [0x04] = mnemonic_add,
-    [0x05] = mnemonic_sub,
-    [0x06] = mnemonic_and,
-    [0x07] = mnemonic_or,
-    [0x08] = mnemonic_xor,
-    [0x09] = mnemonic_zjmp,
-    [0x0A] = mnemonic_ldi,
-    [0x0B] = mnemonic_sti,
-    [0x0C] = mnemonic_fork,
-    [0x0D] = mnemonic_lld,
-    [0x0E] = mnemonic_lldi,
-    [0x0F] = mnemonic_lfork,
-    [0x10] = mnemonic_aff
+const bool (*MNEMONICS[N_OP])(vm_t *, vm_champion_t *, vm_mnemonic_t) = {
+    [MNEMONIC_LIVE] = mnemonic_live,
+    [MNEMONIC_LD] = mnemonic_ld,
+    [MNEMONIC_ST] = mnemonic_st,
+    [MNEMONIC_ADD] = mnemonic_add,
+    [MNEMONIC_SUB] = mnemonic_sub,
+    [MNEMONIC_AND] = mnemonic_and,
+    [MNEMONIC_OR] = mnemonic_or,
+    [MNEMONIC_XOR] = mnemonic_xor,
+    [MNEMONIC_ZJMP] = mnemonic_zjmp,
+    [MNEMONIC_LDI] = mnemonic_ldi,
+    [MNEMONIC_STI] = mnemonic_sti,
+    [MNEMONIC_FORK] = mnemonic_fork,
+    [MNEMONIC_LLD] = mnemonic_lld,
+    [MNEMONIC_LLDI] = mnemonic_lldi,
+    [MNEMONIC_LFORK] = mnemonic_lfork,
+    [MNEMONIC_AFF] = mnemonic_aff
 };
 
 STATIC_FUNCTION void champion_increase_pc

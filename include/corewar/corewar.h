@@ -78,7 +78,10 @@ void scheduler_execute(vm_t *vm);
 extern const vm_champion_t CHAMPION_DEFAULT;
 extern const char *const HELP_MSG;
 
-extern bool (*MNEMONICS[N_OP])(vm_t *, vm_champion_t *, vm_mnemonic_t);
+extern const bool (*MNEMONICS[MNEMONIC_MAX])
+    (vm_t *, vm_champion_t *, vm_mnemonic_t);
+
+extern const bool MNEMONIC_HAS_NO_CODING_BYTE[MNEMONIC_MAX];
 
 extern const char *const PRINTF_COLOR_RED;
 extern const char *const PRINTF_COLOR_GREEN;
