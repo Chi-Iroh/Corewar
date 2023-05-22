@@ -105,7 +105,7 @@
         MNEMONIC_LLDI = 0x0E,
         MNEMONIC_LFORK = 0x0F,
         MNEMONIC_AFF = 0x10,
-        MNEMONIC_MAX = MNEMONIC_AFF
+        MNEMONIC_MAX = 0x11
     };
 
     // Live

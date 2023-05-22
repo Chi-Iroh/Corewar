@@ -111,7 +111,8 @@ run_tests: clean_tests tests
 
 $(NAME): $(OBJ)
 	@echo -------------
-	@echo [COREWAR] CC : $(CC)
+	@echo -n "[COREWAR] CC : "
+	@$(CC) --version | head -n 1
 	@echo [COREWAR] CFLAGS : $(CFLAGS)
 	@echo [COREWAR] LDFLAGS : $(LD_PRELOAD) $(LDFLAGS)
 	@gcc $(OBJ) $(LD_PRELOAD) $(LDFLAGS) -o $(NAME)

@@ -141,6 +141,8 @@ link_header: my.h
 	@ln -f my.h $(INCLUDE)/my.h
 
 $(NAME): link_header $(OBJ)
+	@echo -n "[LIB MY] CC : "
+	@$(CC) --version | head -n 1
 	@ar rcs $(NAME) $(OBJ)
 	@if [[ "$(ANALYZER)" != "" ]]; then\
 		echo "[LIB MY] GCC Analyzer log in analyzer.log";\

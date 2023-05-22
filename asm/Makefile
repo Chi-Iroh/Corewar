@@ -88,7 +88,8 @@ run_tests: clean_tests tests
 
 $(NAME): $(OBJ)
 	@echo -------------
-	@echo [ASM] CC : $(CC)
+	@echo -n "[ASM] CC : "
+	@$(CC) --version | head -n 1
 	@echo [ASM] CFLAGS : $(CFLAGS)
 	@echo [ASM] LDFLAGS : $(LD_PRELOAD) $(LDFLAGS)
 	@gcc $(OBJ) $(LD_PRELOAD) $(LDFLAGS) -o $(NAME)

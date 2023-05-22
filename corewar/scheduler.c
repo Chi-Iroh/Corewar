@@ -8,7 +8,7 @@
 #include "../include/my_macros.h"
 #include "../include/corewar/corewar.h"
 
-const bool (*MNEMONICS[N_OP])(vm_t *, vm_champion_t *, vm_mnemonic_t) = {
+bool (*const MNEMONICS[MNEMONIC_MAX])(vm_t *, vm_champion_t *, vm_mnemonic_t) = {
     [MNEMONIC_LIVE] = mnemonic_live,
     [MNEMONIC_LD] = mnemonic_ld,
     [MNEMONIC_ST] = mnemonic_st,
