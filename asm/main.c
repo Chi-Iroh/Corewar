@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "../include/my_macros.h"
 #include "../include/my.h"
 #include "../include/asm/asm.h"
@@ -20,8 +21,8 @@ STATIC_FUNCTION void free_main
 
 STATIC_FUNCTION void display_help(char *argv[])
 {
-    if (!argv[1]) {
-        return;
+    if (!argv[1] || argv[2]) {
+        exit(!argv[1] ? 0 : 84);
     }
     if (my_strcmp(argv[1], "-h") * my_strcmp(argv[1], "--help") == 0) {
         my_puts(
@@ -36,44 +37,58 @@ STATIC_FUNCTION void display_help(char *argv[])
     }
 }
 
-int main(int argc, char *argv[])
+STATIC_FUNCTION void parse_file_and_labels
+    (parser_line_t **file, parser_label_t **labels, char *argv[])
 {
-    display_help(argv);
-    RETURN_VALUE_IF(!argv[1], 84);
-    parser_line_t *file = parse_file(argv[1]);
-    parser_line_t *const file_copy = file;
-    parser_instruction_t *instruction = file->instruction;
-    parser_label_t *labels = NULL;
-
-    RETURN_VALUE_IF(!file || !instruction, 84);
-    if (!parse_labels(file, &labels)) {
-        free_main(&file, &labels);
-        return 84;
+    EXIT_IF(!file || !labels, 84);
+    *file = parse_file(argv[1]);
+    if (!(*file)) {
+        my_dputs(STDERR_FILENO, "Parsing error !");
+        exit(84);
     }
-    my_printf("Syntax %s\n", parser_check_syntax(file) ? "OK" : "KO");
+    if (!parse_labels(*file, labels)) {
+        my_dputs(STDERR_FILENO, "Label error !");
+        free_main(file, labels);
+        exit(84);
+    }
+    if (!parser_check_syntax(*file)) {
+        my_dputs(STDERR_FILENO, "Syntax error(s) !");
+        free_main(file, labels);
+        exit(84);
+    }
+}
+
+STATIC_FUNCTION void print_debug(parser_line_t *file, parser_label_t *labels)
+{
+    parser_instruction_t *instruction = NULL;
+
     while (file) {
         instruction = file->instruction;
         while (instruction) {
             my_printf("%p : %s\n", instruction, instruction->word);
             instruction = instruction->next;
-            if (instruction) {
-                my_putchar('\t');
-            }
+            my_putchar(instruction ? '\t' : '\n');
         }
-        my_putchar('\n');
+        BREAK_IF(!file->next);
         file = file->next;
     }
     while (labels) {
-        printf("%p : LABEL %s\n", (void*)labels->line, labels->name);
-        if (!labels->next) {
-            break;
-        }
+        my_printf("%p : LABEL %s\n", (void*)labels->line, labels->name);
+        BREAK_IF(!labels->next);
         labels = labels->next;
     }
-    while (labels->previous) {
-        labels = labels->previous;
-    }
-    file = file_copy;
+    DOUBLY_LINKED_LIST_GO_TO_START(labels);
+    DOUBLY_LINKED_LIST_GO_TO_START(file);
+}
+
+int main(int argc, char *argv[])
+{
+    parser_line_t *file = NULL;
+    parser_label_t *labels = NULL;
+
+    display_help(argv);
+    parse_file_and_labels(&file, &labels, argv);
+    print_debug(file, labels);
     free_main(&file, &labels);
     return 0;
 }

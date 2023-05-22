@@ -164,3 +164,30 @@ free_all((void*[(n)])allocs, (void*[(n)])destructors, (n))
         *(ptr) = (value);       \
     }                           \
 }
+
+#ifdef EXIT_IF
+    #undef EXIT_IF
+#endif
+#define EXIT_IF(condition, code) {  \
+    if (condition) {                \
+        exit(code);                 \
+    }                               \
+}
+
+#ifdef DOUBLY_LINKED_LIST_GO_TO_START
+    #undef DOUBLY_LINKED_LIST_GO_TO_START
+#endif
+#define DOUBLY_LINKED_LIST_GO_TO_START(linked_list) {   \
+    while ((linked_list) && (linked_list)->previous) {  \
+        (linked_list) = (linked_list)->previous;        \
+    }                                                   \
+}
+
+#ifdef BREAK_IF
+    #define BREAK_IF
+#endif
+#define BREAK_IF(condition) {   \
+    if (condition) {            \
+        break;                  \
+    }                           \
+}
