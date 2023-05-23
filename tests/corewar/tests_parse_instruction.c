@@ -124,7 +124,7 @@ Test(exec_instruction, exec_instruction) {
         .mnemonic = "ld",
         .args = { 0, 1 },
         .type = { PARAMETER_INDIRECT, PARAMETER_REGISTER },
-        .op = &op_tab[MNEMONIC_LIVE]
+        .op = &op_tab[MNEMONIC_LD]
     };
     vm_address_t load_address = 0;
     write_instruction(&vm, ld, load_address, false);

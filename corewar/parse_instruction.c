@@ -61,7 +61,7 @@ STATIC_FUNCTION bool mnemonic_get_args
         RETURN_VALUE_IF(mnemonic->type[i] == PARAMETER_MAX, true);
         is_arg_index = mnemonic->type[i] == PARAMETER_DIRECT;
         is_arg_index &= mnemonic->op->are_args_indexes[i];
-        arg_size = is_arg_index ? INDEX_SIZE : ARGS_SIZE[mnemonic->type[i]];
+        arg_size = is_arg_index ? INDEX_SIZE : ARG_SIZE[mnemonic->type[i]];
         arg = &mnemonic->args[i];
         if (!memory_read_n_bytes(vm, &address, arg_size, arg)) {
             return false;
@@ -95,10 +95,10 @@ STATIC_FUNCTION void mnemonic_parse_args_type
     if (MNEMONIC_HAS_NO_CODING_BYTE[mnemonic->op->opcode]) {
         return;
     }
-    mnemonic->type[0] = ARGS_BITS_TO_NAME[(vm->memory[address] & 0xC0) >> 6];
-    mnemonic->type[1] = ARGS_BITS_TO_NAME[(vm->memory[address] & 0x30) >> 4];
-    mnemonic->type[2] = ARGS_BITS_TO_NAME[(vm->memory[address] & 0x0C) >> 2];
-    mnemonic->type[3] = ARGS_BITS_TO_NAME[(vm->memory[address++] & 0x03)];
+    mnemonic->type[0] = ARG_BITS_TO_NAME[(vm->memory[address] & 0xC0) >> 6];
+    mnemonic->type[1] = ARG_BITS_TO_NAME[(vm->memory[address] & 0x30) >> 4];
+    mnemonic->type[2] = ARG_BITS_TO_NAME[(vm->memory[address] & 0x0C) >> 2];
+    mnemonic->type[3] = ARG_BITS_TO_NAME[(vm->memory[address++] & 0x03)];
 }
 
 /*

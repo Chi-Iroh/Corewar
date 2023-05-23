@@ -37,7 +37,7 @@ STATIC_FUNCTION void champion_increase_pc
     RETURN_IF(!mnemonic || !pc);
     *pc += 2;
     for (unsigned i = 0; i < MAX_ARGS_NUMBER; i++) {
-        arg_size = ARGS_SIZE[mnemonic->type[i]];
+        arg_size = ARG_SIZE[mnemonic->type[i]];
         is_index = mnemonic->op->are_args_indexes[i];
         is_index &= mnemonic->type[i] ^ PARAMETER_REGISTER;
         *pc += is_index ? INDIRECT_SIZE : arg_size;
