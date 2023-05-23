@@ -7,15 +7,16 @@
 
 SRC_NO_MAIN = 									\
 			../op.c 							\
+			binary.c 							\
+			parser_check_header.c				\
 			parser_check_instruction_syntax.c 	\
 			parser_check_word_syntax.c 			\
+			parser.c							\
 			parser_free.c 						\
 			parser_linked_list.c 				\
-			parser_check_header.c				\
-			parser_remove_operand_separator.c	\
-			parser_next_word.c					\
 			parser_labels.c						\
-			parser.c
+			parser_next_word.c					\
+			parser_remove_operand_separator.c	\
 
 SRC 	=	$(SRC_NO_MAIN) main.c
 

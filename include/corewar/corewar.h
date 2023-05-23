@@ -39,16 +39,6 @@ bool mnemonic_live(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args);
 bool mnemonic_fork(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args);
 bool mnemonic_lfork(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args);
 
-#ifdef ARG_CODING_BITS
-    #undef ARG_CODING_BITS
-#endif
-// Number of bits which encodes one parameter type
-#define PARAMETER_TYPE_BITS 2
-
-extern const mnemonic_parameter_t ARGS_BITS_TO_NAME[1 << PARAMETER_TYPE_BITS];
-extern const unsigned ARGS_NAME_TO_BITS[PARAMETER_MAX + 1];
-extern const unsigned ARGS_SIZE[PARAMETER_MAX + 1];
-
 bool vm_init(vm_t *vm, char *argv[]);
 
 vm_mnemonic_t parse_instruction(vm_t *vm, vm_address_t address);
@@ -80,8 +70,6 @@ extern const char *const HELP_MSG;
 
 extern bool (*const MNEMONICS[MNEMONIC_MAX])
     (vm_t *, vm_champion_t *, vm_mnemonic_t);
-
-extern const bool MNEMONIC_HAS_NO_CODING_BYTE[MNEMONIC_MAX];
 
 extern const char *const PRINTF_COLOR_RED;
 extern const char *const PRINTF_COLOR_GREEN;

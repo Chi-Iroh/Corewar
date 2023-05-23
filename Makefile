@@ -15,7 +15,7 @@ all:
 	@$(MAKE) $(MAKE_FLAGS) -C asm/ $(SRC_COMPILE)
 	@$(MAKE) $(MAKE_FLAGS) -C corewar/ $(SRC_COMPILE)
 
-.PHONY: all
+.PHONY: re
 re: fclean all
 
 .PHONY: debug redebug

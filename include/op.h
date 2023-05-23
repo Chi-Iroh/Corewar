@@ -78,12 +78,11 @@
     #define COMMENT_LENGTH          2'048
     #define HEADER_LENGTH   (PROG_NAME_LENGTH + COMMENT_LENGTH)
     // Magic number in the binary header
-    #define COREWAR_EXEC_MAGIC      0xEA'83'F3
+    #define COREWAR_EXEC_MAGIC      0x00'EA'83'F3
 
     typedef struct header_s {
-        uint32_t magic;
         char prog_name[PROG_NAME_LENGTH + 1];
-        unsigned prog_size;
+        uint32_t prog_size;
         char comment[COMMENT_LENGTH + 1];
     } header_t;
 
@@ -107,6 +106,18 @@
         MNEMONIC_AFF = 0x10,
         MNEMONIC_MAX = 0x11
     };
+
+    #ifdef ARG_CODING_BITS
+        #undef ARG_CODING_BITS
+    #endif
+    // Number of bits which encodes one parameter type
+    #define PARAMETER_TYPE_BITS 2
+
+    extern const mnemonic_parameter_t
+        ARGS_BITS_TO_NAME[1 << PARAMETER_TYPE_BITS];
+    extern const unsigned ARGS_NAME_TO_BITS[PARAMETER_MAX + 1];
+    extern const unsigned ARGS_SIZE[PARAMETER_MAX + 1];
+    extern const bool MNEMONIC_HAS_NO_CODING_BYTE[MNEMONIC_MAX];
 
     // Live
     // number of cycle before being declared dead

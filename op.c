@@ -228,3 +228,32 @@ op_t op_tab[N_OP] = {
         .comment = NULL
     }
 };
+
+// Byte coding of each parameter type (00 = PARAMETER_MAX = no parameter)
+const mnemonic_parameter_t ARGS_BITS_TO_NAME[1 << PARAMETER_TYPE_BITS] = {
+    [0b00] = PARAMETER_MAX,
+    [0b01] = PARAMETER_REGISTER,
+    [0b10] = PARAMETER_DIRECT,
+    [0b11] = PARAMETER_INDIRECT
+};
+
+const unsigned ARGS_NAME_TO_BITS[PARAMETER_MAX + 1] = {
+    [PARAMETER_MAX] = 0b00,
+    [PARAMETER_REGISTER] = 0b01,
+    [PARAMETER_DIRECT] = 0b10,
+    [PARAMETER_INDIRECT] = 0b11
+};
+
+// Size of each parameter type
+const unsigned ARGS_SIZE[PARAMETER_MAX + 1] = {
+    [PARAMETER_DIRECT] = DIRECT_SIZE,
+    [PARAMETER_INDIRECT] = INDIRECT_SIZE,
+    [PARAMETER_REGISTER] = REGISTER_SIZE,
+};
+
+const bool MNEMONIC_HAS_NO_CODING_BYTE[MNEMONIC_MAX] = {
+    [MNEMONIC_LIVE] = true,
+    [MNEMONIC_ZJMP] = true,
+    [MNEMONIC_FORK] = true,
+    [MNEMONIC_LFORK] = true
+};
