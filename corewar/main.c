@@ -42,12 +42,12 @@ int main(int argc, char *argv[])
 
     display_help(argv);
     status = binary_load_all(&vm, argc, argv);
-    printf("%d\n", status);
+    my_printf("%d\n", status);
     for (vm_address_t i = 0; i < vm.n_champions; i++) {
         if (!vm.champions[i].filename) {
             break;
         }
-        puts(vm.champions[i].filename);
+        my_puts(vm.champions[i].filename);
     }
     if (status) {
         scheduler_execute(&vm);

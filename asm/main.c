@@ -12,6 +12,14 @@
 #include "../include/my.h"
 #include "../include/asm/asm.h"
 
+/*
+@brief
+    Properly frees the main resources.
+@param
+    file is the address of the file linked list
+@param
+    labels if the address of the labels linked list
+*/
 STATIC_FUNCTION void free_main
     (parser_line_t **file, parser_label_t **labels)
 {
@@ -19,11 +27,21 @@ STATIC_FUNCTION void free_main
     parser_free_labels(labels);
 }
 
+/*
+@brief
+    Displays help if the firsr command-line argument is either -h or --help,
+        and there's only one argument (except binary filename).
+@param
+    argv are the command line arguments
+@note
+    If the help message must be displayed, this functions exits the program
+        with code 0.
+@attention
+    Regarding the note, this function obviously must be called before any
+        parsing function, otherwise there will be memory leaks due to the exit.
+*/
 STATIC_FUNCTION void display_help(char *argv[])
 {
-    if (!argv[1] || argv[2]) {
-        exit(!argv[1] ? 0 : 84);
-    }
     if (my_strcmp(argv[1], "-h") * my_strcmp(argv[1], "--help") == 0) {
         my_puts(
             "USAGE\n"
@@ -86,6 +104,9 @@ int main(int argc, char *argv[])
     parser_line_t *file = NULL;
     parser_label_t *labels = NULL;
 
+    if (!argv[1] || argv[2]) {
+        return 84;
+    }
     display_help(argv);
     parse_file_and_labels(&file, &labels, argv);
     print_debug(file, labels);

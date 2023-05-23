@@ -12,7 +12,14 @@
 
 /*
 @brief
-    Searches a label's 
+    Searches a label's closest mnemonic to know where does the label redirects.
+@param
+    label is the label node
+@param
+    line is the line where is the label
+@returns
+    NULL is the label isn't in the given line or it is at the end of the file,
+        otherwise the node of its instruction.
 */
 STATIC_FUNCTION parser_instruction_t *parser_label_get_start
     (parser_instruction_t *label, parser_line_t *line)
