@@ -121,7 +121,7 @@ parser_instruction_t *instruction, uint8_t opcode)
     size_t n_written_bytes = 0;
 
     for (unsigned i = 0; i < MAX_ARGS_NUMBER; i++) {
-        if (ARG_NAME_TO_BITS[instruction_get_arg_type(instruction)] == ) {
+        if (ARG_NAME_TO_BITS[instruction_get_arg_type(instruction)] == 4) {
             uint32_t value = my_getnbr(instruction->word + 1);
             uint8_t buffer[4];
             binary_write(value, buffer, 4);
