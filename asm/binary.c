@@ -58,78 +58,74 @@ STATIC_FUNCTION bool binary_write_header(FILE *file, header_t *header)
         has four parameters for implementation purpose, even if less are
         in ASM files.
 */
-STATIC_FUNCTION mnemonic_parameter_t instruction_get_arg_type(parser_instruction_t *instruction)
+STATIC_FUNCTION mnemonic_parameter_t
+instruction_get_arg_type(parser_instruction_t *instruction)
 {
     static parser_instruction_t *function_last_parameter = NULL;
     static parser_instruction_t *function_last_processed = NULL;
 
     RETURN_VALUE_IF(!instruction || !instruction->word, PARAMETER_MAX);
-    if (function_last_parameter == instruction)
-    {
-        function_last_processed = function_last_processed ? function_last_processed->next : NULL;
-    }
-    else
-    {
+    if (function_last_parameter == instruction) {
+        function_last_processed = function_last_processed ?
+        function_last_processed->next : NULL;
+    } else {
         function_last_parameter = instruction;
         function_last_processed = instruction;
     }
     if (parser_is_register(function_last_processed->word))
-    {
         return PARAMETER_REGISTER;
-    }
     else if (parser_is_direct_value(function_last_processed->word))
-    {
         return PARAMETER_DIRECT;
-    }
-    return parser_is_indirect_value(function_last_processed->word) ? PARAMETER_INDIRECT : PARAMETER_MAX;
+    return parser_is_indirect_value(function_last_processed->word) ?
+    PARAMETER_INDIRECT : PARAMETER_MAX;
 }
 
 /*
 @brief
-    Writes an instruction in the binary file (.cor).
+    Writes the opcode and coding byte to the binary file.
+@param
+    file is the binary file
+@param
+    opcode is the opcode of the instruction
+@param
+    coding_byte is the coding byte of the instruction
+@returns
+    true on success, false on failure
+*/
+STATIC_FUNCTION bool binary_write_opcode_and_coding_byte(FILE *file,
+uint8_t opcode, uint8_t coding_byte)
+{
+    size_t n_written_bytes = 0;
+
+    n_written_bytes += fwrite(&opcode,1, 1, file);
+    n_written_bytes += fwrite(&coding_byte, 1, 1, file);
+    return n_written_bytes == 2;
+}
+
+/*
+@brief
+    Writes the arguments of the instruction to the binary file.
 @param
     file is the binary file
 @param
     instruction is the instruction node
+@param
+    opcode is the opcode of the instruction
 @returns
-    false if instruction isn't a mnemonic or write error, otherwise true
+    true on success, false on failure
 */
-
-STATIC_FUNCTION bool binary_write_instruction(FILE *file, parser_instruction_t *instruction)
+STATIC_FUNCTION bool binary_write_arguments (FILE *file,
+parser_instruction_t *instruction, uint8_t opcode)
 {
-    uint8_t opcode = 0x00;
-    uint8_t coding_byte = 0x00;
     size_t n_written_bytes = 0;
 
-    for (unsigned i = 0; file && instruction && i < LAST_OP; i++)
-    {
-        if (my_strcmp(op_tab[i].mnemonic, instruction->word) == 0)
-        {
-            opcode = op_tab[i].opcode;
-            break;
-        }
-    }
-    RETURN_VALUE_IF(opcode == 0x00, false);
-    instruction = instruction->next;
-    for (unsigned i = 0; i < MAX_ARGS_NUMBER; i++)
-    {
-        coding_byte <<= 2;
-        coding_byte |= ARG_NAME_TO_BITS[instruction_get_arg_type(instruction)];
-        instruction = instruction->next;
-    }
-    n_written_bytes += fwrite(&opcode, 1, 1, file);
-    n_written_bytes += fwrite(&coding_byte, 1, 1, file);
-    for (unsigned i = 0; i < MAX_ARGS_NUMBER; i++)
-    {
-        if (ARG_NAME_TO_BITS[instruction_get_arg_type(instruction)] == 1)
-        {
+    for (unsigned i = 0; i < MAX_ARGS_NUMBER; i++) {
+        if (ARG_NAME_TO_BITS[instruction_get_arg_type(instruction)] == 1) {
             uint32_t value = my_getnbr(instruction->word + 1);
             uint8_t buffer[4];
             binary_write(value, buffer, 4);
             n_written_bytes += fwrite(buffer, 1, 4, file) == 4;
-        }
-        else
-        {
+        } else {
             uint16_t value = my_getnbr(instruction->word + 1);
             uint8_t buffer[2];
             binary_write(value, buffer, 2);
@@ -137,5 +133,40 @@ STATIC_FUNCTION bool binary_write_instruction(FILE *file, parser_instruction_t *
         }
         instruction = instruction->next;
     }
-    return n_written_bytes == op_tab[opcode - 1].nbr_args + 2;
+    return n_written_bytes == op_tab[opcode - 1].nbr_args;
+}
+
+/*
+@brief
+    Writes an instruction to the binary file (.cor).
+@param
+    file is the binary file
+@param
+    instruction is the instruction node
+@returns
+    false if instruction isn't a mnemonic or write error, otherwise true
+*/
+STATIC_FUNCTION bool binary_write_instruction(FILE *file,
+parser_instruction_t *instruction)
+{
+    uint8_t opcode = 0x00;
+    uint8_t coding_byte = 0x00;
+    for (unsigned i = 0; file && instruction && i < LAST_OP; i++) {
+        if (my_strcmp(op_tab[i].mnemonic, instruction->word) == 0) {
+            opcode = op_tab[i].opcode;
+            break;
+        }
+    }
+    RETURN_VALUE_IF(opcode == 0x00, false);
+    instruction = instruction->next;
+    for (unsigned i = 0; i < MAX_ARGS_NUMBER; i++) {
+        coding_byte <<= 2;
+        coding_byte |= ARG_NAME_TO_BITS[instruction_get_arg_type(instruction)];
+        instruction = instruction->next;
+    }
+    if (!binary_write_opcode_and_coding_byte(file, opcode, coding_byte))
+        return false;
+    if (!binary_write_arguments(file, instruction, opcode))
+        return false;
+    return true;
 }
