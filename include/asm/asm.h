@@ -51,6 +51,8 @@ bool parser_check_syntax(parser_line_t *file);
 
 void binary_write(uintmax_t value, uint8_t buffer[], unsigned size);
 void binary_read(uint8_t buffer[], uintmax_t *value, unsigned size);
+bool binary_write_header(FILE *file, header_t *header);
+bool binary_write_instruction(FILE *file, parser_instruction_t *instruction);
 
 extern bool (*parser_syntax_functions[PARAMETER_MAX])(char*);
 extern const unsigned parser_word_types[4];
