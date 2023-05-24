@@ -30,8 +30,7 @@ STATIC_FUNCTION bool binary_write_header(FILE *file, header_t *header)
         (COREWAR_EXEC_MAGIC & 0xFF'00'00'00) >> 24,
         (COREWAR_EXEC_MAGIC & 0x00'FF'00'00) >> 16,
         (COREWAR_EXEC_MAGIC & 0x00'00'FF'00) >> 8,
-        COREWAR_EXEC_MAGIC & 0x00'00'00'FF
-    };
+        COREWAR_EXEC_MAGIC & 0x00'00'00'FF};
 
     prog_size[0] = (header->prog_size & 0xFF'00'00'00) >> 24;
     prog_size[1] = (header->prog_size & 0x00'FF'00'00) >> 16;
@@ -59,27 +58,30 @@ STATIC_FUNCTION bool binary_write_header(FILE *file, header_t *header)
         has four parameters for implementation purpose, even if less are
         in ASM files.
 */
-STATIC_FUNCTION mnemonic_parameter_t instruction_get_arg_type
-    (parser_instruction_t *instruction)
+STATIC_FUNCTION mnemonic_parameter_t instruction_get_arg_type(parser_instruction_t *instruction)
 {
     static parser_instruction_t *function_last_parameter = NULL;
     static parser_instruction_t *function_last_processed = NULL;
 
     RETURN_VALUE_IF(!instruction || !instruction->word, PARAMETER_MAX);
-    if (function_last_parameter == instruction) {
-        function_last_processed = function_last_processed ?
-            function_last_processed->next : NULL;
-    } else {
+    if (function_last_parameter == instruction)
+    {
+        function_last_processed = function_last_processed ? function_last_processed->next : NULL;
+    }
+    else
+    {
         function_last_parameter = instruction;
         function_last_processed = instruction;
     }
-    if (parser_is_register(function_last_processed->word)) {
+    if (parser_is_register(function_last_processed->word))
+    {
         return PARAMETER_REGISTER;
-    } else if (parser_is_direct_value(function_last_processed->word)) {
+    }
+    else if (parser_is_direct_value(function_last_processed->word))
+    {
         return PARAMETER_DIRECT;
     }
-    return parser_is_indirect_value(function_last_processed->word) ?
-        PARAMETER_INDIRECT : PARAMETER_MAX;
+    return parser_is_indirect_value(function_last_processed->word) ? PARAMETER_INDIRECT : PARAMETER_MAX;
 }
 
 /*
@@ -92,27 +94,48 @@ STATIC_FUNCTION mnemonic_parameter_t instruction_get_arg_type
 @returns
     false if instruction isn't a mnemonic or write error, otherwise true
 */
-STATIC_FUNCTION bool binary_write_instruction
-    (FILE *file, parser_instruction_t *instruction)
+
+STATIC_FUNCTION bool binary_write_instruction(FILE *file, parser_instruction_t *instruction)
 {
     uint8_t opcode = 0x00;
     uint8_t coding_byte = 0x00;
     size_t n_written_bytes = 0;
 
-    for (unsigned i = 0; file && instruction && i < LAST_OP; i++) {
-        if (my_strcmp(op_tab[i].mnemonic, instruction->word) == 0) {
+    for (unsigned i = 0; file && instruction && i < LAST_OP; i++)
+    {
+        if (my_strcmp(op_tab[i].mnemonic, instruction->word) == 0)
+        {
             opcode = op_tab[i].opcode;
             break;
         }
     }
     RETURN_VALUE_IF(opcode == 0x00, false);
     instruction = instruction->next;
-    for (unsigned i = 0; i < MAX_ARGS_NUMBER; i++) {
-        coding_byte <<= 8;
+    for (unsigned i = 0; i < MAX_ARGS_NUMBER; i++)
+    {
+        coding_byte <<= 2;
         coding_byte |= ARG_NAME_TO_BITS[instruction_get_arg_type(instruction)];
+        instruction = instruction->next;
     }
     n_written_bytes += fwrite(&opcode, 1, 1, file);
     n_written_bytes += fwrite(&coding_byte, 1, 1, file);
-    // write arguments (also increment n_written_bytes), handle indexes size !
-    return n_written_bytes; // == expected instruction size in binary
+    for (unsigned i = 0; i < MAX_ARGS_NUMBER; i++)
+    {
+        if (ARG_NAME_TO_BITS[instruction_get_arg_type(instruction)] == 1)
+        {
+            uint32_t value = my_getnbr(instruction->word + 1);
+            uint8_t buffer[4];
+            binary_write(value, buffer, 4);
+            n_written_bytes += fwrite(buffer, 1, 4, file) == 4;
+        }
+        else
+        {
+            uint16_t value = my_getnbr(instruction->word + 1);
+            uint8_t buffer[2];
+            binary_write(value, buffer, 2);
+            n_written_bytes += fwrite(buffer, 1, 2, file) == 2;
+        }
+        instruction = instruction->next;
+    }
+    return n_written_bytes == op_tab[opcode - 1].nbr_args + 2;
 }
