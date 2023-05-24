@@ -8,6 +8,8 @@
 SRC_NO_MAIN = 									\
 			../op.c 							\
 			binary.c 							\
+			binary_instruction.c 				\
+			binary_read_write.c 				\
 			parser_check_header.c				\
 			parser_check_instruction_syntax.c 	\
 			parser_check_word_syntax.c 			\
