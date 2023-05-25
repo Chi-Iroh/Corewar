@@ -67,7 +67,7 @@ Test(mnemonic_and, vm_null) {
     };
     vm_address_t load_address = 0;
     write_instruction(&vm, args, load_address, false);
-    cr_assert(!mnemonic_add(NULL, &champion, args));
+    cr_assert(!mnemonic_and(NULL, &champion, args));
 }
 
 Test(mnemonic_and, champion_null) {
@@ -95,7 +95,7 @@ Test(mnemonic_and, champion_null) {
     };
     vm_address_t load_address = 0;
     write_instruction(&vm, args, load_address, false);
-    cr_assert(!mnemonic_add(&vm, NULL, args));
+    cr_assert(!mnemonic_and(&vm, NULL, args));
 }
 
 Test(mnemonic_and, bad_args) {
@@ -121,7 +121,7 @@ Test(mnemonic_and, bad_args) {
     };
     vm_address_t load_address = 0;
     write_instruction(&vm, args, load_address, false);
-    cr_assert(!mnemonic_add(&vm, &champion, args));
+    cr_assert(!mnemonic_and(&vm, &champion, args));
 }
 
 Test(mnemonic_and, test_and) {
@@ -149,7 +149,7 @@ Test(mnemonic_and, test_and) {
     };
     vm_address_t load_address = 0;
     write_instruction(&vm, args, load_address, false);
-    cr_assert(mnemonic_add(&vm, &champion, args));
+    cr_assert(mnemonic_and(&vm, &champion, args));
     vm_register_t expected = 0;
     for (vm_address_t i = load_address; i < load_address + sizeof(expected); i++) {
         expected <<= 8;

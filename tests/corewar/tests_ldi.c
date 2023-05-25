@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2023
 ** parse_instruction.c
 ** File description:
-** -> Tests for aff.c
+** -> Tests for ldi.c
 */
 
 #include <string.h>
@@ -42,7 +42,7 @@ static void write_instruction(vm_t *vm, vm_mnemonic_t mnemonic, vm_address_t add
     }
 }
 
-Test(mnemonic_aff, vm_null) {
+Test(mnemonic_ldi, vm_null) {
     vm_champion_t champion = {
         .carry = CARRY_OFF,
         .filename = "notExistingFile.S",
@@ -58,17 +58,17 @@ Test(mnemonic_aff, vm_null) {
         .n_champions = 1
     };
     vm_mnemonic_t args = {
-        .mnemonic = "aff",
-        .args = { 0, 1, 2 },
-        .type = { PARAMETER_REGISTER },
+        .mnemonic = "ldi",
+        .args = { 0, 1 },
+        .type = { PARAMETER_REGISTER, PARAMETER_DIRECT | PARAMETER_INDIRECT },
         .op = &op_tab[MNEMONIC_LIVE]
     };
     vm_address_t load_address = 0;
     write_instruction(&vm, args, load_address, false);
-    cr_assert(!mnemonic_aff(NULL, &champion, args));
+    cr_assert(!mnemonic_ldi(NULL, &champion, args));
 }
 
-Test(mnemonic_aff, champion_null) {
+Test(mnemonic_ldi, champion_null) {
     vm_champion_t champion = {
         .carry = CARRY_OFF,
         .filename = "notExistingFile.S",
@@ -84,17 +84,17 @@ Test(mnemonic_aff, champion_null) {
         .n_champions = 1
     };
     vm_mnemonic_t args = {
-        .mnemonic = "aff",
-        .args = { 0 },
-        .type = { PARAMETER_REGISTER },
+        .mnemonic = "ldi",
+        .args = { 0, 1 },
+        .type = { PARAMETER_REGISTER, PARAMETER_DIRECT | PARAMETER_INDIRECT },
         .op = &op_tab[MNEMONIC_LIVE]
     };
     vm_address_t load_address = 0;
     write_instruction(&vm, args, load_address, false);
-    cr_assert(!mnemonic_aff(&vm, NULL, args));
+    cr_assert(!mnemonic_ldi(&vm, NULL, args));
 }
 
-Test(mnemonic_aff, bad_args) {
+Test(mnemonic_ldi, bad_args) {
     vm_champion_t champion = {
         .carry = CARRY_OFF,
         .filename = "notExistingFile.S",
@@ -112,15 +112,15 @@ Test(mnemonic_aff, bad_args) {
     vm_mnemonic_t args = {
         .mnemonic = "",
         .args = { 0, 1 },
-        .type = { PARAMETER_REGISTER },
+        .type = { PARAMETER_INDIRECT, PARAMETER_REGISTER },
         .op = NULL
     };
     vm_address_t load_address = 0;
     write_instruction(&vm, args, load_address, false);
-    cr_assert(!mnemonic_aff(&vm, &champion, args));
+    cr_assert(!mnemonic_ldi(&vm, &champion, args));
 }
 
-Test(mnemonic_aff, test_aff) {
+Test(mnemonic_ldi, test_ldi) {
     vm_champion_t champion = {
         .carry = CARRY_OFF,
         .filename = "notExistingFile.S",
@@ -136,14 +136,14 @@ Test(mnemonic_aff, test_aff) {
         .n_champions = 1
     };
     vm_mnemonic_t args = {
-        .mnemonic = "aff",
-        .args = { 0 },
-        .type = { PARAMETER_REGISTER },
+        .mnemonic = "ldi",
+        .args = { 0, 1 },
+        .type = { PARAMETER_REGISTER, PARAMETER_DIRECT | PARAMETER_INDIRECT },
         .op = &op_tab[MNEMONIC_LIVE]
     };
     vm_address_t load_address = 0;
     write_instruction(&vm, args, load_address, false);
-    cr_assert(mnemonic_aff(&vm, &champion, args));
+    cr_assert(mnemonic_ldi(&vm, &champion, args));
     vm_register_t expected = 0;
     for (vm_address_t i = load_address; i < load_address + sizeof(expected); i++) {
         expected <<= 8;
