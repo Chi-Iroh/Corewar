@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2023
-** st.c
+** aff.c
 ** File description:
 ** -> st mnemonic
 */

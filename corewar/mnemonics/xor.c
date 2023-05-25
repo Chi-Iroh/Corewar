@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2023
-** or.c
+** xor.c
 ** File description:
 ** -> or mnemonic
 */

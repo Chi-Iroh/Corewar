@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2023
-** ldi.c
+** lldi.c
 ** File description:
 ** -> ldi mnemonic
 */
