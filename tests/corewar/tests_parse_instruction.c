@@ -11,12 +11,12 @@
 #include "../../include/corewar/corewar.h"
 
 // mnemonic is not a pointer but a copy because this function is destructive
-void write_instruction(vm_t *vm, vm_mnemonic_t mnemonic, vm_address_t address, bool zero_init_all_memory)
+static void write_instruction(vm_t *vm, vm_mnemonic_t mnemonic, vm_address_t address, bool zero_init_all_memory)
 {
     if (zero_init_all_memory) {
         memset(&vm->memory[0], 0, MEMORY_SIZE);
     }
-    for (unsigned i = 0; i < LAST_OP; i++) {
+    for (unsigned i = 0; i < N_OP; i++) {
         if (strcmp(op_tab[i].mnemonic, mnemonic.mnemonic) == 0) {
             vm->memory[address++] = op_tab[i].opcode;
             break;
@@ -25,11 +25,11 @@ void write_instruction(vm_t *vm, vm_mnemonic_t mnemonic, vm_address_t address, b
     vm->memory[address] = 0;
     for (unsigned i = 0; i < MAX_ARGS_NUMBER; i++) {
         vm->memory[address] <<= 2;
-        vm->memory[address] |= ARGS_NAME_TO_BITS[mnemonic.type[i]];
+        vm->memory[address] |= ARG_NAME_TO_BITS[mnemonic.type[i]];
     }
     address++;
     for (unsigned i = 0; i < MAX_ARGS_NUMBER; i++) {
-        const unsigned arg_size = ARGS_SIZE[mnemonic.type[i]];
+        const unsigned arg_size = ARG_SIZE[mnemonic.type[i]];
         if (arg_size == 0) {
             break;
         }
@@ -42,7 +42,7 @@ void write_instruction(vm_t *vm, vm_mnemonic_t mnemonic, vm_address_t address, b
     }
 }
 
-void test_instruction(vm_t *vm, vm_mnemonic_t *mnemonic, vm_address_t address, bool zero_init_all_memory, char *comment) {
+static void test_instruction(vm_t *vm, vm_mnemonic_t *mnemonic, vm_address_t address, bool zero_init_all_memory, char *comment) {
     write_instruction(vm, *mnemonic, address, true);
     puts("Memory :");
     dump_memory(vm, 1); // displays one line
@@ -52,7 +52,7 @@ void test_instruction(vm_t *vm, vm_mnemonic_t *mnemonic, vm_address_t address, b
     *mnemonic = parse_instruction(vm, address);
     printf("mnemonic : %s\n", mnemonic->mnemonic);
     for (unsigned i = 0; i < MAX_ARGS_NUMBER; i++) {
-        const unsigned arg_size = ARGS_SIZE[mnemonic->type[i]];
+        const unsigned arg_size = ARG_SIZE[mnemonic->type[i]];
 
         if (arg_size != 0) {
             char format[256] = "%0";
