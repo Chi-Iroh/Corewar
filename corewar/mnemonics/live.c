@@ -20,8 +20,6 @@
 @returns
     true on success, false on failure
 @note
-    live DIRECT
-@note
     Doesn't change the carry.
 */
 bool mnemonic_live(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args)

@@ -20,8 +20,6 @@
     args are the arguments types and values
 @returns
     true on success, false on failure
-@note:
-    lfork DIRECT
 @note
     Doesn't change the carry.
 */

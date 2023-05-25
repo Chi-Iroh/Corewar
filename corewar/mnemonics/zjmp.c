@@ -19,21 +19,8 @@
     args are the arguments types and values
 @returns
     true on success, false on failure
-@note:
-    zjmp DIRECT
 @note
     Doesn't change the carry.
-@note
-    If the parameter is a label as a direct value (%:label), then it's encoded
-        as the number of bytes to jump.
-    If the label's address is lower than the pc, then arg1 is something like
-        0xFF'F5, which means pc must be decreased of its difference with
-        0x01'00'00, here 11 bytes.
-    Else, the arg1 will be something like 0x00'05, which means pc must be
-        increased of 5 bytes.
-    As the memory is much smaller than the max value fitting in 2 bytes
-        (65535), then this notation isn"t ambiguous, if arg1 > MEM_SIZE,
-        pc must be decreased, otherwise pc must be increased.
 @note
     As the addresses are unsigned, if the zjmp causes the pc to overflow or
         underflow, it acts like applying a modulo MEMORY_SIZE.

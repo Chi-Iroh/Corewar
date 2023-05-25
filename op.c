@@ -243,6 +243,18 @@ const unsigned ARG_SIZE[PARAMETER_MAX + 1] = {
     [PARAMETER_REGISTER] = REGISTER_SIZE,
 };
 
+/*
+If a parameter is a label as a direct value (%:label), then it's encoded
+    as the number of bytes to jump.
+If the label's address is lower than the pc, then the arg is something like
+    0xFF'F5, which means pc must be decreased of its difference with
+    0x01'00'00, here 11 bytes.
+Else, the arg will be something like 0x00'05, which means pc must be
+    increased of 5 bytes.
+As the memory is much smaller than the max value fitting in 2 bytes
+    (65535), then this notation isn't ambiguous, if arg1 > MEM_SIZE,
+    pc must be decreased, otherwise pc must be increased.
+*/
 const bool MNEMONIC_HAS_NO_CODING_BYTE[MNEMONIC_MAX] = {
     [MNEMONIC_LIVE] = true,
     [MNEMONIC_ZJMP] = true,
