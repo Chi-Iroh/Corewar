@@ -33,7 +33,7 @@ bool mnemonic_live(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args)
     arg1 = mnemonic_get_arg(args, 0, champion);
     for (vm_address_t i = 0; i < vm->n_champions; i++) {
         if (vm->champions[i].number == arg1) {
-            vm->champions[i].is_alive = true;
+            vm->champions[i].n_live_called++;
             vm->last_process_alive = arg1;
             break;
         }

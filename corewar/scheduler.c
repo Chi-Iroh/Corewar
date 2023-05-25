@@ -28,26 +28,49 @@ bool (*const MNEMONICS[MNEMONIC_MAX])
     [MNEMONIC_AFF] = mnemonic_aff
 };
 
+/*
+@brief
+    Increases the program counter of a champion, according to its current
+        instruction.
+@param
+    champion is the champion to change the program counter
+@note
+    Does nothing if champion is NULL.
+*/
 STATIC_FUNCTION void champion_increase_pc
-    (vm_mnemonic_t *mnemonic, vm_address_t *pc)
+    (vm_champion_t *champion)
 {
     size_t arg_size = 0;
     bool is_index = false;
 
-    RETURN_IF(!mnemonic || !pc);
-    *pc += 2;
+    RETURN_IF(!champion);
+    champion->pc += 2;
+    champion->pc %= MEMORY_SIZE;
     for (unsigned i = 0; i < MAX_ARGS_NUMBER; i++) {
-        arg_size = ARG_SIZE[mnemonic->type[i]];
-        is_index = mnemonic->op->are_args_indexes[i];
-        is_index &= mnemonic->type[i] ^ PARAMETER_REGISTER;
-        *pc += is_index ? INDIRECT_SIZE : arg_size;
+        arg_size = ARG_SIZE[champion->current_mnemonic.type[i]];
+        is_index = champion->current_mnemonic.op->are_args_indexes[i];
+        is_index &= champion->current_mnemonic.type[i] != PARAMETER_REGISTER;
+        champion->pc += is_index ? INDIRECT_SIZE : arg_size;
+        champion->pc %= MEMORY_SIZE;
     }
-    (*pc)++;
+    champion->pc++;
+    champion->pc %= MEMORY_SIZE;
 }
 
+/*
+@brief
+    Executes the next cycle, waits before executing an instruction.
+@param
+    vm is the Virtual Machine
+@param
+    champion is the champion to execute the next cycle
+@note
+    Does nothing if champion or vm is NULL.
+*/
 STATIC_FUNCTION void scheduler_champion_execute_next_cycle
     (vm_t *vm, vm_champion_t *champion)
 {
+    RETURN_IF(!vm || !champion);
     if (!champion->is_waiting) {
         champion->current_mnemonic = parse_instruction(vm, champion->pc);
         champion->is_waiting = true;
@@ -56,24 +79,89 @@ STATIC_FUNCTION void scheduler_champion_execute_next_cycle
     if (champion->cycles_to_wait == 0) {
         MNEMONICS[champion->current_mnemonic.op->opcode]
             (vm, champion, champion->current_mnemonic);
-        champion_increase_pc(&champion->current_mnemonic, &champion->pc);
+        champion_increase_pc(champion);
         champion->is_waiting = false;
     } else {
         champion->cycles_to_wait--;
     }
 }
 
+/*
+@brief
+    Removes a dead program.
+@param
+    vm is the Virtual Machine
+@param
+    index points to the program index to remove
+@note
+    Does nothing if vm or index is NULL.
+@attention
+    If champions reallocation fails, properly frees resources and exits with
+        code 84.
+*/
+STATIC_FUNCTION void scheduler_remove_program(vm_t *vm, unsigned *index)
+{
+    const bool is_index_ok = index ? *index < UINT_MAX && *index > 0 : false;
+
+    RETURN_IF(!vm || !index);
+    for (unsigned i = *index + 1; i < vm->n_champions && is_index_ok; i++) {
+        vm->champions[i - 1] = vm->champions[i];
+    }
+    champions_realloc(vm, false);
+    (*index)--;
+}
+
+/*
+@brief
+    Removes all dead programs in Virtual Machine.
+@param
+    vm is the Virtual Machine
+@note
+    Does nothing if vm is NULL.
+@attention
+    If champions reallocation fails, properly frees resources and exits with
+        code 84.
+*/
+STATIC_FUNCTION void scheduler_remove_dead_programs(vm_t *vm)
+{
+    RETURN_IF(!vm);
+    for (unsigned i = 0; i < vm->n_champions; i++) {
+        if (vm->champions[i].n_live_called != NBR_LIVE) {
+            scheduler_remove_program(vm, &i);
+        }
+        vm->champions[i].cycles_to_wait = 0;
+        vm->champions[i].is_waiting = false;
+    }
+}
+
+/*
+@brief
+    Executes all the instructions in the Virtual Machine.
+@param
+    vm is the Virtual Machine
+@note
+    Does nothing if vm is NULL.
+@attention
+    If champions reallocation fails, properly frees resources and exits with
+        code 84.
+*/
 void scheduler_execute(vm_t *vm)
 {
     bool has_dumped = false;
-    unsigned elapsed_cycles = 0;
+    unsigned global_cycle = 0;
 
-    for (unsigned cycle = 0; cycle > 100; cycle++) {
+    RETURN_IF(!vm);
+    for (unsigned cycle = 1; vm->n_champions > 0; cycle++, global_cycle++) {
+        if (cycle == vm->cycle_to_die) {
+            scheduler_remove_dead_programs(vm);
+            vm->cycle_to_die -= CYCLE_DELTA;
+            cycle = 0;
+            continue;
+        }
         for (vm_address_t i = 0; i < vm->n_champions; i++) {
             scheduler_champion_execute_next_cycle(vm, &vm->champions[i]);
         }
-        elapsed_cycles = CYCLE_TO_DIE - vm->cycle_to_die;
-        if (elapsed_cycles >= vm->cycles_before_memory_dump && !has_dumped) {
+        if (!has_dumped && global_cycle >= vm->cycles_before_memory_dump) {
             dump_memory(vm, 0);
             has_dumped = true;
         }

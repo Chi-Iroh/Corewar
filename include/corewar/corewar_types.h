@@ -94,7 +94,7 @@ typedef struct vm_champion_s {
     vm_address_t size;
     unsigned cycles_to_wait;
     bool is_waiting;
-    bool is_alive;
+    unsigned n_live_called;
 } vm_champion_t;
 
 typedef struct {

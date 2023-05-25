@@ -16,8 +16,10 @@
     vm is the Virtual Machine
 @param
     add_memory allocates one more champion when true, otherwise deallocates one
-@note
+@attention
     Properly frees all resources and exits 84 if memory reallocation failed.
+@note
+    vm->n_champions is updated
 @note
     When calling this function to deallocate memory (with add_memory false),
         this is the last element of vm->champions which will be erased,
@@ -31,7 +33,7 @@
 @note At this point, calling this function is safe because the last element
         can be erased without consequences.
 */
-STATIC_FUNCTION void champions_realloc(vm_t *vm, bool add_memory)
+void champions_realloc(vm_t *vm, bool add_memory)
 {
     vm_champion_t *champions = NULL;
     size_t size = 0;
