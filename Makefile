@@ -9,9 +9,12 @@ ANALYZER	=
 SRC_COMPILE	=
 MAKE_FLAGS	= -s -j --no-print-directory
 
-.PHONY: all
-all:
+.PHONY: make_lib
+make_lib:
 	@$(MAKE) $(MAKE_FLAGS) -C lib/ $(SRC_COMPILE)
+
+.PHONY: all
+all: make_lib
 	@$(MAKE) $(MAKE_FLAGS) -C asm/ $(SRC_COMPILE)
 	@$(MAKE) $(MAKE_FLAGS) -C corewar/ $(SRC_COMPILE)
 

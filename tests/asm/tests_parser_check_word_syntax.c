@@ -13,7 +13,7 @@
 Test(check_word_syntax, mnemonic) {
     char buf[256] = { 0 };
 
-    for (unsigned i = 0; i < LAST_OP; i++) {
+    for (unsigned i = 0; i < N_OP; i++) {
         sprintf(&buf[0], "%s is a valid mnemonic", op_tab[i].mnemonic);
         cr_expect(parser_is_mnemonic(op_tab[i].mnemonic), "%s", &buf[0]);
         memset(&buf[0], 0, 256);
