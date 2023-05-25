@@ -48,7 +48,7 @@ STATIC_FUNCTION bool parser_is_arg_label(char *word)
 STATIC_FUNCTION unsigned parser_op_tab_mnemonic_index(char *mnemonic)
 {
     RETURN_VALUE_IF(!mnemonic, N_OP);
-    for (unsigned i = 0; i < LAST_OP; i++) {
+    for (unsigned i = 0; i < N_OP; i++) {
         if (my_strcmp(mnemonic, op_tab[i].mnemonic) == 0) {
             return i;
         }

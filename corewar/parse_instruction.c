@@ -119,7 +119,7 @@ vm_mnemonic_t parse_instruction(vm_t *vm, vm_address_t address)
     vm_mnemonic_t mnemonic = {};
 
     RETURN_VALUE_IF(!vm, error);
-    for (unsigned i = 0; i < LAST_OP; i++) {
+    for (unsigned i = 0; i < N_OP; i++) {
         if (op_tab[i].opcode == vm->memory[address]) {
             mnemonic.mnemonic = op_tab[i].mnemonic;
             mnemonic.op = &op_tab[i];

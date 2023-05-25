@@ -153,7 +153,7 @@ parser_instruction_t *instruction)
 {
     uint8_t opcode = 0x00;
     uint8_t coding_byte = 0x00;
-    for (unsigned i = 0; file && instruction && i < LAST_OP; i++) {
+    for (unsigned i = 0; file && instruction && i < N_OP; i++) {
         if (my_strcmp(op_tab[i].mnemonic, instruction->word) == 0) {
             opcode = op_tab[i].opcode;
             break;

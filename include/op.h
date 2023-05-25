@@ -15,8 +15,7 @@
     // But GCC 13 doesn't fully support constexpr for now
     // constexpr char* doesn't compile with string literals
 
-    #define N_OP                    17
-    #define LAST_OP                 (N_OP - 1)
+    #define N_OP                    16
 
     #define MEMORY_SIZE             (6 * 1'024)
     // Modulo of the index

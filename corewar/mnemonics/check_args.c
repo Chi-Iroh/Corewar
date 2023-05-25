@@ -12,7 +12,7 @@
 STATIC_FUNCTION unsigned mnemonic_get_op_tab_index(char *mnemonic)
 {
     RETURN_VALUE_IF(!mnemonic, N_OP);
-    for (unsigned i = 0; i < LAST_OP; i++) {
+    for (unsigned i = 0; i < N_OP; i++) {
         if (my_strcmp(mnemonic, op_tab[i].mnemonic) == 0) {
             return i;
         }

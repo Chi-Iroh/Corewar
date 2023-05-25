@@ -20,7 +20,7 @@
 bool parser_is_mnemonic(char *word)
 {
     RETURN_VALUE_IF(!word, false);
-    for (unsigned i = 0; i < LAST_OP; i++) {
+    for (unsigned i = 0; i < N_OP; i++) {
         if (my_strcmp(op_tab[i].mnemonic, word) == 0) {
             return true;
         }

@@ -218,14 +218,6 @@ op_t op_tab[N_OP] = {
         .opcode = 0x10,
         .nbr_cycles = 2,
         .comment = "aff"
-    },
-    {
-        .mnemonic = NULL,
-        .nbr_args = 0,
-        .type = {0},
-        .opcode = 0,
-        .nbr_cycles = 0,
-        .comment = NULL
     }
 };
 
