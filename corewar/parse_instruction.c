@@ -96,6 +96,10 @@ STATIC_FUNCTION void mnemonic_parse_args_type
 {
     RETURN_IF(!vm || !mnemonic || !address || *address >= MEMORY_SIZE);
     if (MNEMONIC_HAS_NO_CODING_BYTE[mnemonic->op->opcode]) {
+        for (unsigned i = 0; i < MAX_ARGS_NUMBER; i++) {
+            mnemonic->type[i] = mnemonic->op->type[i] == 0 ?
+                PARAMETER_MAX : mnemonic->op->type[i];
+        }
         return;
     }
     mnemonic->type[0] = ARG_BITS_TO_NAME[(vm->memory[(*address)] & 0xC0) >> 6];

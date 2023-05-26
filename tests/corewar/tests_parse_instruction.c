@@ -56,12 +56,13 @@ Test(parse_instruction, parse_instruction) {
     vm_mnemonic_t mnemonic = {
         .mnemonic = "live",
         .args = { 234 },
-        .type = { PARAMETER_DIRECT }
+        .type = { PARAMETER_DIRECT },
+        .op = &OP_TAB(MNEMONIC_LIVE)
     };
 
     test_instruction(&vm, &mnemonic, 0, true, "live %234");
     cr_assert_str_eq(mnemonic.mnemonic, "live");
-    cr_assert(mnemonic.args[0] == 234);
+    cr_assert(mnemonic.args[0] == 234, "Expected 234 / Got %u\n", mnemonic.args[0]);
     cr_assert(mnemonic.type[0] == PARAMETER_DIRECT);
     cr_assert(mnemonic.type[1] == PARAMETER_MAX);
 
