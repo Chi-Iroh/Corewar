@@ -37,9 +37,9 @@ bool mnemonic_ld(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args)
         *register_address = args.args[0];
     } else {
         *register_address = 0;
-        for (vm_address_t i = arg1; i < arg1 + REGISTER_SIZE; i++) {
+        for (vm_address_t i = 0; i < REGISTER_SIZE; i++) {
             *register_address <<= 8;
-            *register_address |= vm->memory[i];
+            *register_address |= vm->memory[arg1 + i];
         }
     }
     champion->carry = args.args[0] == 0 ? CARRY_ON : CARRY_OFF;

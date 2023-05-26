@@ -102,21 +102,39 @@ Test(mnemonic_ld, test_ld) {
     write_instruction(&vm, args, 0, false);
     cr_assert(mnemonic_ld(&vm, &champion, args));
     vm_register_t expected = args.args[0];
-    printf("\tExpected : %X / Got : %X\n", expected, champion.registers[0]);
+    printf("\tExpected : %X / Got : %X\n", expected, champion.registers[args.args[1] - 1]);
     cr_assert(champion.registers[args.args[1] - 1] == expected);
 
+    // REGISTER_SIZE is intended and required by ld
     args.type[0] = PARAMETER_INDIRECT;
-    args.args[0] = 0 + 10;
-    vm.memory[31] = 4;
+    args.args[0] = 31 - REGISTER_SIZE + 1;
     write_instruction(&vm, args, 0, true);
+    vm.memory[31] = 139;
+    expected = 0;
     cr_assert(mnemonic_ld(&vm, &champion, args));
-    expected = (vm.memory[30] << 8) | vm.memory[31];
-    printf("\tExpected : %X / Got : %X\n", expected, champion.registers[0]);
+    for (unsigned i = REGISTER_SIZE - 1; ; i--) {
+        expected <<= 8;
+        expected |= vm.memory[31 - i];
+        if (i == 0) {
+            break;
+        }
+    }
+    printf("\tExpected : %X / Got : %X\n", expected, champion.registers[args.args[1] - 1]);
     cr_assert(champion.registers[args.args[1] - 1] == expected);
 
     args.args[0] += INDEX_MODULO;
     write_instruction(&vm, args, 0, true);
+    vm.memory[31] = 139;
+    expected = 0;
     cr_assert(mnemonic_ld(&vm, &champion, args));
-    printf("\tExpected : %X / Got : %X\n", expected, champion.registers[0]);
+    for (unsigned i = REGISTER_SIZE - 1; ; i--) {
+        expected <<= 8;
+        expected |= vm.memory[31 - i];
+        if (i == 0) {
+            break;
+        }
+    }
+    cr_assert(mnemonic_ld(&vm, &champion, args));
+    printf("\tExpected : %X / Got : %X\n", expected, champion.registers[args.args[1] - 1]);
     cr_assert(champion.registers[args.args[1] - 1] == expected);
 }
