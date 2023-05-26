@@ -84,7 +84,7 @@ Test(mnemonic_st, test_st) {
         .load_address = 0,
         .number = 0,
         .pc = 0,
-        .registers = {},
+        .registers = { 139 },
         .size = 0,
     };
     vm_t vm = {
@@ -94,19 +94,26 @@ Test(mnemonic_st, test_st) {
     };
     vm_mnemonic_t args = {
         .mnemonic = "st",
-        .args = { 1, 2 },
+        .args = { 1, 31 - REGISTER_SIZE + 1 },
         .type = { PARAMETER_REGISTER, PARAMETER_INDIRECT },
         .op = &OP_TAB(MNEMONIC_ST)
     };
-    vm_address_t load_address = 0;
     printf("%s :\n", args.mnemonic);
-    write_instruction(&vm, args, load_address, false);
+    write_instruction(&vm, args, 0, false);
     cr_assert(mnemonic_st(&vm, &champion, args));
-    vm_register_t expected = 0;
-    for (vm_address_t i = load_address; i < load_address + sizeof(expected); i++) {
-        expected <<= 8;
-        expected |= vm.memory[i];
+    vm_register_t expected = champion.registers[args.args[0] - 1];
+    vm_register_t got = 0;
+    for (vm_address_t i = args.args[1] % INDEX_MODULO; i < (args.args[1] % INDEX_MODULO) + REGISTER_SIZE; i++) {
+        got <<= 8;
+        got |= vm.memory[i];
     }
-    printf("\tExpected : %X / Got : %X\n", expected, champion.registers[0]);
-    cr_assert(champion.registers[0] == expected);
+    printf("\tExpected : %X / Got : %X\n", expected, got);
+    cr_expect(got == expected);
+
+    args.type[1] = PARAMETER_REGISTER;
+    args.args[1] = 2;
+    write_instruction(&vm, args, 0, true);
+    cr_assert(mnemonic_st(&vm, &champion, args));
+    printf("\tExpected : %X / Got : %X\n", expected, champion.registers[args.args[1] - 1]);
+    cr_expect(expected == champion.registers[args.args[1] - 1]);
 }
