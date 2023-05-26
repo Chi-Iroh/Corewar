@@ -20,19 +20,12 @@ Test(mnemonic_or, vm_null) {
         .registers = {},
         .size = 0,
     };
-    vm_t vm = {
-        .champions = &champion,
-        .memory = {},
-        .n_champions = 1
-    };
     vm_mnemonic_t args = {
         .mnemonic = "or",
         .args = { 0, 1, 2 },
         .type = { PARAMETER_REGISTER, PARAMETER_REGISTER, PARAMETER_REGISTER },
         .op = &OP_TAB(MNEMONIC_OR)
     };
-    vm_address_t load_address = 0;
-    write_instruction(&vm, args, load_address, false);
     cr_assert(!mnemonic_or(NULL, &champion, args));
 }
 
@@ -57,8 +50,6 @@ Test(mnemonic_or, champion_null) {
         .type = { PARAMETER_REGISTER, PARAMETER_REGISTER, PARAMETER_REGISTER },
         .op = &OP_TAB(MNEMONIC_OR)
     };
-    vm_address_t load_address = 0;
-    write_instruction(&vm, args, load_address, false);
     cr_assert(!mnemonic_or(&vm, NULL, args));
 }
 
@@ -81,10 +72,8 @@ Test(mnemonic_or, bad_args) {
         .mnemonic = "",
         .args = { 0, 1 },
         .type = { PARAMETER_INDIRECT, PARAMETER_REGISTER },
-        .op = NULL
+        .op = &OP_TAB(MNEMONIC_OR)
     };
-    vm_address_t load_address = 0;
-    write_instruction(&vm, args, load_address, false);
     cr_assert(!mnemonic_or(&vm, &champion, args));
 }
 

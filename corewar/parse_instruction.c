@@ -79,7 +79,10 @@ STATIC_FUNCTION bool mnemonic_get_args
 @param
     mnemonic is the mnemonic read (mnemonic->op MUST be valid)
 @param
-    address is the memory address where we must parse the eventual coding byte
+    address is a pointer storing the memory address where we must parse
+        the eventual coding byte, *address is increased if so
+@note
+    Does nothing if either vm, mnemonic or address is NULL.
 @note
     Some instructions doesn't have a coding byte
         (LIVE, ZJMP, FORK and LFORK), because they only take one parameter
@@ -89,16 +92,16 @@ STATIC_FUNCTION bool mnemonic_get_args
         but with only one type still has a coding byte...
 */
 STATIC_FUNCTION void mnemonic_parse_args_type
-    (vm_t *vm, vm_mnemonic_t *mnemonic, vm_address_t address)
+    (vm_t *vm, vm_mnemonic_t *mnemonic, vm_address_t *address)
 {
-    RETURN_IF(!mnemonic || address >= MEMORY_SIZE);
+    RETURN_IF(!vm || !mnemonic || !address || *address >= MEMORY_SIZE);
     if (MNEMONIC_HAS_NO_CODING_BYTE[mnemonic->op->opcode]) {
         return;
     }
-    mnemonic->type[0] = ARG_BITS_TO_NAME[(vm->memory[address] & 0xC0) >> 6];
-    mnemonic->type[1] = ARG_BITS_TO_NAME[(vm->memory[address] & 0x30) >> 4];
-    mnemonic->type[2] = ARG_BITS_TO_NAME[(vm->memory[address] & 0x0C) >> 2];
-    mnemonic->type[3] = ARG_BITS_TO_NAME[(vm->memory[address++] & 0x03)];
+    mnemonic->type[0] = ARG_BITS_TO_NAME[(vm->memory[(*address)] & 0xC0) >> 6];
+    mnemonic->type[1] = ARG_BITS_TO_NAME[(vm->memory[(*address)] & 0x30) >> 4];
+    mnemonic->type[2] = ARG_BITS_TO_NAME[(vm->memory[(*address)] & 0x0C) >> 2];
+    mnemonic->type[3] = ARG_BITS_TO_NAME[(vm->memory[(*address)++] & 0x03)];
 }
 
 /*
@@ -128,6 +131,6 @@ vm_mnemonic_t parse_instruction(vm_t *vm, vm_address_t address)
     }
     RETURN_VALUE_IF(!mnemonic.mnemonic, error);
     address++;
-    mnemonic_parse_args_type(vm, &mnemonic, address);
+    mnemonic_parse_args_type(vm, &mnemonic, &address);
     return mnemonic_get_args(vm, address, &mnemonic) ? mnemonic : error;
 }

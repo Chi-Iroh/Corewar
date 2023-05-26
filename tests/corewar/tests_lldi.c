@@ -20,19 +20,12 @@ Test(mnemonic_lldi, vm_null) {
         .registers = {},
         .size = 0,
     };
-    vm_t vm = {
-        .champions = &champion,
-        .memory = {},
-        .n_champions = 1
-    };
     vm_mnemonic_t args = {
         .mnemonic = "lldi",
         .args = { 0, 1 },
         .type = { PARAMETER_REGISTER, PARAMETER_REGISTER },
         .op = &OP_TAB(MNEMONIC_LLDI)
     };
-    vm_address_t load_address = 0;
-    write_instruction(&vm, args, load_address, false);
     cr_assert(!mnemonic_lldi(NULL, &champion, args));
 }
 
@@ -57,8 +50,6 @@ Test(mnemonic_lldi, champion_null) {
         .type = { PARAMETER_REGISTER, PARAMETER_REGISTER },
         .op = &OP_TAB(MNEMONIC_LLDI)
     };
-    vm_address_t load_address = 0;
-    write_instruction(&vm, args, load_address, false);
     cr_assert(!mnemonic_lldi(&vm, NULL, args));
 }
 
@@ -81,10 +72,8 @@ Test(mnemonic_lldi, bad_args) {
         .mnemonic = "",
         .args = { 0, 1 },
         .type = { PARAMETER_INDIRECT, PARAMETER_REGISTER },
-        .op = NULL
+        .op = &OP_TAB(MNEMONIC_LLDI)
     };
-    vm_address_t load_address = 0;
-    write_instruction(&vm, args, load_address, false);
     cr_assert(!mnemonic_lldi(&vm, &champion, args));
 }
 

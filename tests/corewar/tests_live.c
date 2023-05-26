@@ -20,19 +20,12 @@ Test(mnemonic_live, vm_null) {
         .registers = {},
         .size = 0,
     };
-    vm_t vm = {
-        .champions = &champion,
-        .memory = {},
-        .n_champions = 1
-    };
     vm_mnemonic_t args = {
         .mnemonic = "live",
         .args = { 0 },
         .type = { PARAMETER_DIRECT },
         .op = &OP_TAB(MNEMONIC_LIVE)
     };
-    vm_address_t load_address = 0;
-    write_instruction(&vm, args, load_address, false);
     cr_assert(!mnemonic_live(NULL, &champion, args));
 }
 
@@ -57,8 +50,6 @@ Test(mnemonic_live, champion_null) {
         .type = { PARAMETER_DIRECT },
         .op = &OP_TAB(MNEMONIC_LIVE)
     };
-    vm_address_t load_address = 0;
-    write_instruction(&vm, args, load_address, false);
     cr_assert(!mnemonic_live(&vm, NULL, args));
 }
 
@@ -81,10 +72,8 @@ Test(mnemonic_live, bad_args) {
         .mnemonic = "",
         .args = { 0, 1 },
         .type = { PARAMETER_INDIRECT, PARAMETER_REGISTER },
-        .op = NULL
+        .op = &OP_TAB(MNEMONIC_LIVE)
     };
-    vm_address_t load_address = 0;
-    write_instruction(&vm, args, load_address, false);
     cr_assert(!mnemonic_live(&vm, &champion, args));
 }
 

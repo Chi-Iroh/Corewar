@@ -21,19 +21,12 @@ Test(mnemonic_aff, vm_null) {
         .registers = {},
         .size = 0,
     };
-    vm_t vm = {
-        .champions = &champion,
-        .memory = {},
-        .n_champions = 1
-    };
     vm_mnemonic_t args = {
         .mnemonic = "aff",
         .args = { 1 },
         .type = { PARAMETER_REGISTER },
         .op = &OP_TAB(MNEMONIC_AFF)
     };
-    vm_address_t load_address = 0;
-    write_instruction(&vm, args, load_address, false);
     cr_assert(!mnemonic_aff(NULL, &champion, args));
 }
 
@@ -58,8 +51,6 @@ Test(mnemonic_aff, champion_null) {
         .type = { PARAMETER_REGISTER },
         .op = &OP_TAB(MNEMONIC_AFF)
     };
-    vm_address_t load_address = 0;
-    write_instruction(&vm, args, load_address, false);
     cr_assert(!mnemonic_aff(&vm, NULL, args));
 }
 
@@ -82,10 +73,8 @@ Test(mnemonic_aff, bad_args) {
         .mnemonic = "",
         .args = { 0 },
         .type = { PARAMETER_REGISTER },
-        .op = NULL
+        .op = &OP_TAB(MNEMONIC_AFF)
     };
-    vm_address_t load_address = 0;
-    write_instruction(&vm, args, load_address, false);
     cr_assert(!mnemonic_aff(&vm, &champion, args));
 }
 

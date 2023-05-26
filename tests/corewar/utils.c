@@ -18,12 +18,14 @@ void write_instruction(vm_t *vm, vm_mnemonic_t mnemonic, vm_address_t address, b
             break;
         }
     }
-    vm->memory[address] = 0;
-    for (unsigned i = 0; i < MAX_ARGS_NUMBER; i++) {
-        vm->memory[address] <<= 2;
-        vm->memory[address] |= ARG_NAME_TO_BITS[mnemonic.type[i]];
+    if (!MNEMONIC_HAS_NO_CODING_BYTE[mnemonic.op->opcode]) {
+        vm->memory[address] = 0;
+        for (unsigned i = 0; i < MAX_ARGS_NUMBER; i++) {
+            vm->memory[address] <<= 2;
+            vm->memory[address] |= ARG_NAME_TO_BITS[mnemonic.type[i]];
+        }
+        address++;
     }
-    address++;
     for (unsigned i = 0; i < MAX_ARGS_NUMBER; i++) {
         const unsigned arg_size = ARG_SIZE[mnemonic.type[i]];
         if (arg_size == 0) {
