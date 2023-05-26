@@ -101,11 +101,7 @@ Test(mnemonic_xor, test_xor) {
     vm_address_t load_address = 0;
     write_instruction(&vm, args, load_address, false);
     cr_assert(mnemonic_xor(&vm, &champion, args));
-    vm_register_t expected = 0;
-    for (vm_address_t i = load_address; i < load_address + sizeof(expected); i++) {
-        expected <<= 8;
-        expected |= vm.memory[i];
-    }
+    const vm_register_t expected = champion.registers[0] ^ champion.registers[1];
     printf("Expected : %X / Got : %X\n", expected, champion.registers[0]);
-    cr_assert(champion.registers[0] == expected);
+    cr_assert(champion.registers[args.args[2] - 1] == expected);
 }
