@@ -99,6 +99,7 @@ Test(mnemonic_st, test_st) {
         .op = &OP_TAB(MNEMONIC_ST)
     };
     vm_address_t load_address = 0;
+    printf("%s :\n", args.mnemonic);
     write_instruction(&vm, args, load_address, false);
     cr_assert(mnemonic_st(&vm, &champion, args));
     vm_register_t expected = 0;
@@ -106,6 +107,6 @@ Test(mnemonic_st, test_st) {
         expected <<= 8;
         expected |= vm.memory[i];
     }
-    printf("Expected : %X / Got : %X\n", expected, champion.registers[0]);
+    printf("\tExpected : %X / Got : %X\n", expected, champion.registers[0]);
     cr_assert(champion.registers[0] == expected);
 }

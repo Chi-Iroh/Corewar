@@ -84,7 +84,7 @@ Test(mnemonic_or, test_or) {
         .load_address = 0,
         .number = 0,
         .pc = 0,
-        .registers = {},
+        .registers = { 0b101, 0b100 },
         .size = 0,
     };
     vm_t vm = {
@@ -99,9 +99,10 @@ Test(mnemonic_or, test_or) {
         .op = &OP_TAB(MNEMONIC_OR)
     };
     vm_address_t load_address = 0;
+    printf("%s :\n", args.mnemonic);
     write_instruction(&vm, args, load_address, false);
     cr_assert(mnemonic_or(&vm, &champion, args));
-    const vm_register_t expected = champion.registers[0] | champion.registers[1];
-    printf("Expected : %X / Got : %X\n", expected, champion.registers[0]);
+    const vm_register_t expected = champion.registers[args.args[0] - 1] | champion.registers[args.args[1] - 1];
+    printf("\tExpected : %X / Got : %X\n", expected, champion.registers[args.args[2] - 1]);
     cr_assert(champion.registers[args.args[2] - 1] == expected);
 }

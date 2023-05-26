@@ -36,7 +36,7 @@ bool mnemonic_or(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args)
     arg2 = mnemonic_get_indirect_address_value(vm, args.type[1], arg2);
     result |= arg1;
     result |= arg2;
-    champion->registers[args.args[2]] = result;
+    champion->registers[args.args[2] - 1] = result;
     champion->carry = result == 0 ? CARRY_ON : CARRY_OFF;
     return true;
 }

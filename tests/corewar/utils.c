@@ -5,6 +5,7 @@
 ** -> Utilitiy functions for tests
 */
 
+#include <stdlib.h>
 #include "tests.h"
 
 void write_instruction(vm_t *vm, vm_mnemonic_t mnemonic, vm_address_t address, bool zero_init_all_memory)
@@ -16,6 +17,10 @@ void write_instruction(vm_t *vm, vm_mnemonic_t mnemonic, vm_address_t address, b
         if (strcmp(op_tab[i].mnemonic, mnemonic.mnemonic) == 0) {
             vm->memory[address++] = op_tab[i].opcode;
             break;
+        }
+        if (i == N_OP) {
+            printf("Mnemonic '%s' not found, aborting\n", mnemonic.mnemonic);
+            exit(1);
         }
     }
     if (!MNEMONIC_HAS_NO_CODING_BYTE[mnemonic.op->opcode]) {

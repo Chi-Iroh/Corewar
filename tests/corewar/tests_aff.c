@@ -100,6 +100,7 @@ Test(mnemonic_aff, test_aff/*, .init = cr_redirect_stdout*/) {
         .op = &OP_TAB(MNEMONIC_AFF)
     };
     vm_address_t load_address = 0;
+    printf("%s :\n", args.mnemonic);
     write_instruction(&vm, args, load_address, false);
     cr_assert(mnemonic_aff(&vm, &champion, args));
     // to redirect and compare stdout with expected char (for an obscure reason, the size variable is very huge)
@@ -114,7 +115,7 @@ Test(mnemonic_aff, test_aff/*, .init = cr_redirect_stdout*/) {
     // cr_assert(stdout_str);
     // cr_expect(fwrite(stdout_str, sizeof(char), size, file) == size);
     // char expected[2] = { champion.registers[args.args[0] - 1], 0 };
-    // fprintf(stderr, "Expected: '%s' / Got: '%s'\n", expected, stdout_str);
+    // fprintf(stderr, "\tExpected: '%s' / Got: '%s'\n", expected, stdout_str);
     // cr_assert_stdout_eq_str(expected);
     // free(stdout_str);
 }
