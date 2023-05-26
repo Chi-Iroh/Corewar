@@ -106,6 +106,8 @@
         MNEMONIC_MAX = 0x11
     };
 
+    #define OP_TAB(mnemonic_opcode) op_tab[(mnemonic_opcode) - 1]
+
     #ifdef ARG_CODING_BITS
         #undef ARG_CODING_BITS
     #endif

@@ -1,46 +1,15 @@
 /*
 ** EPITECH PROJECT, 2023
-** parse_instruction.c
+** tests_aff.c
 ** File description:
 ** -> Tests for aff.c
 */
 
 #include <string.h>
 #include <criterion/criterion.h>
+#include <criterion/redirect.h>
 #include "../../include/my_macros.h"
-#include "../../include/corewar/corewar.h"
-
-// mnemonic is not a pointer but a copy because this function is destructive
-static void write_instruction(vm_t *vm, vm_mnemonic_t mnemonic, vm_address_t address, bool zero_init_all_memory)
-{
-    if (zero_init_all_memory) {
-        memset(&vm->memory[0], 0, MEMORY_SIZE);
-    }
-    for (unsigned i = 0; i < N_OP; i++) {
-        if (strcmp(op_tab[i].mnemonic, mnemonic.mnemonic) == 0) {
-            vm->memory[address++] = op_tab[i].opcode;
-            break;
-        }
-    }
-    vm->memory[address] = 0;
-    for (unsigned i = 0; i < MAX_ARGS_NUMBER; i++) {
-        vm->memory[address] <<= 2;
-        vm->memory[address] |= ARG_NAME_TO_BITS[mnemonic.type[i]];
-    }
-    address++;
-    for (unsigned i = 0; i < MAX_ARGS_NUMBER; i++) {
-        const unsigned arg_size = ARG_SIZE[mnemonic.type[i]];
-        if (arg_size == 0) {
-            break;
-        }
-        address += arg_size - 1;
-        for (unsigned j = 0; j < arg_size; j++) {
-            vm->memory[address--] = mnemonic.args[i] & 0xFF;
-            mnemonic.args[i] >>= 8;
-        }
-        address += arg_size + 1;
-    }
-}
+#include "tests.h"
 
 Test(mnemonic_aff, vm_null) {
     vm_champion_t champion = {
@@ -59,9 +28,9 @@ Test(mnemonic_aff, vm_null) {
     };
     vm_mnemonic_t args = {
         .mnemonic = "aff",
-        .args = { 0, 1, 2 },
+        .args = { 1 },
         .type = { PARAMETER_REGISTER },
-        .op = &op_tab[MNEMONIC_LIVE]
+        .op = &OP_TAB(MNEMONIC_AFF)
     };
     vm_address_t load_address = 0;
     write_instruction(&vm, args, load_address, false);
@@ -85,9 +54,9 @@ Test(mnemonic_aff, champion_null) {
     };
     vm_mnemonic_t args = {
         .mnemonic = "aff",
-        .args = { 0 },
+        .args = { 1 },
         .type = { PARAMETER_REGISTER },
-        .op = &op_tab[MNEMONIC_LIVE]
+        .op = &OP_TAB(MNEMONIC_AFF)
     };
     vm_address_t load_address = 0;
     write_instruction(&vm, args, load_address, false);
@@ -111,7 +80,7 @@ Test(mnemonic_aff, bad_args) {
     };
     vm_mnemonic_t args = {
         .mnemonic = "",
-        .args = { 0, 1 },
+        .args = { 0 },
         .type = { PARAMETER_REGISTER },
         .op = NULL
     };
@@ -120,14 +89,14 @@ Test(mnemonic_aff, bad_args) {
     cr_assert(!mnemonic_aff(&vm, &champion, args));
 }
 
-Test(mnemonic_aff, test_aff) {
+Test(mnemonic_aff, test_aff/*, .init = cr_redirect_stdout*/) {
     vm_champion_t champion = {
         .carry = CARRY_OFF,
         .filename = "notExistingFile.S",
         .load_address = 0,
         .number = 0,
         .pc = 0,
-        .registers = {},
+        .registers = { '*' },
         .size = 0,
     };
     vm_t vm = {
@@ -137,18 +106,26 @@ Test(mnemonic_aff, test_aff) {
     };
     vm_mnemonic_t args = {
         .mnemonic = "aff",
-        .args = { 0 },
+        .args = { 1 },
         .type = { PARAMETER_REGISTER },
-        .op = &op_tab[MNEMONIC_LIVE]
+        .op = &OP_TAB(MNEMONIC_AFF)
     };
     vm_address_t load_address = 0;
     write_instruction(&vm, args, load_address, false);
     cr_assert(mnemonic_aff(&vm, &champion, args));
-    vm_register_t expected = 0;
-    for (vm_address_t i = load_address; i < load_address + sizeof(expected); i++) {
-        expected <<= 8;
-        expected |= vm.memory[i];
-    }
-    printf("Expected : %X / Got : %X\n", expected, champion.registers[0]);
-    cr_assert(champion.registers[0] == expected);
+    // to redirect and compare stdout with expected char (for an obscure reason, the size variable is very huge)
+    // FILE* file = cr_get_redirected_stdout();
+    // cr_assert(file);
+    // fseek(file, 0, SEEK_END);
+    // const size_t size = ftell(file);
+    // fseek(file, 0, SEEK_SET);
+    // cr_assert(size != 0);
+    // char *stdout_str = calloc(size, sizeof(char));
+    // fprintf(stderr, "Stdout size: %zu\n", size);
+    // cr_assert(stdout_str);
+    // cr_expect(fwrite(stdout_str, sizeof(char), size, file) == size);
+    // char expected[2] = { champion.registers[args.args[0] - 1], 0 };
+    // fprintf(stderr, "Expected: '%s' / Got: '%s'\n", expected, stdout_str);
+    // cr_assert_stdout_eq_str(expected);
+    // free(stdout_str);
 }

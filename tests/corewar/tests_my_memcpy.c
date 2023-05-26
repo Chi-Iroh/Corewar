@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2023
-** my_memcpy.c
+** tests_my_memcpy.c
 ** File description:
 ** -> Tests for my_memcpy function
 */
