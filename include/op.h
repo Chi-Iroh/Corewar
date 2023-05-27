@@ -77,7 +77,10 @@
     #define COMMENT_LENGTH          2'048
     // Magic number in the binary header
     #define COREWAR_EXEC_MAGIC      0x00'EA'83'F3
-    #define HEADER_LENGTH (4 + PROG_NAME_LENGTH + 4 + COMMENT_LENGTH)
+    // position of the prog size in the binary output
+    // Is right after the magic number (4 bytes) and the prog name
+    #define PROG_SIZE_POSITION (4 + PROG_NAME_LENGTH)
+    #define HEADER_LENGTH (4 + PROG_NAME_LENGTH + 8 + COMMENT_LENGTH)
 
     typedef struct header_s {
         char prog_name[PROG_NAME_LENGTH + 1];

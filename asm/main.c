@@ -5,9 +5,10 @@
 ** -> Assembly main
 */
 
-#include <stdio.h>
 #include <stdlib.h>
+#include <fcntl.h>
 #include <unistd.h>
+#include <linux/limits.h>
 #include "../include/my_macros.h"
 #include "../include/my.h"
 #include "../include/asm/asm.h"
@@ -70,46 +71,43 @@ STATIC_FUNCTION void parse_file_and_labels
         exit(84);
     }
     if (!parser_check_syntax(*file)) {
-        my_dputs(STDERR_FILENO, "Syntax error(s) !");
+        my_dputs(STDERR_FILENO, "Syntax error !");
         free_main(file, labels);
         exit(84);
     }
 }
 
-STATIC_FUNCTION void print_debug(parser_line_t *file, parser_label_t *labels)
+STATIC_FUNCTION bool write_to_binary
+    (char *source_filename, parser_line_t *file_content)
 {
-    parser_instruction_t *instruction = NULL;
+    static const int perms = S_IRGRP | S_IROTH | S_IRUSR | S_IWUSR;
+    char output_filename[PATH_MAX] = {};
+    int fd = -1;
+    bool status = true;
 
-    while (file) {
-        instruction = file->instruction;
-        while (instruction) {
-            my_printf("%p : %s\n", instruction, instruction->word);
-            instruction = instruction->next;
-            my_putchar(instruction ? '\t' : '\n');
-        }
-        BREAK_IF(!file->next);
-        file = file->next;
-    }
-    while (labels) {
-        my_printf("%p : LABEL %s\n", (void*)labels->line, labels->name);
-        BREAK_IF(!labels->next);
-        labels = labels->next;
-    }
-    DOUBLY_LINKED_LIST_GO_TO_START(labels);
-    DOUBLY_LINKED_LIST_GO_TO_START(file);
+    RETURN_VALUE_IF(!source_filename, false);
+    my_strncpy(&output_filename[0], source_filename, PATH_MAX);
+    RETURN_VALUE_IF(output_filename[PATH_MAX - 5] != '\0', false);
+    my_strcat(&output_filename[0], ".cor");
+    fd = open(&output_filename[0], O_CREAT | O_RDWR, perms);
+    RETURN_VALUE_IF(fd < 0, false);
+    status = binary_write_file(fd, file_content);
+    close(fd);
+    return status;
 }
 
 int main(int argc, char *argv[])
 {
     parser_line_t *file = NULL;
     parser_label_t *labels = NULL;
+    int return_code = 0;
 
     if (!argv[1] || argv[2]) {
         return 84;
     }
     display_help(argv);
     parse_file_and_labels(&file, &labels, argv);
-    print_debug(file, labels);
+    return_code = write_to_binary(argv[1], file) ? 0 : 84;
     free_main(&file, &labels);
-    return 0;
+    return return_code;
 }

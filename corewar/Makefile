@@ -13,7 +13,6 @@ SRC_NO_MAIN = 								\
 	champion_duplicate_remove.c				\
 	dump_memory.c							\
 	index_apply_to_pc.c 					\
-	my_memcpy.c 							\
 	parse_argv.c							\
 	parse_instruction.c						\
 	prog_number.c 							\

@@ -45,7 +45,7 @@ STATIC_FUNCTION bool parser_is_arg_label(char *word)
 @returns
     N_OP if not found (op_tab's size), otherwise its index
 */
-STATIC_FUNCTION unsigned parser_op_tab_mnemonic_index(char *mnemonic)
+unsigned op_tab_mnemonic_index(char *mnemonic)
 {
     RETURN_VALUE_IF(!mnemonic, N_OP);
     for (unsigned i = 0; i < N_OP; i++) {
@@ -109,7 +109,7 @@ STATIC_FUNCTION bool parser_check_instruction_syntax
 
     RETURN_VALUE_IF(!instruction || !instruction->word, false);
     RETURN_VALUE_IF(!parser_is_mnemonic(instruction->word), false);
-    index = parser_op_tab_mnemonic_index(instruction->word);
+    index = op_tab_mnemonic_index(instruction->word);
     RETURN_VALUE_IF(index == N_OP, false);
     instruction = instruction->next;
     nb_args = op_tab[index].nbr_args;

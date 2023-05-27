@@ -63,6 +63,7 @@ my_isdigit.c 						\
 my_isneg.c 							\
 my_is_prime.c 						\
 my_isspace.c 						\
+my_memcpy.c 						\
 my_putchar.c 						\
 my_put_nbr.c 						\
 my_putstr.c 						\
