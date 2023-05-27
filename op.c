@@ -16,7 +16,7 @@ op_t op_tab[N_OP] = {
             PARAMETER_DIRECT
         },
         .are_args_indexes = ARGS_NO_INDEX,
-        .opcode = 0x01,
+        .opcode = MNEMONIC_LIVE,
         .nbr_cycles = 10,
         .comment = "alive"
     },
@@ -28,7 +28,7 @@ op_t op_tab[N_OP] = {
             PARAMETER_REGISTER
         },
         .are_args_indexes = ARGS_NO_INDEX,
-        .opcode = 0x02,
+        .opcode = MNEMONIC_LD,
         .nbr_cycles = 5,
         .comment = "load"
     },
@@ -40,7 +40,7 @@ op_t op_tab[N_OP] = {
             PARAMETER_INDIRECT | PARAMETER_REGISTER
         },
         .are_args_indexes = ARGS_NO_INDEX,
-        .opcode = 0x03,
+        .opcode = MNEMONIC_ST,
         .nbr_cycles = 5,
         .comment = "store"
     },
@@ -53,7 +53,7 @@ op_t op_tab[N_OP] = {
             PARAMETER_REGISTER
         },
         .are_args_indexes = ARGS_NO_INDEX,
-        .opcode = 0x04,
+        .opcode = MNEMONIC_ADD,
         .nbr_cycles = 10,
         .comment = "addition"
     },
@@ -66,7 +66,7 @@ op_t op_tab[N_OP] = {
             PARAMETER_REGISTER
         },
         .are_args_indexes = ARGS_NO_INDEX,
-        .opcode = 0x05,
+        .opcode = MNEMONIC_SUB,
         .nbr_cycles = 10,
         .comment = "soustraction"
     },
@@ -79,7 +79,7 @@ op_t op_tab[N_OP] = {
             PARAMETER_REGISTER
         },
         .are_args_indexes = ARGS_NO_INDEX,
-        .opcode = 0x06,
+        .opcode = MNEMONIC_AND,
         .nbr_cycles = 6,
         .comment = "et (and  r1, r2, r3   r1&r2 -> r3"
     },
@@ -92,7 +92,7 @@ op_t op_tab[N_OP] = {
             PARAMETER_REGISTER
         },
         .are_args_indexes = ARGS_NO_INDEX,
-        .opcode = 0x07,
+        .opcode = MNEMONIC_OR,
         .nbr_cycles = 6,
         .comment = "ou  (or   r1, r2, r3   r1 | r2 -> r3"
     },
@@ -105,7 +105,7 @@ op_t op_tab[N_OP] = {
             PARAMETER_REGISTER
         },
         .are_args_indexes = ARGS_NO_INDEX,
-        .opcode = 0x08,
+        .opcode = MNEMONIC_XOR,
         .nbr_cycles = 6,
         .comment = "ou (xor  r1, r2, r3   r1^r2 -> r3"
     },
@@ -118,7 +118,7 @@ op_t op_tab[N_OP] = {
         .are_args_indexes = {
             [0] = true
         },
-        .opcode = 0x09,
+        .opcode = MNEMONIC_ZJMP,
         .nbr_cycles = 20,
         .comment = "jump if zero"
     },
@@ -134,7 +134,7 @@ op_t op_tab[N_OP] = {
             [0] = true,
             [1] = true
         },
-        .opcode = 0x0A,
+        .opcode = MNEMONIC_LDI,
         .nbr_cycles = 25,
         .comment = "load index"
     },
@@ -150,7 +150,7 @@ op_t op_tab[N_OP] = {
             [1] = true,
             [2] = true
         },
-        .opcode = 0x0B,
+        .opcode = MNEMONIC_STI,
         .nbr_cycles = 25,
         .comment = "store index"
     },
@@ -163,7 +163,7 @@ op_t op_tab[N_OP] = {
         .are_args_indexes = {
             [0] = true
         },
-        .opcode = 0x0C,
+        .opcode = MNEMONIC_FORK,
         .nbr_cycles = 800,
         .comment = "fork"
     },
@@ -175,7 +175,7 @@ op_t op_tab[N_OP] = {
             PARAMETER_REGISTER
         },
         .are_args_indexes = ARGS_NO_INDEX,
-        .opcode = 0x0D,
+        .opcode = MNEMONIC_LLD,
         .nbr_cycles = 10,
         .comment = "long load"
     },
@@ -191,7 +191,7 @@ op_t op_tab[N_OP] = {
             [0] = true,
             [1] = true
         },
-        .opcode = 0x0E,
+        .opcode = MNEMONIC_LLDI,
         .nbr_cycles = 50,
         .comment = "long load index"
     },
@@ -204,7 +204,7 @@ op_t op_tab[N_OP] = {
         .are_args_indexes = {
             [0] = true
         },
-        .opcode = 0x0F,
+        .opcode = MNEMONIC_LFORK,
         .nbr_cycles = 1000,
         .comment = "long fork"
     },
@@ -215,7 +215,7 @@ op_t op_tab[N_OP] = {
             PARAMETER_REGISTER
         },
         .are_args_indexes = ARGS_NO_INDEX,
-        .opcode = 0x10,
+        .opcode = MNEMONIC_AFF,
         .nbr_cycles = 2,
         .comment = "aff"
     }

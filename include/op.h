@@ -71,7 +71,6 @@
 
     extern op_t op_tab[N_OP];
 
-
     // Header
     #define PROG_NAME_LENGTH        128
     #define COMMENT_LENGTH          2'048
