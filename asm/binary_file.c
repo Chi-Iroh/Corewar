@@ -50,19 +50,22 @@ STATIC_FUNCTION bool header_get_name_and_comment
     return true;
 }
 
-bool binary_write_prog_size(int fd, size_t size)
+bool binary_write_prog_size(int fd, uint64_t size)
 {
-    const uint8_t prog_size[4] = {
-        (size & 0xFF'00'00'00) >> 24,
-        (size & 0x00'FF'00'00) >> 16,
-        (size & 0x00'00'FF'00) >> 8,
-        size & 0x00'00'00'FF
+    const uint8_t prog_size[8] = {
+        (size & 0xFF'00'00'00'00'00'00'00) >> 56,
+        (size & 0x00'FF'00'00'00'00'00'00) >> 48,
+        (size & 0x00'00'FF'00'00'00'00'00) >> 40,
+        (size & 0x00'00'00'FF'00'00'00'00) >> 32,
+        (size & 0x00'00'00'00'FF'00'00'00) >> 24,
+        (size & 0x00'00'00'00'00'FF'00'00) >> 16,
+        (size & 0x00'00'00'00'00'00'FF'00) >> 8,
+        size & 0x00'00'00'00'00'00'00'FF
     };
     bool status = true;
 
     status &= lseek(fd, PROG_SIZE_POSITION, SEEK_SET) == PROG_SIZE_POSITION;
-    status = status && (write(fd, &prog_size[0], 4) == 4);
-    return status;
+    return status && write(fd, &prog_size[0], 8) == 8;
 }
 
 /*
@@ -82,6 +85,8 @@ bool binary_write_prog_size(int fd, size_t size)
 @note
     0 is written instead of the real prog size because it will be calculated
         later, and insertion isn't possible.
+@note
+    4 zero-bytes are written after the comment for padding purpose.
 */
 bool binary_write_header(int fd, header_t *header)
 {
@@ -98,6 +103,7 @@ bool binary_write_header(int fd, header_t *header)
     n_written_bytes += write(fd, &header->prog_name[0], PROG_NAME_LENGTH);
     n_written_bytes += write(fd, &zero, 8);
     n_written_bytes += write(fd, &header->comment[0], COMMENT_LENGTH);
+    n_written_bytes += write(fd, &zero, 4);
     return n_written_bytes == HEADER_LENGTH;
 }
 
@@ -115,7 +121,7 @@ bool binary_write_file(int fd, parser_line_t *file_content)
 {
     parser_instruction_t *instruction = NULL;
     header_t header = {};
-    size_t size = 0;
+    uint64_t size = 0;
     bool status = true;
 
     RETURN_VALUE_IF(fd < 0 || !file_content, false);
@@ -123,7 +129,13 @@ bool binary_write_file(int fd, parser_line_t *file_content)
     status &= binary_write_header(fd, &header);
     while (status && file_content) {
         instruction = file_content->instruction;
-        status &= binary_write_instruction(fd, instruction, &size);
+        while (parser_is_label(instruction->word, LABEL_COLON_END)) {
+            instruction = instruction->next;
+            BREAK_IF(!instruction);
+        }
+        if (instruction && parser_is_mnemonic(instruction->word)) {
+            status &= binary_write_instruction(fd, instruction, &size);
+        }
         file_content = file_content->next;
     }
     return status && binary_write_prog_size(fd, size);

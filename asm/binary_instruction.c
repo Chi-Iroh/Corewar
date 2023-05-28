@@ -24,27 +24,33 @@
     Whatever is its number of parameters, every instruction "virtually"
         has four parameters for implementation purpose, even if less are
         in ASM files.
+@note
+    When instruction is NULL, resets the internal instruction state
+        (not to continue to the next node) and then returns PARAMETER_MAX.
 */
 STATIC_FUNCTION mnemonic_parameter_t
     instruction_get_arg_type(parser_instruction_t *instruction)
 {
-    static parser_instruction_t *function_last_parameter = NULL;
-    static parser_instruction_t *function_last_processed = NULL;
+    static parser_instruction_t *last_parameter = NULL;
+    static parser_instruction_t *last_processed = NULL;
 
+    if (!instruction)
+        last_parameter = NULL;
     RETURN_VALUE_IF(!instruction || !instruction->word, PARAMETER_MAX);
-    if (function_last_parameter == instruction) {
-        function_last_processed = function_last_processed ?
-        function_last_processed->next : NULL;
+    if (last_parameter == instruction) {
+        last_processed = last_processed ? last_processed->next : NULL;
+        RETURN_VALUE_IF(!last_processed, PARAMETER_MAX);
+        RETURN_VALUE_IF(!last_processed->word, PARAMETER_MAX);
     } else {
-        function_last_parameter = instruction;
-        function_last_processed = instruction;
+        last_parameter = instruction;
+        last_processed = instruction;
     }
-    if (parser_is_register(function_last_processed->word))
+    if (parser_is_register(last_processed->word))
         return PARAMETER_REGISTER;
-    else if (parser_is_direct_value(function_last_processed->word))
+    else if (parser_is_direct_value(last_processed->word))
         return PARAMETER_DIRECT;
-    return parser_is_indirect_value(function_last_processed->word) ?
-    PARAMETER_INDIRECT : PARAMETER_MAX;
+    return parser_is_indirect_value(last_processed->word) ?
+        PARAMETER_INDIRECT : PARAMETER_MAX;
 }
 
 /*
@@ -74,12 +80,25 @@ STATIC_FUNCTION bool binary_write_instruction_info(int fd,
     return true;
 }
 
-STATIC_FUNCTION uintmax_t convert_arg_to_number(char *arg)
+STATIC_FUNCTION uintmax_t convert_arg_to_number
+    (parser_instruction_t *instruction)
 {
-    if (parser_is_register(arg)) {
-        return my_getnbr(&arg[1]);
-    } else if (!parser_is_label(&arg[1], LABEL_COLON_BEGIN)) {
-        return my_getnbr(arg);
+    static parser_instruction_t *last_parameter = NULL;
+    static parser_instruction_t *last_processed = NULL;
+
+    RETURN_VALUE_IF(!instruction || !instruction->word, 0);
+    if (last_parameter == instruction) {
+        last_processed = last_processed ? last_processed->next : NULL;
+        RETURN_VALUE_IF(!last_processed, PARAMETER_MAX);
+        RETURN_VALUE_IF(!last_processed->word, PARAMETER_MAX);
+    } else {
+        last_parameter = instruction;
+        last_processed = instruction;
+    }
+    if (parser_is_register(last_processed->word)) {
+        return my_getnbr(&last_processed->word[1]);
+    } else if (!parser_is_label(&last_processed->word[1], LABEL_COLON_BEGIN)) {
+        return my_getnbr(last_processed->word);
     }
     return 0;
 }
@@ -96,7 +115,7 @@ STATIC_FUNCTION uintmax_t convert_arg_to_number(char *arg)
 @returns
     true on success, false on failure
 */
-STATIC_FUNCTION bool binary_write_arguments (int fd,
+STATIC_FUNCTION bool binary_write_arguments(int fd,
     parser_instruction_t *instruction, uint8_t opcode, size_t *prog_size)
 {
     uintmax_t arg = 0;
@@ -108,13 +127,13 @@ STATIC_FUNCTION bool binary_write_arguments (int fd,
         [1] = &arg_1byte, [2] = &arg_2bytes[0], [4] = &arg_4bytes[0]
     };
 
+    instruction_get_arg_type(NULL);
     for (unsigned i = 0; i < MAX_ARGS_NUMBER; i++) {
-        arg = convert_arg_to_number(instruction->word);
+        arg = convert_arg_to_number(instruction);
         arg_size = ARG_SIZE[instruction_get_arg_type(instruction)];
-        binary_write(arg, args[arg_size], 4);
+        binary_write(arg, args[arg_size], arg_size);
         RETURN_VALUE_IF(write(fd, args[arg_size], arg_size) != arg_size, false)
         *prog_size += arg_size;
-        instruction = instruction->next;
     }
     return true;
 }
@@ -130,22 +149,20 @@ STATIC_FUNCTION bool binary_write_arguments (int fd,
     false if instruction isn't a mnemonic or write error, otherwise true
 */
 bool binary_write_instruction
-    (int fd, parser_instruction_t *instruction, size_t *prog_size)
+    (int fd, parser_instruction_t *instruction, uint64_t *prog_size)
 {
     const unsigned index = op_tab_mnemonic_index(instruction->word);
     uint8_t opcode = index == N_OP ? 0x00 : op_tab[index].opcode;
     uint8_t coding_byte = 0x00;
+    bool is_ok = true;
 
     RETURN_VALUE_IF(opcode == 0x00, false);
     instruction = instruction->next;
+    RETURN_VALUE_IF(!instruction, false);
     for (unsigned i = 0; i < MAX_ARGS_NUMBER; i++) {
         coding_byte <<= 2;
         coding_byte |= ARG_NAME_TO_BITS[instruction_get_arg_type(instruction)];
-        instruction = instruction->next;
     }
-    if (!binary_write_instruction_info(fd, opcode, coding_byte, prog_size))
-        return false;
-    if (!binary_write_arguments(fd, instruction, opcode, prog_size))
-        return false;
-    return true;
+    is_ok &= binary_write_instruction_info(fd, opcode, coding_byte, prog_size);
+    return is_ok && binary_write_arguments(fd, instruction, opcode, prog_size);
 }
