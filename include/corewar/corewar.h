@@ -20,7 +20,6 @@ void my_memcpy(void *destination, void *source, size_t size);
 void my_memset(void *destination, uint8_t byte, size_t size);
 
 void dump_memory(vm_t *vm, unsigned n_32bytes_chunks);
-void dump_memory_once(vm_t *vm, unsigned n_32bytes_chunks);
 
 bool mnemonic_are_args_ok(vm_mnemonic_t args);
 bool mnemonic_ld(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args);
@@ -64,6 +63,8 @@ bool memory_read_n_bytes
 vm_address_t index_apply_to_pc
     (vm_address_t pc, vm_indirect_arg_t index,
     bool apply_index_modulo);
+
+void print_champion_name(vm_champion_t *champion);
 
 void champions_realloc(vm_t *vm, bool add_memory);
 void scheduler_execute(vm_t *vm);

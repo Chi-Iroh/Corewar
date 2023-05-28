@@ -5,6 +5,7 @@
 ** -> Scheduler executing processes
 */
 
+#include "../include/my.h"
 #include "../include/my_macros.h"
 #include "../include/corewar/corewar.h"
 
@@ -124,6 +125,8 @@ STATIC_FUNCTION void scheduler_remove_program(vm_t *vm, unsigned *index)
 */
 STATIC_FUNCTION void scheduler_remove_dead_programs(vm_t *vm, unsigned *cycle)
 {
+    static bool has_displayed_end = false;
+
     RETURN_IF(!vm);
     for (unsigned i = 0; i < vm->n_champions; i++) {
         if (!vm->champions[i].is_alive) {
@@ -133,6 +136,14 @@ STATIC_FUNCTION void scheduler_remove_dead_programs(vm_t *vm, unsigned *cycle)
         vm->champions[i].is_waiting = false;
     }
     *cycle = 0;
+    if (vm->n_champions == 1 && !has_displayed_end) {
+        my_printf("The player %u(", vm->champions[0].number);
+        print_champion_name(&vm->champions[0]);
+        my_puts(")has won");
+        has_displayed_end = true;
+    } else if (vm->n_champions == 0) {
+        puts("No winner.");
+    }
 }
 
 /*
@@ -151,7 +162,7 @@ void scheduler_execute(vm_t *vm)
     unsigned global_cycle = 0;
 
     RETURN_IF(!vm);
-    for (unsigned cycle = 1; vm->n_champions > 0; cycle++, global_cycle++) {
+    for (unsigned cycle = 1; vm->n_champions > 1; cycle++, global_cycle++) {
         if (vm->n_lives >= NBR_LIVE) {
             vm->cycle_to_die -= CYCLE_DELTA;
             vm->n_lives %= NBR_LIVE;
@@ -164,7 +175,8 @@ void scheduler_execute(vm_t *vm)
             scheduler_champion_execute_next_cycle(vm, &vm->champions[i]);
         }
         if (global_cycle >= vm->cycles_before_memory_dump) {
-            dump_memory_once(vm, 0);
+            dump_memory(vm, 0);
+            return;
         }
     }
 }

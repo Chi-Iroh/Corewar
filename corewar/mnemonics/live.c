@@ -5,8 +5,22 @@
 ** -> live mnemonic
 */
 
+#include "../../include/my.h"
 #include "../../include/my_macros.h"
 #include "../../include/corewar/corewar.h"
+
+void print_champion_name(vm_champion_t *champion)
+{
+    char *str = my_strrchr(champion->filename, '/');
+    char *const dot = my_strrchr(champion->filename, '.');
+
+    if (!str) {
+        str = champion->filename;
+    }
+    while (str != dot) {
+        my_putchar(*str++);
+    }
+}
 
 /*
 @brief
@@ -37,5 +51,8 @@ bool mnemonic_live(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args)
             break;
         }
     }
+    my_printf("The player %u(", champion->number);
+    print_champion_name(champion);
+    my_puts(")is alive.");
     return true;
 }

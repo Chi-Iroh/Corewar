@@ -69,13 +69,3 @@ void dump_memory(vm_t *vm, unsigned n_32bytes_chunks)
         }
     }
 }
-
-void dump_memory_once(vm_t *vm, unsigned n_32bytes_chunks)
-{
-    static bool is_first_call = true;
-
-    if (is_first_call) {
-        dump_memory(vm, n_32bytes_chunks);
-        is_first_call = false;
-    }
-}
