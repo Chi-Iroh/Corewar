@@ -1,0 +1,5 @@
+Segfault when no .name / .comment
+Label fails to find referred instruction when on another line :
+label:
+bla
+instead of label: bla.

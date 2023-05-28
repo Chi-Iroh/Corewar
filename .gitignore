@@ -49,4 +49,4 @@ corewar_binaries
 !custom_champions/**.S
 
 # important
-!segfault_note.txt
+!BUGS.txt
