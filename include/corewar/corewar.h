@@ -58,7 +58,7 @@ bool binary_argv_load_single_binary
 bool binary_load_all(vm_t *vm, unsigned argc, char *argv[]);
 
 bool memory_read_n_bytes
-    (vm_t *vm, vm_address_t *address, vm_address_t n_bytes, uintmax_t *arg);
+    (vm_t *vm, vm_address_t address, vm_address_t n_bytes, uintmax_t *arg);
 vm_address_t index_apply_to_pc
     (vm_address_t pc, vm_indirect_arg_t index,
     bool apply_index_modulo);
