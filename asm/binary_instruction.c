@@ -117,7 +117,6 @@ STATIC_FUNCTION bool binary_write_arguments(int fd,
     parser_instruction_t *instruction, parser_line_t *line,
     parser_label_t *labels)
 {
-    const unsigned index = mnemonic_index(instruction->previous->word);
     uintmax_t arg = 0;
     unsigned arg_size = 0;
     uint8_t arg_1byte = 0;
@@ -130,9 +129,7 @@ STATIC_FUNCTION bool binary_write_arguments(int fd,
     instruction_get_arg_type(NULL);
     for (unsigned i = 0; instruction && i < MAX_ARGS_NUMBER; i++) {
         arg = convert_arg_to_number(instruction, line, labels);
-        arg_size = ARG_SIZE[instruction_get_arg_type(instruction)];
-        arg_size = op_tab[index].are_args_indexes[i] ? INDEX_SIZE : arg_size;
-        instruction->size = arg_size;
+        arg_size = instruction->size;
         binary_write(arg, args[arg_size], arg_size);
         RETURN_VALUE_IF(write(fd, args[arg_size], arg_size) != arg_size, false)
         instruction = instruction->next;

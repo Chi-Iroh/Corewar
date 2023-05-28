@@ -7,6 +7,7 @@ asm/asm
 corewar/corewar
 
 ## Binary
+champions
 **/*.out
 **/*.gcno
 **/*.gcda
