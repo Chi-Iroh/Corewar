@@ -39,7 +39,7 @@ bool mnemonic_lldi(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args)
     arg1 = mnemonic_get_indirect_address_value(vm, args.type[0], arg1);
     arg2 = mnemonic_get_arg(args, 1, champion);
     memory_address = index_apply_to_pc(champion->pc, arg1, false);
-    memory_read_n_bytes(vm, &memory_address, INDIRECT_SIZE, (uintmax_t*)&tmp);
+    memory_read_n_bytes(vm, memory_address, INDIRECT_SIZE, (uintmax_t*)&tmp);
     tmp = arg2 > MEMORY_SIZE ? tmp - (0x01'00'00 - arg2) : tmp + arg2;
     memory_address = index_apply_to_pc(champion->pc, tmp, false);
     register_address = &champion->registers[args.args[2] - 1];
