@@ -54,8 +54,8 @@ tests: make_lib clean_tests
 
 .PHONY: tests_run
 tests_run: tests
-	@$(MAKE) $(MAKE_FLAGS) -C asm/ run_tests
-	@$(MAKE) $(MAKE_FLAGS) -C corewar/ run_tests
+	@$(MAKE) $(MAKE_FLAGS) -C asm/ tests_run
+	@$(MAKE) $(MAKE_FLAGS) -C corewar/ tests_run
 
 .PHONY: clean_lib
 clean_lib:

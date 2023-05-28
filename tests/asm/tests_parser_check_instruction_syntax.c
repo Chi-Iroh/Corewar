@@ -18,13 +18,13 @@ Test(check_instruction_syntax, get_mnemonic_index) {
 
     for (unsigned i = 0; i < N_OP; i++) {
         sprintf(&buf[0], "%s is the %u-th mnemonic", op_tab[i].mnemonic, i);
-        cr_expect(parser_op_tab_mnemonic_index(op_tab[i].mnemonic) == i, "%s", &buf[0]);
+        cr_expect(mnemonic_index(op_tab[i].mnemonic) == i, "%s", &buf[0]);
         memset(&buf[0], 0, 256);
     }
-    cr_expect(parser_op_tab_mnemonic_index("helloworld") == N_OP, "helloworld isn't a mnemonic (out-of-bounds index expected)");
-    cr_expect(parser_op_tab_mnemonic_index(NULL) == N_OP, "NULL isn't a mnemonic (out-of-bounds index expected)");
-    cr_expect(parser_op_tab_mnemonic_index("") == N_OP, "empty string isn't a mnemonic (out-of-bounds index expected)");
-    cr_expect(parser_op_tab_mnemonic_index("addj") == N_OP, "addj isn't a mnemonic (out-of-bounds index expected)");
+    cr_expect(mnemonic_index("helloworld") == N_OP, "helloworld isn't a mnemonic (out-of-bounds index expected)");
+    cr_expect(mnemonic_index(NULL) == N_OP, "NULL isn't a mnemonic (out-of-bounds index expected)");
+    cr_expect(mnemonic_index("") == N_OP, "empty string isn't a mnemonic (out-of-bounds index expected)");
+    cr_expect(mnemonic_index("addj") == N_OP, "addj isn't a mnemonic (out-of-bounds index expected)");
 }
 
 Test(check_instruction_syntax, check_arg_type) {

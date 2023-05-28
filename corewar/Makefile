@@ -98,8 +98,8 @@ tests: clean_tests
 			-DRUNNING_CRITERION_TESTS $(CFLAGS) $(LDFLAGS) -o $(NAME);		\
 	fi
 
-.PHONY: run_tests
-run_tests: clean_tests tests
+.PHONY: tests_run
+tests_run: clean_tests tests
 	@echo "[COREWAR] Running tests :"
 	@./$(NAME)
 	@echo "[COREWAR] Writing line coverage log in corewar/line_coverage.log."

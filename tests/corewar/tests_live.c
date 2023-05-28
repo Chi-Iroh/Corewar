@@ -101,7 +101,7 @@ Test(mnemonic_live, test_live) {
         .op = &OP_TAB(MNEMONIC_LIVE)
     };
     vm_address_t load_address = 0;
-    int n_lives = vm.n_lives;
+    const unsigned n_lives = vm.n_lives;
     printf("%s :\n", args.mnemonic);
     write_instruction(&vm, args, load_address, false);
     cr_assert(mnemonic_live(&vm, &champion, args));
