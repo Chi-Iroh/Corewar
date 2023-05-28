@@ -16,6 +16,8 @@ void print_champion_name(vm_champion_t *champion)
 
     if (!str) {
         str = champion->filename;
+    } else {
+        str++;
     }
     while (str != dot) {
         my_putchar(*str++);
