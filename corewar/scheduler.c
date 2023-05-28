@@ -126,7 +126,7 @@ STATIC_FUNCTION void scheduler_remove_dead_programs(vm_t *vm)
 {
     RETURN_IF(!vm);
     for (unsigned i = 0; i < vm->n_champions; i++) {
-        if (vm->champions[i].n_live_called != NBR_LIVE) {
+        if (!vm->champions[i].is_alive) {
             scheduler_remove_program(vm, &i);
         }
         vm->champions[i].cycles_to_wait = 0;
@@ -151,12 +151,14 @@ void scheduler_execute(vm_t *vm)
     unsigned global_cycle = 0;
 
     RETURN_IF(!vm);
-    for (unsigned cycle = 1; vm->n_champions > 0; cycle++, global_cycle++) {
+    for (unsigned cycle = 0; vm->n_champions > 0; cycle++, global_cycle++) {
+        if (vm->n_lives >= NBR_LIVE) {
+            vm->cycle_to_die -= CYCLE_DELTA;
+            vm->n_lives = 0;
+        }
         if (cycle == vm->cycle_to_die) {
             scheduler_remove_dead_programs(vm);
-            vm->cycle_to_die -= CYCLE_DELTA;
             cycle = 0;
-            continue;
         }
         for (vm_address_t i = 0; i < vm->n_champions; i++) {
             scheduler_champion_execute_next_cycle(vm, &vm->champions[i]);
