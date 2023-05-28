@@ -8,6 +8,7 @@
 #include <string.h>
 #include <criterion/criterion.h>
 #include "../../include/my_macros.h"
+#include "../../include/my.h"
 #include "tests.h"
 
 Test(mnemonic_fork, vm_null) {
@@ -106,4 +107,5 @@ Test(mnemonic_fork, test_fork) {
     bool r_value = mnemonic_fork(&vm, &vm.champions[0], args);
     cr_assert(r_value);
     printf("\t%s\n", r_value ? "success" : "fail");
+    cr_assert(my_strcmp(vm.champions[0].filename, vm.champions[1].filename) == 0);
 }
