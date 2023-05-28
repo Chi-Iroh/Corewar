@@ -89,8 +89,8 @@ STATIC_FUNCTION uintmax_t convert_arg_to_number
     RETURN_VALUE_IF(!instruction || !instruction->word, 0);
     if (last_parameter == instruction) {
         last_processed = last_processed ? last_processed->next : NULL;
-        RETURN_VALUE_IF(!last_processed, PARAMETER_MAX);
-        RETURN_VALUE_IF(!last_processed->word, PARAMETER_MAX);
+        RETURN_VALUE_IF(!last_processed, 0);
+        RETURN_VALUE_IF(!last_processed->word, 0);
     } else {
         last_parameter = instruction;
         last_processed = instruction;
@@ -128,6 +128,7 @@ STATIC_FUNCTION bool binary_write_arguments(int fd,
     };
 
     instruction_get_arg_type(NULL);
+    convert_arg_to_number(NULL);
     for (unsigned i = 0; i < MAX_ARGS_NUMBER; i++) {
         arg = convert_arg_to_number(instruction);
         arg_size = ARG_SIZE[instruction_get_arg_type(instruction)];
@@ -159,6 +160,7 @@ bool binary_write_instruction
     RETURN_VALUE_IF(opcode == 0x00, false);
     instruction = instruction->next;
     RETURN_VALUE_IF(!instruction, false);
+    instruction_get_arg_type(NULL);
     for (unsigned i = 0; i < MAX_ARGS_NUMBER; i++) {
         coding_byte <<= 2;
         coding_byte |= ARG_NAME_TO_BITS[instruction_get_arg_type(instruction)];
