@@ -86,11 +86,13 @@ Test(mnemonic_live, test_live) {
         .pc = 0,
         .registers = {},
         .size = 0,
+        .is_alive = false
     };
     vm_t vm = {
         .champions = &champion,
         .memory = {},
-        .n_champions = 1
+        .n_champions = 1,
+        .n_lives = 0
     };
     vm_mnemonic_t args = {
         .mnemonic = "live",
@@ -99,14 +101,10 @@ Test(mnemonic_live, test_live) {
         .op = &OP_TAB(MNEMONIC_LIVE)
     };
     vm_address_t load_address = 0;
+    int n_lives = vm.n_lives;
     printf("%s :\n", args.mnemonic);
     write_instruction(&vm, args, load_address, false);
     cr_assert(mnemonic_live(&vm, &champion, args));
-    // vm_register_t expected = 0;
-    // for (vm_address_t i = load_address; i < load_address + sizeof(expected); i++) {
-    //     expected <<= 8;
-    //     expected |= vm.memory[i];
-    // }
-    // printf("\tExpected : %X / Got : %X\n", expected, champion.registers[0]);
-    // cr_assert(champion.registers[args.args[0] - 1] == expected);
+    cr_assert(champion.is_alive);
+    cr_assert(vm.n_lives == n_lives + 1);
 }
