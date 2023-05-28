@@ -122,7 +122,7 @@ STATIC_FUNCTION void scheduler_remove_program(vm_t *vm, unsigned *index)
     If champions reallocation fails, properly frees resources and exits with
         code 84.
 */
-STATIC_FUNCTION void scheduler_remove_dead_programs(vm_t *vm)
+STATIC_FUNCTION void scheduler_remove_dead_programs(vm_t *vm, unsigned *cycle)
 {
     RETURN_IF(!vm);
     for (unsigned i = 0; i < vm->n_champions; i++) {
@@ -132,6 +132,7 @@ STATIC_FUNCTION void scheduler_remove_dead_programs(vm_t *vm)
         vm->champions[i].cycles_to_wait = 0;
         vm->champions[i].is_waiting = false;
     }
+    *cycle = 0;
 }
 
 /*
@@ -147,25 +148,23 @@ STATIC_FUNCTION void scheduler_remove_dead_programs(vm_t *vm)
 */
 void scheduler_execute(vm_t *vm)
 {
-    bool has_dumped = false;
     unsigned global_cycle = 0;
 
     RETURN_IF(!vm);
-    for (unsigned cycle = 0; vm->n_champions > 0; cycle++, global_cycle++) {
+    for (unsigned cycle = 1; vm->n_champions > 0; cycle++, global_cycle++) {
         if (vm->n_lives >= NBR_LIVE) {
             vm->cycle_to_die -= CYCLE_DELTA;
-            vm->n_lives = 0;
+            vm->n_lives %= NBR_LIVE;
         }
         if (cycle == vm->cycle_to_die) {
-            scheduler_remove_dead_programs(vm);
-            cycle = 0;
+            scheduler_remove_dead_programs(vm, &cycle);
+            continue;
         }
         for (vm_address_t i = 0; i < vm->n_champions; i++) {
             scheduler_champion_execute_next_cycle(vm, &vm->champions[i]);
         }
-        if (!has_dumped && global_cycle >= vm->cycles_before_memory_dump) {
-            dump_memory(vm, 0);
-            has_dumped = true;
+        if (global_cycle >= vm->cycles_before_memory_dump) {
+            dump_memory_once(vm, 0);
         }
     }
 }
