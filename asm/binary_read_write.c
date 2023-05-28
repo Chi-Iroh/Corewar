@@ -26,7 +26,7 @@ void binary_write(uintmax_t value, uint8_t buffer[], unsigned size)
 
     for (unsigned i = 0; i < size; i++) {
         n_bits = (size - i - 1) * 8;
-        buffer[i] = (value & (0xFF << n_bits)) >> n_bits;
+        buffer[i] = (value & ((uintmax_t)0xFF << n_bits)) >> n_bits;
     }
 }
 

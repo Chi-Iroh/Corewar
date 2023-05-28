@@ -39,6 +39,8 @@ parser_line_t *parse_file(char *filename);
 bool parse_labels(parser_line_t *file, parser_label_t **labels);
 bool parser_check_syntax(parser_line_t *file);
 
+void parser_add_size(parser_line_t *file);
+
 /*
 @brief
     Number of types
@@ -51,6 +53,9 @@ bool parser_check_syntax(parser_line_t *file);
 */
 #define PARSER_WORD_TYPES 4
 
+mnemonic_parameter_t instruction_get_arg_type
+    (parser_instruction_t *instruction);
+
 void skip_labels(parser_instruction_t **instruction_address);
 bool find_label
     (parser_label_t *labels, parser_instruction_t *current_instruction,
@@ -59,11 +64,13 @@ bool find_label
 void binary_write(uintmax_t value, uint8_t buffer[], unsigned size);
 void binary_read(uint8_t buffer[], uintmax_t *value, unsigned size);
 bool binary_write_header(int fd, header_t *header);
-uint64_t binary_write_instruction
+bool binary_write_instruction
     (int fd, parser_instruction_t *instruction,
     parser_line_t *line, parser_label_t *labels);
 bool binary_write_file
     (int fd, parser_line_t *file_content, parser_label_t *labels);
+
+uint64_t parser_get_file_size(parser_line_t *file);
 
 extern bool (*parser_syntax_functions[PARAMETER_MAX])(char*);
 extern const unsigned parser_word_types[4];

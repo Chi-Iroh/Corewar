@@ -75,6 +75,7 @@ STATIC_FUNCTION void parse_file_and_labels
         free_main(file, labels);
         exit(84);
     }
+    parser_add_size(*file);
 }
 
 STATIC_FUNCTION bool write_to_binary

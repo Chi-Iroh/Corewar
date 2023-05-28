@@ -183,6 +183,15 @@ free_all((void*[(n)])allocs, (void*[(n)])destructors, (n))
     }                                                   \
 }
 
+#ifdef DOUBLY_LINKED_LIST_GO_TO_END
+    #undef DOUBLY_LINKED_LIST_GO_TO_END
+#endif
+#define DOUBLY_LINKED_LIST_GO_TO_END(linked_list) {     \
+    while ((linked_list) && (linked_list)->next) {      \
+        (linked_list) = (linked_list)->next;            \
+    }                                                   \
+}
+
 #ifdef BREAK_IF
     #define BREAK_IF
 #endif
@@ -190,4 +199,13 @@ free_all((void*[(n)])allocs, (void*[(n)])destructors, (n))
     if (condition) {            \
         break;                  \
     }                           \
+}
+
+#ifdef CONTINUE_IF
+    #define CONTINUE_IF
+#endif
+#define CONTINUE_IF(condition) {    \
+    if (condition) {                \
+        continue;                   \
+    }                               \
 }

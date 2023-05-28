@@ -34,9 +34,12 @@ bool parser_instruction_append_word
         node = node->next;
     }
     node->next = new_node;
-    new_node->next = NULL;
-    new_node->previous = node;
-    new_node->word = word;
+    *new_node = (parser_instruction_t) {
+        .size = 0,
+        .next = NULL,
+        .previous = node,
+        .word = word
+    };
     return true;
 }
 

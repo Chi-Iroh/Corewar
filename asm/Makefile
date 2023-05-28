@@ -20,6 +20,7 @@ SRC_NO_MAIN = 									\
 			parser_labels.c						\
 			parser_next_word.c					\
 			parser_remove_operand_separator.c	\
+			parser_size.c 						\
 			skip_labels.c
 
 SRC 	=	$(SRC_NO_MAIN) main.c

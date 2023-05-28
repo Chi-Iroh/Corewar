@@ -28,8 +28,8 @@
     When instruction is NULL, resets the internal instruction state
         (not to continue to the next node) and then returns PARAMETER_MAX.
 */
-STATIC_FUNCTION mnemonic_parameter_t
-    instruction_get_arg_type(parser_instruction_t *instruction)
+mnemonic_parameter_t instruction_get_arg_type
+    (parser_instruction_t *instruction)
 {
     static parser_instruction_t *last_parameter = NULL;
     static parser_instruction_t *last_processed = NULL;
@@ -66,17 +66,12 @@ STATIC_FUNCTION mnemonic_parameter_t
     true on success, false on failure
 */
 STATIC_FUNCTION bool binary_write_instruction_info(int fd,
-    uint8_t opcode, uint8_t coding_byte, size_t *prog_size)
+    uint8_t opcode, uint8_t coding_byte)
 {
-    const ssize_t expected_written_bytes =
-        1 + !MNEMONIC_HAS_NO_CODING_BYTE[opcode];
-    ssize_t n_written_bytes = write(fd, &opcode, 1);
-
+    RETURN_VALUE_IF(write(fd, &opcode, 1) != 1, false);
     if (!MNEMONIC_HAS_NO_CODING_BYTE[opcode]) {
-        n_written_bytes += write(fd, &coding_byte, 1);
+        RETURN_VALUE_IF(write(fd, &coding_byte, 1) != 1, false);
     }
-    RETURN_VALUE_IF(n_written_bytes != expected_written_bytes, false);
-    *prog_size += n_written_bytes;
     return true;
 }
 
@@ -102,7 +97,8 @@ STATIC_FUNCTION uintmax_t convert_arg_to_number
     } else if (!parser_is_label(&last_processed->word[1], LABEL_COLON_BEGIN)) {
         return my_getnbr(last_processed->word);
     }
-    return find_label(labels, instruction, line, &label_index) * label_index;
+    RETURN_VALUE_IF(!find_label(labels, instruction, line, &label_index), 0);
+    return label_index;
 }
 
 /*
@@ -117,11 +113,11 @@ STATIC_FUNCTION uintmax_t convert_arg_to_number
 @returns
     true on success, false on failure
 */
-STATIC_FUNCTION size_t binary_write_arguments(int fd,
+STATIC_FUNCTION bool binary_write_arguments(int fd,
     parser_instruction_t *instruction, parser_line_t *line,
     parser_label_t *labels)
 {
-    size_t written = 0;
+    const unsigned index = mnemonic_index(instruction->previous->word);
     uintmax_t arg = 0;
     unsigned arg_size = 0;
     uint8_t arg_1byte = 0;
@@ -132,14 +128,16 @@ STATIC_FUNCTION size_t binary_write_arguments(int fd,
     };
 
     instruction_get_arg_type(NULL);
-    for (unsigned i = 0; i < MAX_ARGS_NUMBER; i++) {
+    for (unsigned i = 0; instruction && i < MAX_ARGS_NUMBER; i++) {
         arg = convert_arg_to_number(instruction, line, labels);
         arg_size = ARG_SIZE[instruction_get_arg_type(instruction)];
+        arg_size = op_tab[index].are_args_indexes[i] ? INDEX_SIZE : arg_size;
+        instruction->size = arg_size;
         binary_write(arg, args[arg_size], arg_size);
         RETURN_VALUE_IF(write(fd, args[arg_size], arg_size) != arg_size, false)
-        written += arg_size;
+        instruction = instruction->next;
     }
-    return written;
+    return true;
 }
 
 /*
@@ -152,15 +150,13 @@ STATIC_FUNCTION size_t binary_write_arguments(int fd,
 @returns
     false if instruction isn't a mnemonic or write error, otherwise true
 */
-uint64_t binary_write_instruction
+bool binary_write_instruction
     (int fd, parser_instruction_t *instruction,
     parser_line_t *line, parser_label_t *labels)
 {
     const unsigned index = mnemonic_index(instruction->word);
     uint8_t opcode = index == N_OP ? 0x00 : op_tab[index].opcode;
     uint8_t coding_byte = 0x00;
-    size_t prog_size = 0;
-    size_t copy_prog_size = 0;
 
     RETURN_VALUE_IF(opcode == 0x00, 0);
     instruction = instruction->next;
@@ -170,9 +166,8 @@ uint64_t binary_write_instruction
         coding_byte <<= 2;
         coding_byte |= ARG_NAME_TO_BITS[instruction_get_arg_type(instruction)];
     }
-    if (binary_write_instruction_info(fd, opcode, coding_byte, &prog_size)) {
-        copy_prog_size = prog_size;
-        prog_size += binary_write_arguments(fd, instruction, line, labels);
+    if (binary_write_instruction_info(fd, opcode, coding_byte)) {
+        return binary_write_arguments(fd, instruction, line, labels);
     }
-    return prog_size > copy_prog_size ? prog_size : 0;
+    return false;
 }

@@ -121,10 +121,9 @@ bool binary_write_header(int fd, header_t *header)
 bool binary_write_file
     (int fd, parser_line_t *file, parser_label_t *labels)
 {
+    parser_line_t *const file_copy = file;
     parser_instruction_t *instruction = NULL;
     header_t header = {};
-    uint64_t copy_size = 0;
-    uint64_t size = 0;
     bool status = true;
 
     RETURN_VALUE_IF(fd < 0 || !file, false);
@@ -134,11 +133,10 @@ bool binary_write_file
         instruction = file->instruction;
         skip_labels(&instruction);
         if (instruction && parser_is_mnemonic(instruction->word)) {
-            copy_size = size;
-            size += binary_write_instruction(fd, instruction, file, labels);
-            status &= size > copy_size;
+            status &= binary_write_instruction(fd, instruction, file, labels);
         }
         file = file->next;
     }
-    return status && binary_write_prog_size(fd, size);
+    file = file_copy;
+    return status && binary_write_prog_size(fd, parser_get_file_size(file));
 }

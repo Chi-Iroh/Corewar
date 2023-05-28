@@ -9,6 +9,7 @@
 
 typedef struct parser_instruction {
     char *word;
+    unsigned size;
     struct parser_instruction *next;
     struct parser_instruction *previous;
 } parser_instruction_t;

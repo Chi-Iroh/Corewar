@@ -80,20 +80,21 @@ STATIC_FUNCTION bool parser_init_label
     true on success, false on failure
 */
 STATIC_FUNCTION bool parser_add_label
-    (parser_label_t **label, parser_instruction_t **instruction,
+    (parser_label_t **label, parser_instruction_t *instruction,
     parser_line_t *line)
 {
-    parser_label_t *node = label && instruction && *instruction ?
+    parser_label_t *node = label && instruction ?
         malloc(sizeof(parser_label_t)) : NULL;
 
     RETURN_VALUE_IF(!node, false);
     while (*label && (*label)->next) {
         *label = (*label)->next;
     }
-    if (!parser_init_label(node, *label, *instruction, line)) {
+    if (!parser_init_label(node, *label, instruction, line)) {
         free(node);
         return false;
     }
+    node->line = instruction;
     if (!(*label)) {
         *label = node;
     } else {
@@ -116,16 +117,14 @@ STATIC_FUNCTION bool parse_line_labels
     (parser_line_t **single_line, parser_label_t **labels)
 {
     bool status = true;
-    parser_instruction_t **instruction = NULL;
-    parser_instruction_t *copy_next = NULL;
+    parser_instruction_t *instruction = NULL;
 
     RETURN_VALUE_IF(!single_line || !(*single_line) || !labels, false);
-    instruction = &(*single_line)->instruction;
-    while (*instruction && status) {
-        BREAK_IF(!parser_is_label((*instruction)->word, LABEL_COLON_END));
-        copy_next = (*instruction)->next;
+    instruction = (*single_line)->instruction;
+    while (instruction && status) {
+        BREAK_IF(!parser_is_label(instruction->word, LABEL_COLON_END));
         status &= parser_add_label(labels, instruction, *single_line);
-        *instruction = copy_next;
+        instruction = instruction->next;
     }
     return status;
 }
