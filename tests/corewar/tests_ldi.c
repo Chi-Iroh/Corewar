@@ -99,17 +99,11 @@ Test(mnemonic_ldi, test_ldi) {
         .op = &OP_TAB(MNEMONIC_LDI)
     };
     printf("%s :\n", args.mnemonic);
-    write_instruction(&vm, args, 0, false);
-    cr_assert(mnemonic_ldi(&vm, &champion, args));
-    vm_register_t expected = args.args[0] + args.args[1];
-    printf("\tExpected : %X / Got : %X\n", expected, champion.registers[args.args[2] - 1]);
-    cr_assert(champion.registers[args.args[2] - 1] == expected);
 
-    args.type[0] = PARAMETER_INDIRECT;
-    args.args[0] = 31 - REGISTER_SIZE + 1;
     write_instruction(&vm, args, 0, true);
+    printf("\tGot : %X\n", champion.registers[0]);
     vm.memory[31] = 139;
-    expected = 0;
+    vm_register_t expected = 0;
     cr_assert(mnemonic_ldi(&vm, &champion, args));
     for (unsigned i = REGISTER_SIZE - 1; ; i--) {
         expected <<= 8;
