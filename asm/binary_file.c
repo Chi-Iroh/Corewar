@@ -52,20 +52,21 @@ STATIC_FUNCTION bool header_get_name_and_comment
 
 bool binary_write_prog_size(int fd, uint64_t size)
 {
-    const uint8_t prog_size[8] = {
-        (size & 0xFF'00'00'00'00'00'00'00) >> 56,
-        (size & 0x00'FF'00'00'00'00'00'00) >> 48,
-        (size & 0x00'00'FF'00'00'00'00'00) >> 40,
-        (size & 0x00'00'00'FF'00'00'00'00) >> 32,
-        (size & 0x00'00'00'00'FF'00'00'00) >> 24,
-        (size & 0x00'00'00'00'00'FF'00'00) >> 16,
-        (size & 0x00'00'00'00'00'00'FF'00) >> 8,
-        size & 0x00'00'00'00'00'00'00'FF
+    const unsigned size_bytes = PROG_SIZE_SIZE;
+    const uint8_t prog_size[PROG_SIZE_SIZE] = {
+        [PROG_SIZE_SIZE - 8] = (size & 0xFF'00'00'00'00'00'00'00) >> 56,
+        [PROG_SIZE_SIZE - 7] = (size & 0x00'FF'00'00'00'00'00'00) >> 48,
+        [PROG_SIZE_SIZE - 6] = (size & 0x00'00'FF'00'00'00'00'00) >> 40,
+        [PROG_SIZE_SIZE - 5] = (size & 0x00'00'00'FF'00'00'00'00) >> 32,
+        [PROG_SIZE_SIZE - 4] = (size & 0x00'00'00'00'FF'00'00'00) >> 24,
+        [PROG_SIZE_SIZE - 3] = (size & 0x00'00'00'00'00'FF'00'00) >> 16,
+        [PROG_SIZE_SIZE - 2] = (size & 0x00'00'00'00'00'00'FF'00) >> 8,
+        [PROG_SIZE_SIZE - 1] = size & 0x00'00'00'00'00'00'00'FF
     };
     bool status = true;
 
     status &= lseek(fd, PROG_SIZE_POSITION, SEEK_SET) == PROG_SIZE_POSITION;
-    return status && write(fd, &prog_size[0], 8) == 8;
+    return status && write(fd, &prog_size[0], size_bytes) == size_bytes;
 }
 
 /*
@@ -92,18 +93,18 @@ bool binary_write_header(int fd, header_t *header)
 {
     size_t n_written_bytes = 0;
     static const uint64_t zero = 0;
-    static const uint8_t magic[4] = {
-        (COREWAR_EXEC_MAGIC & 0xFF'00'00'00) >> 24,
-        (COREWAR_EXEC_MAGIC & 0x00'FF'00'00) >> 16,
-        (COREWAR_EXEC_MAGIC & 0x00'00'FF'00) >> 8,
-        COREWAR_EXEC_MAGIC & 0x00'00'00'FF
+    static const uint8_t magic[MAGIC_NUMBER_SIZE] = {
+        [MAGIC_NUMBER_SIZE - 4] = (COREWAR_EXEC_MAGIC & 0xFF'00'00'00) >> 24,
+        [MAGIC_NUMBER_SIZE - 3] = (COREWAR_EXEC_MAGIC & 0x00'FF'00'00) >> 16,
+        [MAGIC_NUMBER_SIZE - 2] = (COREWAR_EXEC_MAGIC & 0x00'00'FF'00) >> 8,
+        [MAGIC_NUMBER_SIZE - 1] = COREWAR_EXEC_MAGIC & 0x00'00'00'FF
     };
 
-    n_written_bytes += write(fd, &magic[0], 4);
+    n_written_bytes += write(fd, &magic[0], MAGIC_NUMBER_SIZE);
     n_written_bytes += write(fd, &header->prog_name[0], PROG_NAME_LENGTH);
-    n_written_bytes += write(fd, &zero, 8);
+    n_written_bytes += write(fd, &zero, PROG_SIZE_SIZE);
     n_written_bytes += write(fd, &header->comment[0], COMMENT_LENGTH);
-    n_written_bytes += write(fd, &zero, 4);
+    n_written_bytes += write(fd, &zero, PADDING_AFTER_COMMENT);
     return n_written_bytes == HEADER_LENGTH;
 }
 

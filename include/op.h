@@ -75,9 +75,9 @@
 
     // Header
     // Number of bytes encoding the magic number
-    #define HEADER_MAGIC_NUMBER_SIZE 4
+    #define MAGIC_NUMBER_SIZE 4
     // Number of bytes encoding the prog size
-    #define HEADER_PROG_SIZE_SIZE 8
+    #define PROG_SIZE_SIZE 8
     #define PROG_NAME_LENGTH        128
     #define COMMENT_LENGTH          2'048
     // Magic number in the binary header
@@ -85,10 +85,10 @@
     // position of the prog size in the binary output
     // Is right after the magic number (4 bytes) and the prog name
     #define PROG_SIZE_POSITION (4 + PROG_NAME_LENGTH)
-    #define HEADER_PADDING_AFTER_COMMENT 4
+    #define PADDING_AFTER_COMMENT 4
     #define HEADER_LENGTH \
-        (HEADER_MAGIC_NUMBER_SIZE + PROG_NAME_LENGTH +  \
-        HEADER_PROG_SIZE_SIZE + COMMENT_LENGTH + HEADER_PADDING_AFTER_COMMENT)
+        (MAGIC_NUMBER_SIZE + PROG_NAME_LENGTH +  \
+        PROG_SIZE_SIZE + COMMENT_LENGTH + PADDING_AFTER_COMMENT)
 
     typedef struct header_s {
         char prog_name[PROG_NAME_LENGTH + 1];
