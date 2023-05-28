@@ -118,26 +118,27 @@ bool binary_write_header(int fd, header_t *header)
 @returns
     false if instruction isn't a mnemonic or write error, otherwise true
 */
-bool binary_write_file(int fd, parser_line_t *file_content)
+bool binary_write_file
+    (int fd, parser_line_t *file, parser_label_t *labels)
 {
     parser_instruction_t *instruction = NULL;
     header_t header = {};
+    uint64_t copy_size = 0;
     uint64_t size = 0;
     bool status = true;
 
-    RETURN_VALUE_IF(fd < 0 || !file_content, false);
-    status &= header_get_name_and_comment(file_content, &header);
+    RETURN_VALUE_IF(fd < 0 || !file, false);
+    status &= header_get_name_and_comment(file, &header);
     status &= binary_write_header(fd, &header);
-    while (status && file_content) {
-        instruction = file_content->instruction;
-        while (parser_is_label(instruction->word, LABEL_COLON_END)) {
-            instruction = instruction->next;
-            BREAK_IF(!instruction);
-        }
+    while (status && file) {
+        instruction = file->instruction;
+        skip_labels(&instruction);
         if (instruction && parser_is_mnemonic(instruction->word)) {
-            status &= binary_write_instruction(fd, instruction, &size);
+            copy_size = size;
+            size += binary_write_instruction(fd, instruction, file, labels);
+            status &= size > copy_size;
         }
-        file_content = file_content->next;
+        file = file->next;
     }
     return status && binary_write_prog_size(fd, size);
 }

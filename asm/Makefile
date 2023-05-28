@@ -10,6 +10,7 @@ SRC_NO_MAIN = 									\
 			binary_file.c						\
 			binary_instruction.c 				\
 			binary_read_write.c 				\
+			index_label.c 						\
 			parser_check_header.c				\
 			parser_check_instruction_syntax.c 	\
 			parser_check_word_syntax.c 			\
@@ -19,6 +20,7 @@ SRC_NO_MAIN = 									\
 			parser_labels.c						\
 			parser_next_word.c					\
 			parser_remove_operand_separator.c	\
+			skip_labels.c
 
 SRC 	=	$(SRC_NO_MAIN) main.c
 

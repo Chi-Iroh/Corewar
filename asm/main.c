@@ -78,7 +78,8 @@ STATIC_FUNCTION void parse_file_and_labels
 }
 
 STATIC_FUNCTION bool write_to_binary
-    (char *source_filename, parser_line_t *file_content)
+    (char *source_filename, parser_line_t *file_content,
+    parser_label_t *labels)
 {
     static const int perms = S_IRGRP | S_IROTH | S_IRUSR | S_IWUSR;
     char output_filename[PATH_MAX] = {};
@@ -91,7 +92,7 @@ STATIC_FUNCTION bool write_to_binary
     my_strcat(&output_filename[0], ".cor");
     fd = open(&output_filename[0], O_CREAT | O_RDWR, perms);
     RETURN_VALUE_IF(fd < 0, false);
-    status = binary_write_file(fd, file_content);
+    status = binary_write_file(fd, file_content, labels);
     close(fd);
     return status;
 }
@@ -107,7 +108,7 @@ int main(int argc, char *argv[])
     }
     display_help(argv);
     parse_file_and_labels(&file, &labels, argv);
-    return_code = write_to_binary(argv[1], file) ? 0 : 84;
+    return_code = write_to_binary(argv[1], file, labels) ? 0 : 84;
     free_main(&file, &labels);
     return return_code;
 }

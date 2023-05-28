@@ -13,7 +13,7 @@
 #include "asm_config.h"
 #include "asm_types.h"
 
-unsigned op_tab_mnemonic_index(char *mnemonic);
+unsigned mnemonic_index(char *mnemonic);
 
 void parser_free_instruction(parser_instruction_t **instruction);
 void parser_free_line(parser_line_t **line);
@@ -51,12 +51,19 @@ bool parser_check_syntax(parser_line_t *file);
 */
 #define PARSER_WORD_TYPES 4
 
+void skip_labels(parser_instruction_t **instruction_address);
+bool find_label
+    (parser_label_t *labels, parser_instruction_t *current_instruction,
+    parser_line_t *current_line, uint16_t *index);
+
 void binary_write(uintmax_t value, uint8_t buffer[], unsigned size);
 void binary_read(uint8_t buffer[], uintmax_t *value, unsigned size);
 bool binary_write_header(int fd, header_t *header);
-bool binary_write_instruction
-    (int fd, parser_instruction_t *instruction, size_t *prog_size);
-bool binary_write_file(int fd, parser_line_t *file_content);
+uint64_t binary_write_instruction
+    (int fd, parser_instruction_t *instruction,
+    parser_line_t *line, parser_label_t *labels);
+bool binary_write_file
+    (int fd, parser_line_t *file_content, parser_label_t *labels);
 
 extern bool (*parser_syntax_functions[PARAMETER_MAX])(char*);
 extern const unsigned parser_word_types[4];

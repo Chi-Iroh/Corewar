@@ -1,0 +1,1 @@
+Segfault when no .name / .comment

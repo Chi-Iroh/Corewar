@@ -81,10 +81,12 @@ STATIC_FUNCTION bool binary_write_instruction_info(int fd,
 }
 
 STATIC_FUNCTION uintmax_t convert_arg_to_number
-    (parser_instruction_t *instruction)
+    (parser_instruction_t *instruction, parser_line_t *line,
+    parser_label_t *labels)
 {
     static parser_instruction_t *last_parameter = NULL;
     static parser_instruction_t *last_processed = NULL;
+    uint16_t label_index = 0;
 
     RETURN_VALUE_IF(!instruction || !instruction->word, 0);
     if (last_parameter == instruction) {
@@ -100,7 +102,7 @@ STATIC_FUNCTION uintmax_t convert_arg_to_number
     } else if (!parser_is_label(&last_processed->word[1], LABEL_COLON_BEGIN)) {
         return my_getnbr(last_processed->word);
     }
-    return 0;
+    return find_label(labels, instruction, line, &label_index) * label_index;
 }
 
 /*
@@ -115,9 +117,11 @@ STATIC_FUNCTION uintmax_t convert_arg_to_number
 @returns
     true on success, false on failure
 */
-STATIC_FUNCTION bool binary_write_arguments(int fd,
-    parser_instruction_t *instruction, uint8_t opcode, size_t *prog_size)
+STATIC_FUNCTION size_t binary_write_arguments(int fd,
+    parser_instruction_t *instruction, parser_line_t *line,
+    parser_label_t *labels)
 {
+    size_t written = 0;
     uintmax_t arg = 0;
     unsigned arg_size = 0;
     uint8_t arg_1byte = 0;
@@ -128,15 +132,14 @@ STATIC_FUNCTION bool binary_write_arguments(int fd,
     };
 
     instruction_get_arg_type(NULL);
-    convert_arg_to_number(NULL);
     for (unsigned i = 0; i < MAX_ARGS_NUMBER; i++) {
-        arg = convert_arg_to_number(instruction);
+        arg = convert_arg_to_number(instruction, line, labels);
         arg_size = ARG_SIZE[instruction_get_arg_type(instruction)];
         binary_write(arg, args[arg_size], arg_size);
         RETURN_VALUE_IF(write(fd, args[arg_size], arg_size) != arg_size, false)
-        *prog_size += arg_size;
+        written += arg_size;
     }
-    return true;
+    return written;
 }
 
 /*
@@ -149,22 +152,27 @@ STATIC_FUNCTION bool binary_write_arguments(int fd,
 @returns
     false if instruction isn't a mnemonic or write error, otherwise true
 */
-bool binary_write_instruction
-    (int fd, parser_instruction_t *instruction, uint64_t *prog_size)
+uint64_t binary_write_instruction
+    (int fd, parser_instruction_t *instruction,
+    parser_line_t *line, parser_label_t *labels)
 {
-    const unsigned index = op_tab_mnemonic_index(instruction->word);
+    const unsigned index = mnemonic_index(instruction->word);
     uint8_t opcode = index == N_OP ? 0x00 : op_tab[index].opcode;
     uint8_t coding_byte = 0x00;
-    bool is_ok = true;
+    size_t prog_size = 0;
+    size_t copy_prog_size = 0;
 
-    RETURN_VALUE_IF(opcode == 0x00, false);
+    RETURN_VALUE_IF(opcode == 0x00, 0);
     instruction = instruction->next;
-    RETURN_VALUE_IF(!instruction, false);
+    RETURN_VALUE_IF(!instruction, 0);
     instruction_get_arg_type(NULL);
     for (unsigned i = 0; i < MAX_ARGS_NUMBER; i++) {
         coding_byte <<= 2;
         coding_byte |= ARG_NAME_TO_BITS[instruction_get_arg_type(instruction)];
     }
-    is_ok &= binary_write_instruction_info(fd, opcode, coding_byte, prog_size);
-    return is_ok && binary_write_arguments(fd, instruction, opcode, prog_size);
+    if (binary_write_instruction_info(fd, opcode, coding_byte, &prog_size)) {
+        copy_prog_size = prog_size;
+        prog_size += binary_write_arguments(fd, instruction, line, labels);
+    }
+    return prog_size > copy_prog_size ? prog_size : 0;
 }
