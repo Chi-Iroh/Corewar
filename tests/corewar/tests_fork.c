@@ -103,5 +103,7 @@ Test(mnemonic_fork, test_fork) {
     };
     printf("%s :\n", args.mnemonic);
     write_instruction(&vm, args, 0, false);
-    cr_assert(mnemonic_fork(&vm, &vm.champions[0], args));
+    bool r_value = mnemonic_fork(&vm, &vm.champions[0], args);
+    cr_assert(r_value);
+    printf("\t%s\n", r_value ? "success" : "fail");
 }
