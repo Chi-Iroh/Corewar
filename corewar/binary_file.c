@@ -109,12 +109,18 @@ STATIC_FUNCTION bool binary_open
 @note
     A MEMORY_SIZE modulo will be applied to the load address.
 */
-bool binary_load_at(vm_t *vm, char *binary, vm_address_t load_address)
+bool binary_load_at(vm_t *vm, char *binary,
+    vm_address_t load_address, unsigned index)
 {
     static unsigned n_champions = 0;
-    vm_champion_t *new_champion = &vm->champions[n_champions++];
+    vm_champion_t *new_champion = NULL;
     bool status = vm && binary;
 
+    if (index == UINT_MAX) {
+        new_champion = &vm->champions[n_champions++];
+    } else {
+        new_champion = &vm->champions[index];
+    }
     status = status && binary_open(vm, binary, new_champion, load_address);
     RETURN_VALUE_IF(!status, false);
     return true;

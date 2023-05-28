@@ -91,7 +91,7 @@ STATIC_FUNCTION bool write_to_binary
     my_strncpy(&output_filename[0], source_filename, PATH_MAX);
     RETURN_VALUE_IF(output_filename[PATH_MAX - 5] != '\0', false);
     my_strcat(&output_filename[0], ".cor");
-    fd = open(&output_filename[0], O_CREAT | O_RDWR, perms);
+    fd = open(&output_filename[0], O_CREAT | O_TRUNC | O_RDWR, perms);
     RETURN_VALUE_IF(fd < 0, false);
     status = binary_write_file(fd, file_content, labels);
     close(fd);

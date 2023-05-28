@@ -82,5 +82,5 @@ bool binary_argv_load_single_binary
             (argv, index, &load_address, &prog_number);
     }
     load_address %= MEMORY_SIZE;
-    return binary_load_at(vm, binary_name, load_address);
+    return binary_load_at(vm, binary_name, load_address, UINT_MAX);
 }

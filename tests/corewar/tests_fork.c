@@ -82,7 +82,7 @@ Test(mnemonic_fork, bad_args) {
 Test(mnemonic_fork, test_fork) {
     vm_champion_t champion = {
         .carry = CARRY_OFF,
-        .filename = "notExistingFile.S",
+        .filename = "../custom_champions/single_instruction.S.cor",
         .load_address = 0,
         .number = 0,
         .pc = 0,
@@ -103,5 +103,5 @@ Test(mnemonic_fork, test_fork) {
     };
     printf("%s :\n", args.mnemonic);
     write_instruction(&vm, args, 0, false);
-    cr_assert(mnemonic_fork(&vm, vm.champions, args));
+    cr_assert(mnemonic_fork(&vm, &vm.champions[0], args));
 }

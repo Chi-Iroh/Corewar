@@ -33,5 +33,6 @@ bool mnemonic_fork(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args)
     champion_duplicate(vm, champion);
     duplicated = &vm->champions[vm->n_champions - 1];
     duplicated->load_address = champion->pc + (arg1 % INDEX_MODULO);
-    return binary_load_at(vm, duplicated->filename, duplicated->load_address);
+    return binary_load_at(vm, duplicated->filename,
+        duplicated->load_address, vm->n_champions - 1);
 }

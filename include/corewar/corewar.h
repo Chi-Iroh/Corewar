@@ -52,7 +52,8 @@ bool champions_next_prog_number
 void champion_duplicate(vm_t *vm, vm_champion_t *parent);
 void champion_remove(vm_t *vm, vm_address_t champion);
 
-bool binary_load_at(vm_t *vm, char *binary, vm_address_t load_address);
+bool binary_load_at
+    (vm_t *vm, char *binary, vm_address_t load_address, unsigned index);
 bool binary_argv_load_single_binary
     (vm_t *vm, unsigned argc, char *argv[], unsigned *index);
 bool binary_load_all(vm_t *vm, unsigned argc, char *argv[]);
