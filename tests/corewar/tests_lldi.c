@@ -94,19 +94,23 @@ Test(mnemonic_lldi, test_lldi) {
     };
     vm_mnemonic_t args = {
         .mnemonic = "lldi",
-        .args = { 1, 1, 1 },
-        .type = { PARAMETER_REGISTER, PARAMETER_REGISTER, PARAMETER_REGISTER },
+        .args = { 24, 4, 1 },
+        .type = { PARAMETER_DIRECT, PARAMETER_DIRECT, PARAMETER_REGISTER },
         .op = &OP_TAB(MNEMONIC_LLDI)
     };
-    vm_address_t load_address = 0;
     printf("%s :\n", args.mnemonic);
-    write_instruction(&vm, args, load_address, false);
-    cr_assert(mnemonic_lldi(&vm, &champion, args));
+
+    write_instruction(&vm, args, 0, true);
+    vm.memory[31] = 139;
     vm_register_t expected = 0;
-    for (vm_address_t i = load_address; i < load_address + sizeof(expected); i++) {
+    cr_assert(mnemonic_lldi(&vm, &champion, args));
+    for (unsigned i = REGISTER_SIZE - 1; ; i--) {
         expected <<= 8;
-        expected |= vm.memory[i];
+        expected |= vm.memory[31 - i];
+        if (i == 0) {
+            break;
+        }
     }
-    printf("\tExpected : %X / Got : %X\n", expected, champion.registers[0]);
+    printf("\tExpected : %X / Got : %X\n", expected, champion.registers[args.args[2] - 1]);
     cr_assert(champion.registers[args.args[2] - 1] == expected);
 }
