@@ -42,15 +42,9 @@ int main(int argc, char *argv[])
 
     display_help(argv);
     status = binary_load_all(&vm, argc, argv);
-    for (vm_address_t i = 0; i < vm.n_champions; i++) {
-        if (!vm.champions[i].filename) {
-            break;
-        }
-    }
     if (status) {
         scheduler_execute(&vm);
     }
-    dump_memory(&vm, 0);
     free(vm.champions);
     return !status * 84;
 }

@@ -34,6 +34,7 @@ bool binary_load_all(vm_t *vm, unsigned argc, char *argv[])
             break;
         }
         status &= binary_argv_load_single_binary(vm, argc, argv, &i);
+        vm->n_champions += status;
     }
     return status;
 }
