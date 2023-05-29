@@ -44,6 +44,13 @@ int main(int argc, char *argv[])
     status = binary_load_all(&vm, argc, argv);
     if (status) {
         scheduler_execute(&vm);
+        if (vm.n_champions == 1) {
+            my_printf("The player %u(%s)has won.\n",
+                vm.champions[0].number, &vm.champions[0].name[0]);
+        }
+        if (vm.n_champions == 0) {
+            my_puts("No winner");
+        }
     }
     free(vm.champions);
     return !status * 84;

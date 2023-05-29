@@ -14,10 +14,9 @@ const vm_champion_t CHAMPION_DEFAULT = {
     .cycles_to_wait = 0,
     .current_mnemonic = {},
     .filename = NULL,
-    .is_alive = false,
     .is_waiting = false,
     .load_address = VM_ADDRESS_MAX,
-    .number = 0,
+    .number = 1,
     .pc = 0,
     .registers = {},
     .size = 0,
@@ -37,7 +36,10 @@ STATIC_FUNCTION unsigned binary_argv_count_champions(char *argv[])
 {
     vm_address_t n_champions = 0;
 
-    for (unsigned i = 1; argv && argv[i] && parse_argv_is_flag(argv[i]); i++) {
+    for (unsigned i = 1; argv && argv[i]; i++) {
+        if (parse_argv_is_flag(argv[i])) {
+            continue;
+        }
         n_champions++;
     }
     return n_champions;
@@ -65,7 +67,9 @@ bool vm_init(vm_t *vm, char *argv[])
         .cycle_to_die = CYCLE_TO_DIE,
         .last_process_alive = VM_ADDRESS_MAX
     };
-    vm->champions = malloc(sizeof(vm_champion_t) * vm->n_champions);
+    if (vm->n_champions > 0) {
+        vm->champions = malloc(sizeof(vm_champion_t) * vm->n_champions);
+    }
     for (unsigned i = 0; vm->champions && i < vm->n_champions; i++) {
         vm->champions[i] = CHAMPION_DEFAULT;
     }

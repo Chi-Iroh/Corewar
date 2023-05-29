@@ -64,8 +64,6 @@ vm_address_t index_apply_to_pc
     (vm_address_t pc, vm_indirect_arg_t index,
     bool apply_index_modulo);
 
-void print_champion_name(vm_champion_t *champion);
-
 void champions_realloc(vm_t *vm, bool add_memory);
 void scheduler_execute(vm_t *vm);
 

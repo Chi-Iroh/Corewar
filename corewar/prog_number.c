@@ -44,7 +44,7 @@ STATIC_FUNCTION void swap_if_greater(vm_address_t *a, vm_address_t *b)
 STATIC_FUNCTION vm_address_t champions_next_prog_number_impl
     (vm_address_t *used, unsigned size)
 {
-    vm_address_t n = 0;
+    vm_address_t n = 1;
 
     for (unsigned i = 0; i < size; i++) {
         for (unsigned j = i; j < size - 1; j++) {
@@ -74,7 +74,7 @@ bool champions_next_prog_number
         malloc(sizeof(vm_address_t) * vm->n_champions) : NULL;
     bool status = vm->n_champions < VM_ADDRESS_MAX;
 
-    *prog_number = 0;
+    *prog_number = 1;
     RETURN_VALUE_IF(vm && !vm->champions, status);
     RETURN_VALUE_IF(!status || !used, false);
     for (vm_address_t i = 0; i < vm->n_champions; i++) {

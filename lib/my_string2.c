@@ -11,7 +11,7 @@
 
 char *str_back(char *str)
 {
-    return str + my_strlen(str) - 1;
+    return str ? str + my_strlen(str) - 1 : NULL;
 }
 
 char *cstr_padding(char *str, int length, int left_padding, char c)

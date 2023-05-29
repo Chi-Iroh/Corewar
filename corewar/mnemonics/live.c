@@ -9,21 +9,6 @@
 #include "../../include/my_macros.h"
 #include "../../include/corewar/corewar.h"
 
-void print_champion_name(vm_champion_t *champion)
-{
-    char *str = my_strrchr(champion->filename, '/');
-    char *const dot = my_strrchr(champion->filename, '.');
-
-    if (!str) {
-        str = champion->filename;
-    } else {
-        str++;
-    }
-    while (str != dot) {
-        my_putchar(*str++);
-    }
-}
-
 /*
 @brief
     LIVE mnemonic : indicates that a champion is still alive.
@@ -53,8 +38,7 @@ bool mnemonic_live(vm_t *vm, vm_champion_t *champion, vm_mnemonic_t args)
             break;
         }
     }
-    my_printf("The player %u(", champion->number);
-    print_champion_name(champion);
-    my_puts(")is alive.");
+    my_printf
+        ("The player %u(%s)is alive.\n", champion->number, &champion->name[0]);
     return true;
 }

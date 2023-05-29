@@ -50,6 +50,13 @@ STATIC_FUNCTION bool binary_is_size_valid
     return true;
 }
 
+STATIC_FUNCTION bool binary_read_name(int fd, vm_champion_t *champion)
+{
+    RETURN_VALUE_IF
+        (lseek(fd, MAGIC_NUMBER_SIZE, SEEK_SET) != MAGIC_NUMBER_SIZE, false);
+    return read(fd, &champion->name[0], PROG_NAME_LENGTH) == PROG_NAME_LENGTH;
+}
+
 /*
 @brief
     Opens a binary and copies its content in the memory, according to its
@@ -73,7 +80,7 @@ STATIC_FUNCTION bool binary_open
     (vm_t *vm, char *binary,
     vm_champion_t *champion, vm_address_t load_address)
 {
-    const bool status = vm && binary && champion && load_address < MEMORY_SIZE;
+    bool status = vm && binary && champion && load_address < MEMORY_SIZE;
     const int fd = status ? open(binary, O_RDONLY) : -1;
 
     RETURN_VALUE_IF(fd < 0, false);
@@ -83,16 +90,16 @@ STATIC_FUNCTION bool binary_open
     champion->cycles_to_wait = 0;
     champion->load_address = load_address;
     champion->size = binary_get_size(fd);
-
-    if (!binary_is_size_valid(champion->size, load_address)) {
-        close(fd);
-        return false;
+    status &= binary_read_name(fd, champion);
+    status &= binary_is_size_valid(champion->size, load_address);
+    if (status) {
+        champion->size -= HEADER_LENGTH;
+        status &= lseek(fd, HEADER_LENGTH, SEEK_SET) == HEADER_LENGTH;
+        status &= read(fd, &vm->memory[load_address], champion->size)
+            == champion->size;
     }
-    champion->size -= HEADER_LENGTH;
-    lseek(fd, HEADER_LENGTH, SEEK_SET);
-    read(fd, &vm->memory[load_address], champion->size);
     close(fd);
-    return true;
+    return status;
 }
 
 /*

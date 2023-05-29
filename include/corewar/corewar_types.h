@@ -90,6 +90,7 @@ typedef struct vm_champion_s {
     vm_address_t pc;
     // not malloc'd, same pointer as in argv
     char *filename;
+    char name[PROG_NAME_LENGTH + 1];
     vm_address_t load_address;
     vm_address_t size;
     unsigned cycles_to_wait;

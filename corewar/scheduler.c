@@ -108,6 +108,7 @@ STATIC_FUNCTION void scheduler_remove_program(vm_t *vm, unsigned *index)
     for (unsigned i = *index + 1; i < vm->n_champions && is_index_ok; i++) {
         vm->champions[i - 1] = vm->champions[i];
     }
+    vm->n_champions--;
     champions_realloc(vm, false);
     (*index)--;
 }
@@ -125,8 +126,6 @@ STATIC_FUNCTION void scheduler_remove_program(vm_t *vm, unsigned *index)
 */
 STATIC_FUNCTION void scheduler_remove_dead_programs(vm_t *vm, unsigned *cycle)
 {
-    static bool has_displayed_end = false;
-
     RETURN_IF(!vm);
     for (unsigned i = 0; i < vm->n_champions; i++) {
         if (!vm->champions[i].is_alive) {
@@ -136,14 +135,6 @@ STATIC_FUNCTION void scheduler_remove_dead_programs(vm_t *vm, unsigned *cycle)
         vm->champions[i].is_waiting = false;
     }
     *cycle = 0;
-    if (vm->n_champions == 1 && !has_displayed_end) {
-        my_printf("The player %u(", vm->champions[0].number);
-        print_champion_name(&vm->champions[0]);
-        my_puts(")has won");
-        has_displayed_end = true;
-    } else if (vm->n_champions == 0) {
-        puts("No winner.");
-    }
 }
 
 /*
