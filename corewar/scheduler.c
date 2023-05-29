@@ -80,7 +80,7 @@ STATIC_FUNCTION void scheduler_champion_execute_next_cycle
             return;
         }
         champion->cycles_to_wait = champion->current_mnemonic.op->nbr_cycles;
-    } else if (champion->cycles_to_wait == 0) {
+    } else if (champion->cycles_to_wait == 1) {
         MNEMONICS[champion->current_mnemonic.op->opcode]
             (vm, champion, champion->current_mnemonic);
         champion_increase_pc(champion);

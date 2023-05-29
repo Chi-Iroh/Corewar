@@ -84,10 +84,8 @@ STATIC_FUNCTION bool binary_open
     const int fd = status ? open(binary, O_RDONLY) : -1;
 
     RETURN_VALUE_IF(fd < 0, false);
-    champion->carry = CARRY_OFF;
     champion->filename = binary;
-    champion->pc = 0;
-    champion->cycles_to_wait = 0;
+    status &= champions_next_prog_number(vm, &champion->number);
     champion->load_address = load_address;
     champion->size = binary_get_size(fd);
     status &= binary_read_name(fd, champion);
