@@ -83,13 +83,15 @@ STATIC_FUNCTION bool write_to_binary
     parser_label_t *labels)
 {
     static const int perms = S_IRGRP | S_IROTH | S_IRUSR | S_IWUSR;
-    char output_filename[PATH_MAX] = {};
+    char output_filename[NAME_MAX] = {};
     int fd = -1;
     bool status = true;
+    char *const last_slash = my_strrchr(source_filename, '/');
+    char *const start = last_slash ? last_slash + 1 : source_filename;
 
     RETURN_VALUE_IF(!source_filename, false);
-    my_strncpy(&output_filename[0], source_filename, PATH_MAX);
-    RETURN_VALUE_IF(output_filename[PATH_MAX - 5] != '\0', false);
+    my_strncpy(&output_filename[0], start, NAME_MAX);
+    RETURN_VALUE_IF(output_filename[NAME_MAX - 5] != '\0', false);
     my_strcat(&output_filename[0], ".cor");
     fd = open(&output_filename[0], O_CREAT | O_TRUNC | O_RDWR, perms);
     RETURN_VALUE_IF(fd < 0, false);
