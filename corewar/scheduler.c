@@ -43,9 +43,11 @@ STATIC_FUNCTION void champion_increase_pc
 {
     size_t arg_size = 0;
     bool is_index = false;
+    const uint8_t opcode =
+        champion ? champion->current_mnemonic.op->opcode : 0;
 
     RETURN_IF(!champion);
-    champion->pc += 2;
+    champion->pc += 1 + !MNEMONIC_HAS_NO_CODING_BYTE[opcode];
     champion->pc %= MEMORY_SIZE;
     for (unsigned i = 0; i < MAX_ARGS_NUMBER; i++) {
         arg_size = ARG_SIZE[champion->current_mnemonic.type[i]];
