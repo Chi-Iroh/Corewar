@@ -43,13 +43,16 @@ void champions_realloc(vm_t *vm, bool add_memory)
     RETURN_IF(!add_memory && vm->n_champions == 0);
     vm->n_champions += add_memory ? 1 : -1;
     size = sizeof(vm_champion_t) * vm->n_champions;
+    if (size == 0) {
+        FREE_IF_ALLOCATED(vm->champions, free);
+        return;
+    }
     champions = realloc(vm->champions, size);
     if (!champions) {
         free(vm->champions);
         exit(84);
     }
     vm->champions = champions;
-    vm->champions[vm->n_champions - 1] = CHAMPION_DEFAULT;
 }
 
 /*

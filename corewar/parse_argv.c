@@ -31,8 +31,8 @@ STATIC_FUNCTION bool parse_argv_dump
     RETURN_VALUE_IF(my_strcmp(argv[index], "-dump") != 0, false);
     RETURN_VALUE_IF(!argv[index++], false);
     RETURN_VALUE_IF(str_find_not_pred(argv[index], my_isdigit) != NULL, false);
-    vm->must_dump_memory = true;
-    vm->cycles_before_memory_dump = my_getnbr(argv[index]);
+    vm->must_dump = true;
+    vm->cycles_before_dump = my_getnbr(argv[index]);
     return true;
 }
 

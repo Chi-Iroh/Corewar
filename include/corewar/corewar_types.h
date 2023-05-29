@@ -96,14 +96,15 @@ typedef struct vm_champion_s {
     unsigned cycles_to_wait;
     bool is_waiting;
     bool is_alive;
+    bool has_bad_opcode;
 } vm_champion_t;
 
 typedef struct {
     vm_memory_t memory;
     vm_champion_t *champions;
     vm_address_t n_champions;
-    unsigned cycles_before_memory_dump;
-    bool must_dump_memory;
+    unsigned cycles_before_dump;
+    bool must_dump;
     unsigned cycle_to_die;
     unsigned n_lives;
     vm_address_t last_process_alive;

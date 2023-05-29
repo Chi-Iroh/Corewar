@@ -71,13 +71,16 @@ STATIC_FUNCTION void champion_increase_pc
 STATIC_FUNCTION void scheduler_champion_execute_next_cycle
     (vm_t *vm, vm_champion_t *champion)
 {
-    RETURN_IF(!vm || !champion);
+    RETURN_IF(!vm || !champion || champion->has_bad_opcode);
     if (!champion->is_waiting) {
         champion->current_mnemonic = parse_instruction(vm, champion->pc);
         champion->is_waiting = true;
+        if (!champion->current_mnemonic.op) {
+            champion->has_bad_opcode = true;
+            return;
+        }
         champion->cycles_to_wait = champion->current_mnemonic.op->nbr_cycles;
-    }
-    if (champion->cycles_to_wait == 0) {
+    } else if (champion->cycles_to_wait == 0) {
         MNEMONICS[champion->current_mnemonic.op->opcode]
             (vm, champion, champion->current_mnemonic);
         champion_increase_pc(champion);
@@ -102,15 +105,16 @@ STATIC_FUNCTION void scheduler_champion_execute_next_cycle
 */
 STATIC_FUNCTION void scheduler_remove_program(vm_t *vm, unsigned *index)
 {
-    const bool is_index_ok = index ? *index < UINT_MAX && *index > 0 : false;
+    const bool is_index_ok = index ? *index != UINT_MAX : false;
 
     RETURN_IF(!vm || !index);
     for (unsigned i = *index + 1; i < vm->n_champions && is_index_ok; i++) {
         vm->champions[i - 1] = vm->champions[i];
     }
-    vm->n_champions--;
     champions_realloc(vm, false);
-    (*index)--;
+    if (*index > 0) {
+        (*index)--;
+    }
 }
 
 /*
@@ -124,17 +128,27 @@ STATIC_FUNCTION void scheduler_remove_program(vm_t *vm, unsigned *index)
     If champions reallocation fails, properly frees resources and exits with
         code 84.
 */
-STATIC_FUNCTION void scheduler_remove_dead_programs(vm_t *vm, unsigned *cycle)
+STATIC_FUNCTION bool scheduler_remove_dead_programs(vm_t *vm, unsigned *cycle)
 {
-    RETURN_IF(!vm);
+    bool remove_only_bad_opcode = true;
+    bool has_removed_programs = false;
+    bool remove_prog = false;
+
+    RETURN_VALUE_IF(!vm || !cycle, false);
+    remove_only_bad_opcode = *cycle < vm->cycle_to_die;
     for (unsigned i = 0; i < vm->n_champions; i++) {
-        if (!vm->champions[i].is_alive) {
+        remove_prog = vm->champions[i].has_bad_opcode;
+        remove_prog |= !remove_only_bad_opcode && !vm->champions[i].is_alive;
+        if (remove_prog) {
             scheduler_remove_program(vm, &i);
+            has_removed_programs = true;
+            continue;
         }
-        vm->champions[i].cycles_to_wait = 0;
-        vm->champions[i].is_waiting = false;
+        vm->champions[i].cycles_to_wait *= *cycle < vm->cycle_to_die;
+        vm->champions[i].is_waiting *= *cycle < vm->cycle_to_die;
     }
-    *cycle = 0;
+    *cycle *= remove_only_bad_opcode;
+    return has_removed_programs;
 }
 
 /*
@@ -158,14 +172,13 @@ void scheduler_execute(vm_t *vm)
             vm->cycle_to_die -= CYCLE_DELTA;
             vm->n_lives %= NBR_LIVE;
         }
-        if (cycle == vm->cycle_to_die) {
-            scheduler_remove_dead_programs(vm, &cycle);
+        if (scheduler_remove_dead_programs(vm, &cycle)) {
             continue;
         }
         for (vm_address_t i = 0; i < vm->n_champions; i++) {
             scheduler_champion_execute_next_cycle(vm, &vm->champions[i]);
         }
-        if (global_cycle >= vm->cycles_before_memory_dump) {
+        if (global_cycle >= vm->cycles_before_dump && vm->must_dump) {
             dump_memory(vm, 0);
             return;
         }

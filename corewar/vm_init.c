@@ -38,6 +38,7 @@ STATIC_FUNCTION unsigned binary_argv_count_champions(char *argv[])
 
     for (unsigned i = 1; argv && argv[i]; i++) {
         if (parse_argv_is_flag(argv[i])) {
+            i++;
             continue;
         }
         n_champions++;
@@ -62,8 +63,8 @@ bool vm_init(vm_t *vm, char *argv[])
         .memory = {},
         .n_champions = binary_argv_count_champions(argv),
         .champions = NULL,
-        .must_dump_memory = false,
-        .cycles_before_memory_dump = 0,
+        .must_dump = false,
+        .cycles_before_dump = 0,
         .cycle_to_die = CYCLE_TO_DIE,
         .last_process_alive = VM_ADDRESS_MAX
     };
