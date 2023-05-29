@@ -56,8 +56,6 @@ STATIC_FUNCTION void champion_increase_pc
         champion->pc += is_index ? INDIRECT_SIZE : arg_size;
         champion->pc %= MEMORY_SIZE;
     }
-    champion->pc++;
-    champion->pc %= MEMORY_SIZE;
 }
 
 /*
