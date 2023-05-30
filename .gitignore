@@ -48,6 +48,4 @@ corewar_binaries
 **/*.cor
 **/*.asm
 !custom_champions/**.S
-
-# important
-!BUGS.txt
+!**/*.sh
