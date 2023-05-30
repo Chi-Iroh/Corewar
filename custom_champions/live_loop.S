@@ -3,5 +3,5 @@
 
 add r3, r3, r3
 label:
-    live %2
+    live %1
     zjmp %:label

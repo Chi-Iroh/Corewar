@@ -1,13 +1,13 @@
-.name "hello worlddd"
+.name "All"
 
 
-.comment                "hdsjz"
-label: sti r1, %:label, %1 # h
-# 7542
-live %234 # 4 #7
+.comment                "Lezgo péter le parsing"
+label: sti r1, %:label, %1 # comment 1
+# 42
+live %234 # comment 2 #comment 3
             #fjdk
             
-ld %0, r3  #fjd*
+ld %0, r3  #comment 4
 
 
 zjmp %:label

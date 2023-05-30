@@ -95,6 +95,7 @@ STATIC_FUNCTION bool binary_open
         status &= lseek(fd, HEADER_LENGTH, SEEK_SET) == HEADER_LENGTH;
         status &= read(fd, &vm->memory[load_address], champion->size)
             == champion->size;
+        champion->pc = champion->load_address;
     }
     close(fd);
     return status;

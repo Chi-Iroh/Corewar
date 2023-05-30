@@ -68,8 +68,8 @@ STATIC_FUNCTION void champion_increase_pc
 @note
     Does nothing if champion or vm is NULL.
 */
-STATIC_FUNCTION void scheduler_champion_execute_next_cycle
-    (vm_t *vm, vm_champion_t *champion)
+STATIC_FUNCTION void scheduler_champion_next_cycle
+    (vm_t *vm, vm_champion_t *champion, unsigned cycle)
 {
     RETURN_IF(!vm || !champion || champion->has_bad_opcode);
     if (!champion->is_waiting) {
@@ -133,21 +133,22 @@ STATIC_FUNCTION bool scheduler_remove_dead_programs(vm_t *vm, unsigned *cycle)
     bool remove_only_bad_opcode = true;
     bool has_removed_programs = false;
     bool remove_prog = false;
-
     RETURN_VALUE_IF(!vm || !cycle, false);
     remove_only_bad_opcode = *cycle < vm->cycle_to_die;
     for (unsigned i = 0; i < vm->n_champions; i++) {
         remove_prog = vm->champions[i].has_bad_opcode;
-        remove_prog |= !remove_only_bad_opcode && !vm->champions[i].is_alive;
+        remove_prog |= !remove_only_bad_opcode && !vm->champions[i].is_alive
+            && *cycle - vm->champions[i].live_cycle >= vm->cycle_to_die;
         if (remove_prog) {
             scheduler_remove_program(vm, &i);
             has_removed_programs = true;
             continue;
         }
         vm->champions[i].cycles_to_wait *= *cycle < vm->cycle_to_die;
-        vm->champions[i].is_waiting *= *cycle < vm->cycle_to_die;
+        vm->champions[i].is_waiting &= *cycle < vm->cycle_to_die;
+        vm->champions[i].is_alive &= remove_only_bad_opcode;
     }
-    *cycle *= remove_only_bad_opcode;
+    *cycle = remove_only_bad_opcode ? *cycle : 1;
     return has_removed_programs;
 }
 
@@ -164,23 +165,23 @@ STATIC_FUNCTION bool scheduler_remove_dead_programs(vm_t *vm, unsigned *cycle)
 */
 void scheduler_execute(vm_t *vm)
 {
-    unsigned global_cycle = 0;
+    unsigned global_cycle = 1;
 
     RETURN_IF(!vm);
-    for (unsigned cycle = 1; vm->n_champions > 1; cycle++, global_cycle++) {
-        if (vm->n_lives >= NBR_LIVE) {
-            vm->cycle_to_die -= CYCLE_DELTA;
-            vm->n_lives %= NBR_LIVE;
-        }
-        if (scheduler_remove_dead_programs(vm, &cycle)) {
+    for (vm->cycle = 1; vm->n_champions > 1; vm->cycle++, global_cycle++) {
+        if (scheduler_remove_dead_programs(vm, &vm->cycle)) {
             continue;
         }
         for (vm_address_t i = 0; i < vm->n_champions; i++) {
-            scheduler_champion_execute_next_cycle(vm, &vm->champions[i]);
+            scheduler_champion_next_cycle(vm, &vm->champions[i], vm->cycle);
         }
         if (global_cycle >= vm->cycles_before_dump && vm->must_dump) {
             dump_memory(vm, 0);
             return;
+        }
+        if (vm->n_lives >= NBR_LIVE) {
+            vm->cycle_to_die -= CYCLE_DELTA;
+            vm->n_lives %= NBR_LIVE;
         }
     }
 }
