@@ -46,7 +46,7 @@ STATIC_FUNCTION void champion_increase_pc
     const uint8_t opcode =
         champion ? champion->current_mnemonic.op->opcode : 0;
 
-    RETURN_IF(!champion);
+    RETURN_IF(!champion || opcode == MNEMONIC_ZJMP);
     champion->pc += 1 + !MNEMONIC_HAS_NO_CODING_BYTE[opcode];
     champion->pc %= MEMORY_SIZE;
     for (unsigned i = 0; i < MAX_ARGS_NUMBER; i++) {
